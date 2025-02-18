@@ -96,6 +96,7 @@ class __HomeScreenState extends State<_HomeScreen> {
                 child: const Text('Add badge'),
                 onPressed: () => _addBadge(),
               ),
+              const SizedBox(height: 16),
               ElevatedButton(
                 child: const Text('Remove badge'),
                 onPressed: () => _remove(),

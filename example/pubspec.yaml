@@ -21,8 +21,15 @@ dependencies:
 
 
 dev_dependencies:
+  # Integration tests for Flutter
+  integration_test:
+    sdk: flutter
+  # Unit & Widget tests for Flutter
   flutter_test:
     sdk: flutter
+
+  # Linting
+  flutter_lints: ^5.0.0
 
 
 flutter:
