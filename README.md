@@ -65,15 +65,15 @@ import 'package:flutter_badge_manager/flutter_badge_manager.dart';
 
 Then you can add a badge:
 ```dart
-FlutterAppBadger.update(1);
+FlutterBadgeManager.update(1);
 ```
 
 Remove a badge:
 ```dart
-FlutterAppBadger.remove();
+FlutterBadgeManager.remove();
 ```
 
 Or just check if the device supports this feature with:
 ```dart
-FlutterAppBadger.isSupported();
+FlutterBadgeManager.isSupported();
 ```
