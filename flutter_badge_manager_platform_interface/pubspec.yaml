@@ -1,0 +1,55 @@
+name: flutter_badge_manager_platform_interface
+description: A common platform interface for the flutter_badge_manager plugin.
+version: 0.1.0
+
+homepage: https://github.com/ziqq/flutter_badge_manager/flutter_badge_manager_platform_interface
+
+repository: https://github.com/ziqq/flutter_badge_manager/flutter_badge_manager_platform_interface
+
+issue_tracker: https://github.com/ziqq/flutter_badge_manager/issues?q=is%3Aissue+is%3Aopen+label%3A%22p%3A+flutter_badge_manager%22
+
+funding:
+  - https://www.buymeacoffee.com/ziqq
+  - https://www.patreon.com/ziqq
+  - https://boosty.to/ziqq
+
+platforms:
+  android:
+  macos:
+  ios:
+
+#screenshots:
+#  - description: 'Example of using the library to check app version.'
+#    path: example.png
+
+
+environment:
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: ">=3.29.0"
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  plugin_platform_interface: ^2.1.7
+
+  # Utilities
+  meta: '>=1.15.0 <2.0.0'
+
+
+dev_dependencies:
+  # Integration tests for Flutter
+  integration_test:
+    sdk: flutter
+  # Unit & Widget tests for Flutter
+  flutter_test:
+    sdk: flutter
+
+  # Linting
+  flutter_lints: ^5.0.0
+
+
+topics:
+  - badge
+  - manager

@@ -1,0 +1,69 @@
+name: flutter_badge_manager_android
+description: Android implementation of the flutter_badge_manager plugin.
+version: 0.1.0
+
+publish_to: 'none'
+
+homepage: https://github.com/ziqq/flutter_badge_manager/flutter_badge_manager_android
+
+repository: https://github.com/ziqq/flutter_badge_manager/flutter_badge_manager_android
+
+issue_tracker: https://github.com/ziqq/flutter_badge_manager/issues?q=is%3Aissue+is%3Aopen+label%3A%22p%3A+flutter_badge_manager%22
+
+funding:
+  - https://www.buymeacoffee.com/ziqq
+  - https://www.patreon.com/ziqq
+  - https://boosty.to/ziqq
+
+platforms:
+  android:
+  macos:
+  ios:
+
+#screenshots:
+#  - description: 'Example of using the library to check app version.'
+#    path: example.png
+
+
+topics:
+  - badge
+  - manager
+
+
+environment:
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: ">=3.29.0"
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # flutter_badge_manager_platform_interface: ^0.2.0
+  flutter_badge_manager_platform_interface:
+    path: ../flutter_badge_manager_platform_interface
+
+
+dev_dependencies:
+  # Integration tests for Flutter
+  integration_test:
+    sdk: flutter
+  # Unit & Widget tests for Flutter
+  flutter_test:
+    sdk: flutter
+
+  pigeon: ^25.1.0
+
+  # Linting
+  flutter_lints: ^5.0.0
+
+
+flutter:
+  plugin:
+    implements: flutter_badge_manager
+    platforms:
+      android:
+        package: flutter.plugins.flutterbadgemanager
+        pluginClass: FlutterBadgetManagerPlugin
+        dartPluginClass: FlutterBadgetManagerAndroid
+

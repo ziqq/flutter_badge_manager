@@ -1,0 +1,36 @@
+name: flutter_badge_manager_example
+description: Demonstrates how to use the flutter_badge_manager plugin.
+version: 0.0.1
+
+publish_to: 'none'
+
+
+environment:
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: ">=3.27.1"
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  flutter_badge_manager:
+    path: ../
+
+
+dev_dependencies:
+  # Integration tests for Flutter
+  integration_test:
+    sdk: flutter
+  # Unit & Widget tests for Flutter
+  flutter_test:
+    sdk: flutter
+
+  # Linting
+  flutter_lints: ^5.0.0
+
+
+flutter:
+  uses-material-design: true

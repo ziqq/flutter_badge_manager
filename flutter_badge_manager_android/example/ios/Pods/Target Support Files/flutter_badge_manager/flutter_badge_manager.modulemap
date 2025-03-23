@@ -1,0 +1,6 @@
+framework module flutter_badge_manager {
+  umbrella header "flutter_badge_manager-umbrella.h"
+
+  export *
+  module * { export * }
+}
