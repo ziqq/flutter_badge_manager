@@ -1,0 +1,66 @@
+name: flutter_badge_manager_foundation
+description: iOS and macOS implementation of the flutter_badge_manager plugin.
+version: 0.1.0
+
+publish_to: 'none'
+
+homepage: https://github.com/ziqq/flutter_badge_manager/flutter_badge_manager_foundation
+
+repository: https://github.com/ziqq/flutter_badge_manager/flutter_badge_manager_foundation
+
+issue_tracker: https://github.com/ziqq/flutter_badge_manager/issues
+
+funding:
+  - https://www.buymeacoffee.com/ziqq
+  - https://www.patreon.com/ziqq
+  - https://boosty.to/ziqq
+
+platforms:
+  android:
+  macos:
+  ios:
+
+#screenshots:
+#  - description: 'Example of using the library to check app version.'
+#    path: example.png
+
+
+environment:
+  sdk: '>=3.6.0 <4.0.0'
+  flutter: ">=3.29.0"
+
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # flutter_badge_manager_platform_interface: ^0.2.0
+  flutter_badge_manager_platform_interface:
+    path: ../flutter_badge_manager_platform_interface
+
+
+dev_dependencies:
+  # Integration tests for Flutter
+  integration_test:
+    sdk: flutter
+  # Unit & Widget tests for Flutter
+  flutter_test:
+    sdk: flutter
+
+  # Linting
+  flutter_lints: ^6.0.0
+
+  pigeon: ^25.1.0
+
+
+flutter:
+  plugin:
+    platforms:
+      ios:
+        pluginClass: FlutterBadgeManagerPlugin
+        dartPluginClass: FlutterBadgeManagerFoundation
+        sharedDarwinSource: true
+      macos:
+        pluginClass: FlutterBadgeManagerPlugin
+        dartPluginClass: FlutterBadgeManagerFoundation
+        sharedDarwinSource: true
