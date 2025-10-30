@@ -1,3 +1,19 @@
+SHELL :=/bin/bash -e -o pipefail
+PWD   :=$(shell pwd)
+
+.DEFAULT_GOAL := all
+.PHONY: all
+all: ## build pipeline
+all: format analyze test-unit
+
+.PHONY: ci
+ci: ## CI build pipeline
+ci: all
+
+.PHONY: precommit
+precommit: ## validate the branch before commit
+precommit: all
+
 .PHONY: help
 help: ## Help dialog
 				@echo 'Usage: make <OPTIONS> ... <TARGETS>'
@@ -16,24 +32,12 @@ version: ## Check fvm flutter version
 .PHONY: format
 format: ## Format code
 				@echo "╠ RUN FORMAT THE CODE"
-				@fvm dart format --fix -l 80 . || (echo "¯\_(ツ)_/¯ Format code error ¯\_(ツ)_/¯"; exit 1)
+				@fvm dart format --fix -l 80 . || (echo "¯\_(ツ)_/¯ Format code error"; exit 1)
 				@echo "╠ CODE FORMATED SUCCESSFULLY"
 
 .PHONY: fix
 fix: format ## Fix code
 				@fvm dart fix --apply lib
-
-.PHONY: clean-cache
-clean-cache: ## Clean the pub cache
-				@echo "╠ CLEAN PUB CACHE"
-				@fvm flutter pub cache repair
-				@echo "╠ PUB CACHE CLEANED SUCCESSFULLY"
-
-.PHONY: clean
-clean: ## Clean flutter
-				@echo "╠ RUN FLUTTER CLEAN"
-				@fvm flutter clean
-				@echo "╠ FLUTTER CLEANED SUCCESSFULLY"
 
 .PHONY: get
 get: ## Get dependencies
@@ -72,13 +76,6 @@ coverage: ## Runs get coverage
 run-genhtml: ## Runs generage coverage html
 				@genhtml coverage/lcov.info -o coverage/html
 
-.PHONY: test-unit
-test-unit: ## Runs unit tests
-				@echo "╠ RUNNING UNIT TESTS..."
-				@fvm flutter test --coverage || (echo "¯\_(ツ)_/¯ Error while running tests ¯\_(ツ)_/¯"; exit 1)
-				@genhtml coverage/lcov.info --output=coverage -o coverage/html || (echo "¯\_(ツ)_/¯ Error while running genhtml with coverage ¯\_(ツ)_/¯"; exit 2)
-				@echo "╠ UNIT TESTS SUCCESSFULLY"
-
 .PHONY: tag-add
 tag-add: ## Make command to add TAG. E.g: make tag-add TAG=v1.0.0
 				@if [ -z "$(TAG)" ]; then echo "TAG is not set"; exit 1; fi
@@ -110,3 +107,11 @@ build: clean analyze test-unit ## Build test apk for android on example apps
 				@cd example && fvm flutter clean && fvm flutter pub get && fvm flutter build apk --release && fvm flutter build ios --release --no-codesign
 				@echo "║"
 				@echo "╠ FINISH BUILD EXAMPLES..."
+
+.PHONY: test-unit
+test-unit: ## Runs unit tests for all packages
+	@echo "╠ RUNNING UNIT TESTS FOR flutter_badge_manager_platform_interface..."
+	@cd flutter_badge_manager_platform_interface && flutter test --coverage test/flutter_badge_manager_platform_interface_test.dart && flutter test --coverage test/method_channel_flutter_badge_manger_test.dart || (echo "¯\_(ツ)_/¯ Error while running tests in flutter_badge_manager_platform_interface"; exit 1)
+
+	@echo "╠ RUNNING UNIT TESTS FOR flutter_badge_manager_foundation..."
+	@cd flutter_badge_manager_foundation && flutter test --coverage test/flutter_badge_manager_foundation_test.dart || (echo "¯\_(ツ)_/¯ Error while running tests in flutter_badge_manager_foundation"; exit 1)
