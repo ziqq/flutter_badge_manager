@@ -19,23 +19,22 @@ abstract class FlutterBadgeManagerPlatform extends PlatformInterface {
 
   static final Object _token = Object();
 
-  /// The default instance of [FlutterBadgeManagerPlatform] to use.
+  static FlutterBadgeManagerPlatform? _instance;
+
+  /// The current default [FlutterBadgeManagerPlatform] instance.
   ///
-  /// Defaults to [MethodChannelflutter_badge_manager].
-  static FlutterBadgeManagerPlatform get instance => _instance;
+  /// It will always default to [MethodChannelFlutterBadgeManager]
+  /// if no other implementation was provided.
+  static FlutterBadgeManagerPlatform get instance =>
+      _instance ??= MethodChannelFlutterBadgeManager.instance;
 
   /// Platform-specific plugins should set this with their own platform-specific
   /// class that extends [FlutterBadgeManagerPlatform]
   /// when they register themselves.
   static set instance(FlutterBadgeManagerPlatform instance) {
-    if (!instance.isMock) {
-      PlatformInterface.verify(instance, _token);
-    }
+    if (!instance.isMock) PlatformInterface.verify(instance, _token);
     _instance = instance;
   }
-
-  static FlutterBadgeManagerPlatform _instance =
-      MethodChannelFlutterBadgeManager();
 
   /// Only mock implementations should set this to true.
   ///
@@ -44,15 +43,21 @@ abstract class FlutterBadgeManagerPlatform extends PlatformInterface {
   /// This property provides a backdoor for mockito mocks to
   /// skip the verification that the class isn't implemented with `implements`.
   @visibleForTesting
-  @Deprecated('Use MockPlatformInterfaceMixin instead')
+  // @Deprecated('Use MockPlatformInterfaceMixin instead')
   bool get isMock => false;
 
   /// Checks if the device supports app badges.
-  Future<bool> isSupported();
+  Future<bool> isSupported() {
+    throw UnimplementedError('isSupported is not implemented');
+  }
 
   /// Updates the app badge count.
-  Future<void> update(int count);
+  Future<void> update(int count) {
+    throw UnimplementedError('update is not implemented');
+  }
 
   /// Removes the app badge.
-  Future<void> remove();
+  Future<void> remove() {
+    throw UnimplementedError('remove is not implemented');
+  }
 }

@@ -16,9 +16,9 @@ public final class GeneratedPluginRegistrant {
   private static final String TAG = "GeneratedPluginRegistrant";
   public static void registerWith(@NonNull FlutterEngine flutterEngine) {
     try {
-      flutterEngine.getPlugins().add(new flutter.plugins.flutterbadgemanager.FlutterBadgetManagerPlugin());
+      flutterEngine.getPlugins().add(new flutter.plugins.flutterbadgemanager.FlutterBadgeManagerPlugin());
     } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_badge_manager, flutter.plugins.flutterbadgemanager.FlutterBadgetManagerPlugin", e);
+      Log.e(TAG, "Error registering plugin flutter_badge_manager, flutter.plugins.flutterbadgemanager.FlutterBadgeManagerPlugin", e);
     }
     try {
       flutterEngine.getPlugins().add(new dev.flutter.plugins.integration_test.IntegrationTestPlugin());

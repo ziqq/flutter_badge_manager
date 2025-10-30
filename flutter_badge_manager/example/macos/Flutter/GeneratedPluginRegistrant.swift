@@ -8,5 +8,5 @@ import Foundation
 import flutter_badge_manager
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  FlutterBadgetManagerPlugin.register(with: registry.registrar(forPlugin: "FlutterBadgetManagerPlugin"))
+  FlutterBadgeManagerPlugin.register(with: registry.registrar(forPlugin: "FlutterBadgeManagerPlugin"))
 }

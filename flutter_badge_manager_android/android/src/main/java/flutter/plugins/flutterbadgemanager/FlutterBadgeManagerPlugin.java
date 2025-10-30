@@ -10,9 +10,9 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
 /**
- * FlutterBadgetManagerPlugin
+ * FlutterBadgeManagerPlugin
  */
-public class FlutterBadgetManagerPlugin implements MethodCallHandler, FlutterPlugin {
+public class FlutterBadgeManagerPlugin implements MethodCallHandler, FlutterPlugin {
 
   private Context applicationContext;
   private MethodChannel channel;

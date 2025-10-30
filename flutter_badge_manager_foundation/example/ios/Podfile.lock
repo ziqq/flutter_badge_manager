@@ -1,0 +1,29 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_badge_manager_foundation (0.1.0):
+    - Flutter
+    - FlutterMacOS
+  - integration_test (0.0.1):
+    - Flutter
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_badge_manager_foundation (from `.symlinks/plugins/flutter_badge_manager_foundation/darwin`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_badge_manager_foundation:
+    :path: ".symlinks/plugins/flutter_badge_manager_foundation/darwin"
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
+
+SPEC CHECKSUMS:
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_badge_manager_foundation: aaa015f979e73752b85b087775f30d723c3aa9ba
+  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
+
+PODFILE CHECKSUM: 9033ba3f6af960faf780f37b4acba278cb77c66f
+
+COCOAPODS: 1.16.2

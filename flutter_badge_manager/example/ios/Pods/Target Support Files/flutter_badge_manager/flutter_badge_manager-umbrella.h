@@ -10,7 +10,7 @@
 #endif
 #endif
 
-#import "FlutterBadgetManagerPlugin.h"
+#import "FlutterBadgeManagerPlugin.h"
 
 FOUNDATION_EXPORT double flutter_badge_managerVersionNumber;
 FOUNDATION_EXPORT const unsigned char flutter_badge_managerVersionString[];

@@ -55,7 +55,7 @@ dev_dependencies:
   pigeon: ^25.1.0
 
   # Linting
-  flutter_lints: ^5.0.0
+  flutter_lints: ^6.0.0
 
 
 flutter:
@@ -64,6 +64,6 @@ flutter:
     platforms:
       android:
         package: flutter.plugins.flutterbadgemanager
-        pluginClass: FlutterBadgetManagerPlugin
-        dartPluginClass: FlutterBadgetManagerAndroid
+        pluginClass: FlutterBadgeManagerPlugin
+        dartPluginClass: FlutterBadgeManagerAndroid
 

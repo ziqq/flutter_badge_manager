@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_badge_manager/flutter_badge_manager.dart';
+import 'package:flutter_badge_manager_android/flutter_badge_manager_android.dart';
 
 void main() => runApp(const MyApp());
 
@@ -45,7 +45,8 @@ class __HomeScreenState extends State<_HomeScreen> {
 
     String supportedString;
     try {
-      bool isSupported = await FlutterBadgeManager.isSupported();
+      bool isSupported =
+          await FlutterBadgeManagerAndroid.instance.isSupported();
       log('isSupported: $isSupported');
       if (isSupported) {
         supportedString = 'Supported';
@@ -68,7 +69,7 @@ class __HomeScreenState extends State<_HomeScreen> {
     final messenger = ScaffoldMessenger.maybeOf(context);
     _count++;
     messenger?.clearSnackBars();
-    FlutterBadgeManager.update(_count);
+    FlutterBadgeManagerAndroid.instance.update(_count);
     messenger
         ?.showSnackBar(SnackBar(content: Text('Badge count updated: $_count')));
   }
@@ -78,7 +79,7 @@ class __HomeScreenState extends State<_HomeScreen> {
     final messenger = ScaffoldMessenger.maybeOf(context);
     _count = 0;
     messenger?.clearSnackBars();
-    FlutterBadgeManager.remove();
+    FlutterBadgeManagerAndroid.instance.remove();
     messenger
         ?.showSnackBar(SnackBar(content: Text('Badge count updated: $_count')));
   }

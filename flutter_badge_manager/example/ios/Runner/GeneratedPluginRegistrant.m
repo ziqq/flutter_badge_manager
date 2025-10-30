@@ -6,8 +6,8 @@
 
 #import "GeneratedPluginRegistrant.h"
 
-#if __has_include(<flutter_badge_manager/FlutterBadgetManagerPlugin.h>)
-#import <flutter_badge_manager/FlutterBadgetManagerPlugin.h>
+#if __has_include(<flutter_badge_manager/FlutterBadgeManagerPlugin.h>)
+#import <flutter_badge_manager/FlutterBadgeManagerPlugin.h>
 #else
 @import flutter_badge_manager;
 #endif
@@ -21,7 +21,7 @@
 @implementation GeneratedPluginRegistrant
 
 + (void)registerWithRegistry:(NSObject<FlutterPluginRegistry>*)registry {
-  [FlutterBadgetManagerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterBadgetManagerPlugin"]];
+  [FlutterBadgeManagerPlugin registerWithRegistrar:[registry registrarForPlugin:@"FlutterBadgeManagerPlugin"]];
   [IntegrationTestPlugin registerWithRegistrar:[registry registrarForPlugin:@"IntegrationTestPlugin"]];
 }
 

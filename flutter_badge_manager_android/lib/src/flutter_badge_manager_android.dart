@@ -2,6 +2,8 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
+// ignore_for_file: sort_constructors_first
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_platform_interface.dart';
 import 'package:flutter_badge_manager_platform_interface/method_channel_flutter_badge_manger.dart';
@@ -12,27 +14,40 @@ import 'package:flutter_badge_manager_platform_interface/method_channel_flutter_
 /// functionality for Android.
 class FlutterBadgeManagerAndroid extends FlutterBadgeManagerPlatform {
   /// Creates a new plugin implementation instance.
-  FlutterBadgeManagerAndroid({
-    @visibleForOverriding MethodChannelFlutterBadgeManager? methodChannel,
-  }) : _methodChannel = methodChannel ?? MethodChannelFlutterBadgeManager();
+  FlutterBadgeManagerAndroid._({
+    @visibleForOverriding MethodChannelFlutterBadgeManager? channel,
+  }) : _channel = channel ?? MethodChannelFlutterBadgeManager.instance;
 
-  final MethodChannelFlutterBadgeManager _methodChannel;
+  //  Messaging does not yet support multiple Firebase Apps. Default app only.
+  /// Returns an instance using a specified [FirebaseApp].
+  factory FlutterBadgeManagerAndroid._instanceFor({
+    @visibleForOverriding MethodChannelFlutterBadgeManager? channel,
+  }) =>
+      FlutterBadgeManagerAndroid._(channel: channel);
+
+  final MethodChannelFlutterBadgeManager _channel;
+
+  static FlutterBadgeManagerAndroid? _instance;
+
+  /// Returns an instance using the default [FlutterBadgeManagerAndroid].
+  static FlutterBadgeManagerAndroid get instance =>
+      _instance ??= FlutterBadgeManagerAndroid._instanceFor();
 
   /// Registers this class
-  /// as the default instance of [FlutterBadgeManagerPlatform].
+  /// as the default instance of [SharedPreferencesAsyncPlatform].
   static void registerWith() {
-    FlutterBadgeManagerPlatform.instance = FlutterBadgeManagerAndroid();
+    FlutterBadgeManagerPlatform.instance = FlutterBadgeManagerAndroid.instance;
   }
 
   /// Checks if the device supports app badges.
   @override
-  Future<bool> isSupported() => _methodChannel.isSupported();
+  Future<bool> isSupported() => _channel.isSupported();
 
   /// Updates the app badge count.
   @override
-  Future<void> update(int count) => _methodChannel.update(count);
+  Future<void> update(int count) => _channel.update(count);
 
   /// Removes the app badge.
   @override
-  Future<void> remove() => _methodChannel.remove();
+  Future<void> remove() => _channel.remove();
 }

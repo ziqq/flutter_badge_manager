@@ -19,14 +19,14 @@
 /* End PBXAggregateTarget section */
 
 /* Begin PBXBuildFile section */
-		1452F30C2D91CA99F4A00B48DDFACDCC /* FlutterBadgetManagerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F773AB60C5BFE7673C83DD9AF5C3226 /* FlutterBadgetManagerPlugin.m */; };
+		1452F30C2D91CA99F4A00B48DDFACDCC /* FlutterBadgeManagerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 3F773AB60C5BFE7673C83DD9AF5C3226 /* FlutterBadgeManagerPlugin.m */; };
 		34A4F2EF3D6EACF7B5965B092EC25B14 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 384DDA2CB25005BD6479B5987C619DD4 /* Foundation.framework */; };
 		4CE8D60A0E793C7706CCBA241489C32F /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 384DDA2CB25005BD6479B5987C619DD4 /* Foundation.framework */; };
 		62CE76CA0A60DF81312FCC81791E76E5 /* flutter_badge_manager-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 908C398FF9C7FD35D335E89152CC48D5 /* flutter_badge_manager-dummy.m */; };
 		8979BFD7837AC16989DC68AE2F6A9BC7 /* flutter_badge_manager-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5D532154189AF89BC01714CB1EC3050F /* flutter_badge_manager-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		8FAAD0462E92DFA4BA6DA58B6DB4BA0E /* Pods-Runner-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7B3C932BD54DBB963102A89E0F9E3948 /* Pods-Runner-dummy.m */; };
 		9CD44EED623ED58F04DB1A624FB96A84 /* Pods-Runner-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 96BF45FBE2BC9AD7B2D7E56D01B5EE46 /* Pods-Runner-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		DB236FFAD0B69EB2AED2A5BDF1D7B5C2 /* FlutterBadgetManagerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = A7723B4F394774519B7622D19F303F82 /* FlutterBadgetManagerPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		DB236FFAD0B69EB2AED2A5BDF1D7B5C2 /* FlutterBadgeManagerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = A7723B4F394774519B7622D19F303F82 /* FlutterBadgeManagerPlugin.h */; settings = {ATTRIBUTES = (Public, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,7 +58,7 @@
 		317C26B9A7CEDD34ADE8F37FAAB7AC20 /* Pods-Runner-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Runner-frameworks.sh"; sourceTree = "<group>"; };
 		3343841AD5E4CF19A55E0765C630B586 /* flutter_badge_manager.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.module; path = flutter_badge_manager.modulemap; sourceTree = "<group>"; };
 		384DDA2CB25005BD6479B5987C619DD4 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		3F773AB60C5BFE7673C83DD9AF5C3226 /* FlutterBadgetManagerPlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FlutterBadgetManagerPlugin.m; path = ../../../../../../../ios/Classes/FlutterBadgetManagerPlugin.m; sourceTree = "<group>"; };
+		3F773AB60C5BFE7673C83DD9AF5C3226 /* FlutterBadgeManagerPlugin.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; name = FlutterBadgeManagerPlugin.m; path = ../../../../../../../ios/Classes/FlutterBadgeManagerPlugin.m; sourceTree = "<group>"; };
 		51825CD8F0558EFA53D9510F0E5BFA16 /* Pods-Runner-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Runner-Info.plist"; sourceTree = "<group>"; };
 		5D532154189AF89BC01714CB1EC3050F /* flutter_badge_manager-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "flutter_badge_manager-umbrella.h"; sourceTree = "<group>"; };
 		669E8F25E1897672BDB80B7EB784DA24 /* Pods-Runner */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = "Pods-Runner"; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -70,7 +70,7 @@
 		99E410A02C3FD4EE69EA6F42FD5CEC7B /* flutter_badge_manager.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = flutter_badge_manager.podspec; path = ../../../../../../ios/flutter_badge_manager.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9D940727FF8FB9C785EB98E56350EF41 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		9F79F8269DC34AC56BB3D1D9652C0D86 /* Pods-Runner.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Runner.profile.xcconfig"; sourceTree = "<group>"; };
-		A7723B4F394774519B7622D19F303F82 /* FlutterBadgetManagerPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FlutterBadgetManagerPlugin.h; path = ../../../../../../../ios/Classes/FlutterBadgetManagerPlugin.h; sourceTree = "<group>"; };
+		A7723B4F394774519B7622D19F303F82 /* FlutterBadgeManagerPlugin.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; name = FlutterBadgeManagerPlugin.h; path = ../../../../../../../ios/Classes/FlutterBadgeManagerPlugin.h; sourceTree = "<group>"; };
 		ADC0AAB2933BE2904111CB227764EB75 /* flutter_badge_manager */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = flutter_badge_manager; path = flutter_badge_manager.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AEFADDBEC73FD5224C0F297DE1F44239 /* flutter_badge_manager.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = flutter_badge_manager.release.xcconfig; sourceTree = "<group>"; };
 		B098FE05EE0396939E419F623FD1CA22 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../../../../../../LICENSE; sourceTree = "<group>"; };
@@ -170,8 +170,8 @@
 		3D7F8A8216BB5D4405D1E9A3E2ADA774 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				A7723B4F394774519B7622D19F303F82 /* FlutterBadgetManagerPlugin.h */,
-				3F773AB60C5BFE7673C83DD9AF5C3226 /* FlutterBadgetManagerPlugin.m */,
+				A7723B4F394774519B7622D19F303F82 /* FlutterBadgeManagerPlugin.h */,
+				3F773AB60C5BFE7673C83DD9AF5C3226 /* FlutterBadgeManagerPlugin.m */,
 			);
 			name = Classes;
 			path = Classes;
@@ -336,7 +336,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8979BFD7837AC16989DC68AE2F6A9BC7 /* flutter_badge_manager-umbrella.h in Headers */,
-				DB236FFAD0B69EB2AED2A5BDF1D7B5C2 /* FlutterBadgetManagerPlugin.h in Headers */,
+				DB236FFAD0B69EB2AED2A5BDF1D7B5C2 /* FlutterBadgeManagerPlugin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -436,7 +436,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				62CE76CA0A60DF81312FCC81791E76E5 /* flutter_badge_manager-dummy.m in Sources */,
-				1452F30C2D91CA99F4A00B48DDFACDCC /* FlutterBadgetManagerPlugin.m in Sources */,
+				1452F30C2D91CA99F4A00B48DDFACDCC /* FlutterBadgeManagerPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

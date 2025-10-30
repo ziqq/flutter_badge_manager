@@ -1,15 +1,28 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_platform_interface.dart';
 
-/// The [MethodChannel] used to interact with the platform side of the plugin.
-const _kChannel = MethodChannel('github.com/ziqq/flutter_badge_manager');
-
+/// The entry point for accessing a app badge.
 ///
+/// You can get an instance
+/// by calling [MethodChannelFlutterBadgeManager.instance].
 class MethodChannelFlutterBadgeManager extends FlutterBadgeManagerPlatform {
+  /// Constructs a [MethodChannelFlutterBadgeManager].
+  MethodChannelFlutterBadgeManager._();
+
+  /// Returns a stub instance to allow the platform interface to access
+  /// the class instance statically.
+  static MethodChannelFlutterBadgeManager get instance =>
+      MethodChannelFlutterBadgeManager._();
+
+  /// The [MethodChannel] used to interact with the platform side of the plugin.
+  static const MethodChannel _channel = MethodChannel(
+    'github.com/ziqq/flutter_badge_manager',
+  );
+
   /// Checks if the device supports app badges.
   @override
   Future<bool> isSupported() async {
-    final respnse = await _kChannel.invokeMethod('isSupported');
+    final respnse = await _channel.invokeMethod('isSupported');
     if (respnse case bool? isSupported) return isSupported ?? false;
     return false;
   }
@@ -17,9 +30,9 @@ class MethodChannelFlutterBadgeManager extends FlutterBadgeManagerPlatform {
   /// Updates the app badge count.
   @override
   Future<void> update(int count) =>
-      _kChannel.invokeMethod('update', {'count': count});
+      _channel.invokeMethod('update', {'count': count});
 
   /// Removes the app badge.
   @override
-  Future<void> remove() => _kChannel.invokeMethod('remove');
+  Future<void> remove() => _channel.invokeMethod('remove');
 }
