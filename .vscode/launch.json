@@ -6,9 +6,23 @@
       "type": "dart",
       "request": "launch",
       "cwd": "${workspaceFolder}/example",
-      "args": [
-        // "--dart-define-from-file=config/development.json",
-      ],
+      "args": [],
+      "env": {}
+    },
+    {
+      "name": "Run Android",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/flutter_badge_manager_android/example",
+      "args": [],
+      "env": {}
+    },
+    {
+      "name": "Run IOS",
+      "type": "dart",
+      "request": "launch",
+      "cwd": "${workspaceFolder}/flutter_badge_manager_foundation/example",
+      "args": [],
       "env": {}
     },
     {

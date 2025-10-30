@@ -38,7 +38,10 @@ clean: ## Clean flutter
 .PHONY: get
 get: ## Get dependencies
 				@echo "╠ RUN GET DEPENDENCIES..."
-				@fvm flutter pub get || (echo "¯\_(ツ)_/¯ Get dependencies error ¯\_(ツ)_/¯"; exit 1)
+				@cd flutter_badge_manager_platform_interface; fvm flutter pub get || (echo "¯\_(ツ)_/¯ Get dependencies in flutter_badge_manager_platform_interface error ¯\_(ツ)_/¯"; exit 1)
+				@cd flutter_badge_manager_android; fvm flutter pub get || (echo "¯\_(ツ)_/¯ Get dependencies in flutter_badge_manager_android error ¯\_(ツ)_/¯"; exit 2)
+				@cd flutter_badge_manager_foundation; fvm flutter pub get || (echo "¯\_(ツ)_/¯ Get dependencies in flutter_badge_manager_foundation error ¯\_(ツ)_/¯"; exit 3)
+				@cd flutter_badge_manager; fvm flutter pub get || (echo "¯\_(ツ)_/¯ Get dependencies in flutter_badge_manager error ¯\_(ツ)_/¯"; exit 4)
 				@echo "╠ DEPENDENCIES GETED SUCCESSFULLY"
 
 .PHONY: analyze

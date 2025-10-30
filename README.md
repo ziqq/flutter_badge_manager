@@ -26,34 +26,55 @@ It supports iOS, macOS, and some Android devices (the official API does not supp
 
 ## Installation
 
+### Android
+
+Starting with Android 8.0 (API level 26), notification badges—also known as notification
+dots—appear on a launcher icon when the associated app has an active notification. Users can
+touch & hold the app icon to reveal the notifications, along with any app shortcuts.
+
+https://developer.android.com/develop/ui/views/notifications/badges
+
+Starting With Android13 (API level 33), notification runtime permission should be requested before setting the app badge.
+
+Add the following permissions to `AndroidManifest.xml` according to the system you need to support:
+```xml
+<!-- Samsung -->
+<uses-permission android:name="com.sec.android.provider.badge.permission.READ"/>
+<uses-permission android:name="com.sec.android.provider.badge.permission.WRITE"/>
+
+<!-- HTC -->
+<uses-permission android:name="com.htc.launcher.permission.READ_SETTINGS"/>
+<uses-permission android:name="com.htc.launcher.permission.UPDATE_SHORTCUT"/>
+
+<!-- Sony -->
+<uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE"/>
+<uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE"/>
+
+<!-- Apex -->
+<uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT"/>
+
+<!-- Solid -->
+<uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE"/>
+
+<!-- Huawei -->
+<uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+<uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS" />
+<uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" />
+```
+
 ### iOS
 
-On iOS, the notification permission is required to update the badge.
-It is automatically asked when the badge is added or removed.
-
-Please also add the following to your <your project>/ios/Runner/Info.plist:
-```xml
-<key>UIBackgroundModes</key>
-<array>
-    <string>remote-notification</string>
-</array>
-```
+On iOS, when using with notification message, notification permission is required.
 
 ### macOS
 
-On macOS, the notification permission is required to update the badge.
-It is automatically asked when the badge is added or removed.
+On macOS, when using with notification message, notification permission is required.
 
-Please also add the following to your <your project>/macos/Runner/Info.plist:
-```xml
-<key>NSUserNotificationAlertStyle</key>
-<string>banner</string>
-```
+### permission_handler
 
-### Android
+Using permission_handler package to manage permission on Android and iOS.
 
-On Android, no official API exists to show a badge in the launcher. But some devices (Samsung, HTC...) support the feature.
-Thanks to the [Shortcut Badger library](https://github.com/leolin310148/ShortcutBadger/), ~ 16 launchers are supported.
+https://pub.dev/packages/permission_handler
 
 
 ## Example
