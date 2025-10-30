@@ -16,9 +16,7 @@ Pod::Spec.new do |s|
   # Use local path (plugin shipped from local packages directory for Flutter). Remote :http not needed.
   s.source           = { :path => '.' }
 
-  # Provide Objective-C sources (universal Darwin) under darwin/flutter_badge_manager_foundation/Sources/flutter_badge_manager_foundation
-  s.source_files        = 'flutter_badge_manager_foundation/Sources/flutter_badge_manager_foundation/**/*.{h,m}'
-  s.public_header_files = 'flutter_badge_manager_foundation/Sources/flutter_badge_manager_foundation/**/*.h'
+  s.source_files        = 'flutter_badge_manager_foundation/Sources/flutter_badge_manager_foundation/**/*.swift'
   s.requires_arc = true
 
   s.ios.dependency 'Flutter'
