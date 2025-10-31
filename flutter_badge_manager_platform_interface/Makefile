@@ -4,7 +4,7 @@ PWD   :=$(shell pwd)
 .DEFAULT_GOAL := all
 .PHONY: all
 all: ## build pipeline
-all: format check test-unit publish-check
+all: get format analyze check test-unit publish-check
 
 .PHONY: ci
 ci: ## CI build pipeline
@@ -45,13 +45,13 @@ get: ## Get dependencies
 				@fvm flutter pub get || (echo "¯\_(ツ)_/¯ Get contactos_platform_interface dependencies error"; exit 1)
 
 .PHONY: analyze
-analyze: get format ## Analyze code
-				@fvm dart analyze --fatal-infos --fatal-warnings
+analyze: ## Analyze code
+				@fvm dart analyze --fatal-infos --fatal-warnings || (echo "¯\_(ツ)_/¯ Analyze code error"; exit 1)
 
 .PHONY: check
-check: analyze ## Check the code
+check: ## Check the code
 				@fvm dart pub global activate pana
-				@pana --json --no-warning --line-length 80 > log.pana.json
+				@pana --json --no-warning --line-length 80 > log.pana.json || (echo "¯\_(ツ)_/¯ Check code error"; exit 1)
 
 .PHONY: publish-check
 publish-check: check ## Check the code before publish
@@ -71,5 +71,5 @@ run-genhtml: ## Runs generage coverage html
 
 .PHONY: test-unit
 test-unit: ## Runs unit tests
-				@fvm flutter test --coverage || (echo "¯\_(ツ)_/¯ Error while running test-unit"; exit 1)
+				@fvm flutter test --coverage || (echo "¯\_(ツ)_/¯ Error while running flutter_badge_manager_platform_interface tests"; exit 1)
 				@genhtml coverage/lcov.info --output=coverage -o coverage/html || (echo "¯\_(ツ)_/¯ Error while running genhtml with coverage"; exit 2)
