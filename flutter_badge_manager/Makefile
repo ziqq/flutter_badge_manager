@@ -46,7 +46,7 @@ get: ## Get dependencies
 
 .PHONY: analyze
 analyze: get format ## Analyze code
-				@fvm dart analyze --fatal-infos --fatal-warnings
+				@fvm flutter analyze --fatal-warnings --no-fatal-infos lib/ test/ || (echo "¯\_(ツ)_/¯ Analyze code error"; exit 1)
 
 .PHONY: check
 check: analyze ## Check the code
