@@ -1,79 +1,56 @@
-# flutter_badge_manager
+# flutter_badge_manager_platform_interface
 
-[![Pub](https://img.shields.io/pub/v/flutter_badge_manager.svg)](https://pub.dartlang.org/packages/flutter_badge_manager)
+[![Pub](https://img.shields.io/pub/v/flutter_badge_manager_platform_interface.svg)](https://pub.dartlang.org/packages/flutter_badge_manager_platform_interface)
 
+Common platform interface for the `flutter_badge_manager` family of plugins.
 
-## Description
-This plugin for [Flutter](https://flutter.io) adds the ability to change the badge of the app in the launcher.
-It supports iOS, macOS, and some Android devices (the official API does not support the feature, even on Oreo).
+This package defines the abstract API used by:
+- Foundation (iOS / macOS) implementation
+- Android implementation
+- Any future (custom) implementations
 
-<p align="center">
-  <img
-    src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.docs/ios.png"
-    style="margin:auto" width="600"
-    alt="Android badge"
-    height="228">
-</p>
+## Interface
 
-<p align="center">
-  <img
-    src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.docs/android.png"
-    style="margin:auto" width="600"
-    alt="Android badge"
-    height="322">
-</p>
+Extend `FlutterBadgeManagerPlatform` and set your implementation as default:
 
-
-## Installation
-
-### iOS
-
-On iOS, the notification permission is required to update the badge.
-It is automatically asked when the badge is added or removed.
-
-Please also add the following to your <your project>/ios/Runner/Info.plist:
-```xml
-<key>UIBackgroundModes</key>
-<array>
-    <string>remote-notification</string>
-</array>
-```
-
-### macOS
-
-On macOS, the notification permission is required to update the badge.
-It is automatically asked when the badge is added or removed.
-
-Please also add the following to your <your project>/macos/Runner/Info.plist:
-```xml
-<key>NSUserNotificationAlertStyle</key>
-<string>banner</string>
-```
-
-### Android
-
-On Android, no official API exists to show a badge in the launcher. But some devices (Samsung, HTC...) support the feature.
-Thanks to the [Shortcut Badger library](https://github.com/leolin310148/ShortcutBadger/), ~ 16 launchers are supported.
-
-
-## Example
-
-First, you just have to import the package in your dart files with:
 ```dart
-import 'package:flutter_badge_manager/flutter_badge_manager.dart';
+class MyBadgeManager extends FlutterBadgeManagerPlatform {
+  @override
+  Future<bool> isSupported() async => /* platform check */;
+  @override
+  Future<void> update(int count) async { /* apply badge */ }
+  @override
+  Future<void> remove() async { /* remove badge */ }
+}
 ```
 
-Then you can add a badge:
+Registration (typically in your plugin's `registerWith` or static init):
+
 ```dart
-FlutterBadgeManager.update(1);
+FlutterBadgeManagerPlatform.instance = MyBadgeManager();
 ```
 
-Remove a badge:
-```dart
-FlutterBadgeManager.remove();
-```
+The provided MethodChannel implementation (`MethodChannelFlutterBadgeManager`) is used as the default on supported platforms.
 
-Or just check if the device supports this feature with:
-```dart
-FlutterBadgeManager.isSupported();
-```
+## Methods
+
+- `isSupported()` → `bool`
+- `update(int count)` (count >= 0)
+- `remove()`
+
+Negative counts must throw a `PlatformException` with code `invalid_args`.
+
+## Adding a new platform implementation
+
+1. Create a new package (e.g. `flutter_badge_manager_windows`).
+2. Depend on `flutter_badge_manager_platform_interface`.
+3. Implement `FlutterBadgeManagerPlatform`.
+4. Set `FlutterBadgeManagerPlatform.instance` to your class during plugin registration.
+
+## Breaking changes
+
+Avoid breaking the interface. Prefer adding new optional methods with sensible fallbacks. See Flutter guidance: https://flutter.dev/go/platform-interface-breaking-changes
+
+## License
+
+BSD 3-Clause (see LICENSE).
