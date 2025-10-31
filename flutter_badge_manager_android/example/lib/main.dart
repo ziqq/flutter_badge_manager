@@ -1,8 +1,10 @@
-import 'dart:developer';
+import 'dart:developer' as dev;
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager_android/flutter_badge_manager_android.dart';
+import 'package:flutter_badge_manager_example/local_notifications_manager.dart';
 
 void main() => runApp(const MyApp());
 
@@ -45,19 +47,19 @@ class __HomeScreenState extends State<_HomeScreen> {
 
     String supportedString;
     try {
-      bool isSupported =
-          await FlutterBadgeManagerAndroid.instance.isSupported();
-      log('isSupported: $isSupported');
+      bool isSupported = await FlutterBadgeManagerAndroid.instance
+          .isSupported();
+      dev.log('isSupported: $isSupported');
       if (isSupported) {
         supportedString = 'Supported';
       } else {
         supportedString = 'Not supported';
       }
     } on PlatformException {
-      log('error: PlatformException');
-      supportedString = 'Failed to get badge support.';
-    } on Object catch (_, __) {
-      log('error: Object');
+      dev.log('error: PlatformException');
+      supportedString = 'Badge is not supported.';
+    } on Object catch (e, _) {
+      dev.log('error: $e');
       supportedString = 'Failed to get badge support.';
     }
 
@@ -69,9 +71,18 @@ class __HomeScreenState extends State<_HomeScreen> {
     final messenger = ScaffoldMessenger.maybeOf(context);
     _count++;
     messenger?.clearSnackBars();
+    LocalNotificationsManager.instance
+        .showNotification(
+          id: Random().nextInt(1 << 31),
+          body: 'This is body',
+          title: 'This is title',
+          payload: 'This is payload',
+        )
+        .ignore();
     FlutterBadgeManagerAndroid.instance.update(_count);
-    messenger
-        ?.showSnackBar(SnackBar(content: Text('Badge count updated: $_count')));
+    messenger?.showSnackBar(
+      SnackBar(content: Text('Badge count updated: $_count')),
+    );
   }
 
   void _remove() {
@@ -80,30 +91,31 @@ class __HomeScreenState extends State<_HomeScreen> {
     _count = 0;
     messenger?.clearSnackBars();
     FlutterBadgeManagerAndroid.instance.remove();
-    messenger
-        ?.showSnackBar(SnackBar(content: Text('Badge count updated: $_count')));
+    messenger?.showSnackBar(
+      SnackBar(content: Text('Badge count updated: $_count')),
+    );
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('Plugin example app')),
-        body: SizedBox.expand(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text('Badge supported: $_supportedString\n'),
-              ElevatedButton(
-                child: const Text('Add badge'),
-                onPressed: () => _addBadge(),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                child: const Text('Remove badge'),
-                onPressed: () => _remove(),
-              ),
-            ],
+    appBar: AppBar(title: const Text('Plugin example app')),
+    body: SizedBox.expand(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text('Badge supported: $_supportedString\n'),
+          ElevatedButton(
+            child: const Text('Add badge'),
+            onPressed: () => _addBadge(),
           ),
-        ),
-      );
+          const SizedBox(height: 16),
+          ElevatedButton(
+            child: const Text('Remove badge'),
+            onPressed: () => _remove(),
+          ),
+        ],
+      ),
+    ),
+  );
 }

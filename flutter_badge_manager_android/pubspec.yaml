@@ -15,15 +15,9 @@ funding:
   - https://www.patreon.com/ziqq
   - https://boosty.to/ziqq
 
-platforms:
-  android:
-  macos:
-  ios:
-
 #screenshots:
 #  - description: 'Example of using the library to check app version.'
 #    path: example.png
-
 
 topics:
   - badge
@@ -39,7 +33,7 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # flutter_badge_manager_platform_interface: ^0.2.0
+  # flutter_badge_manager_platform_interface: ^0.0.1
   flutter_badge_manager_platform_interface:
     path: ../flutter_badge_manager_platform_interface
 

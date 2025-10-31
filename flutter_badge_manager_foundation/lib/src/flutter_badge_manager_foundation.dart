@@ -2,39 +2,38 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: sort_constructors_first
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_platform_interface.dart';
 import 'package:flutter_badge_manager_platform_interface/method_channel_flutter_badge_manger.dart';
 
-/// The Android implementation of [FlutterBadgeManagerPlatform].
+/// The iOS and macOS implementation of [FlutterBadgeManagerPlatform].
 ///
 /// This class implements the `package:flutter_badge_manager`
-/// functionality for Android.
+/// functionality for iOS and macOS.
 class FlutterBadgeManagerFoundation extends FlutterBadgeManagerPlatform {
-  /// Creates a new plugin implementation instance.
+  /// Creates a new plugin for iOS and macOS implementation instance.
   FlutterBadgeManagerFoundation._({
     @visibleForOverriding MethodChannelFlutterBadgeManager? channel,
   }) : _channel = channel ?? MethodChannelFlutterBadgeManager.instance;
 
-  //  Messaging does not yet support multiple Firebase Apps. Default app only.
-  /// Returns an instance using a specified [FirebaseApp].
+  /// Returns an instance using a specified [MethodChannelFlutterBadgeManager].
   factory FlutterBadgeManagerFoundation._instanceFor({
     @visibleForOverriding MethodChannelFlutterBadgeManager? channel,
-  }) =>
-      FlutterBadgeManagerFoundation._(channel: channel);
+  }) => FlutterBadgeManagerFoundation._(channel: channel);
 
-  final MethodChannelFlutterBadgeManager _channel;
-
-  static FlutterBadgeManagerFoundation? _instance;
+  /// Returns the default instance
+  /// of [FlutterBadgeManagerFoundation].
+  static FlutterBadgeManagerFoundation get instance => _instance;
 
   /// Returns an instance using the default [FlutterBadgeManagerFoundation].
-  static FlutterBadgeManagerFoundation get instance =>
-      _instance ??= FlutterBadgeManagerFoundation._instanceFor();
+  static final FlutterBadgeManagerFoundation _instance =
+      FlutterBadgeManagerFoundation._instanceFor();
+
+  /// The channel used to interact with the platform side of the plugin.
+  final MethodChannelFlutterBadgeManager _channel;
 
   /// Registers this class
-  /// as the default instance of [SharedPreferencesAsyncPlatform].
+  /// as the default instance of [FlutterBadgeManagerPlatform].
   static void registerWith() {
     FlutterBadgeManagerPlatform.instance =
         FlutterBadgeManagerFoundation.instance;

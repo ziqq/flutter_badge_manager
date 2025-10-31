@@ -7,6 +7,10 @@
 This plugin for [Flutter](https://flutter.io) adds the ability to change the badge of the app in the launcher.
 It supports iOS, macOS, and some Android devices (the official API does not support the feature, even on Oreo).
 
+|             | Android | iOS   | macOS  | Web | Windows     |
+|-------------|---------|-------|--------|-----|-------------|
+| **Support** | SDK 21+ | 13.0+ | 10.5+ | N/A | N/A         |
+
 <p align="center">
   <img
     src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.docs/ios.png"
@@ -62,19 +66,15 @@ Add the following permissions to `AndroidManifest.xml` according to the system y
 <uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS" />
 ```
 
-### iOS
+### iOS and macOS
 
-On iOS, when using with notification message, notification permission is required.
+Requires notification permission if badge is used together with notifications iOS 13.0+, macOS 10.15+.
 
-### macOS
+### Permissions
 
-On macOS, when using with notification message, notification permission is required.
-
-### permission_handler
-
-Using permission_handler package to manage permission on Android and iOS.
-
-https://pub.dev/packages/permission_handler
+Use **[permission_handler](https://pub.dev/packages/permission_handler)** to request:
+- Android 13+: Notification permission.
+- iOS / macOS: Notification authorization (badge).
 
 
 ## Example
@@ -98,3 +98,11 @@ Or just check if the device supports this feature with:
 ```dart
 FlutterBadgeManager.isSupported();
 ```
+
+## Notes
+- Pixel / AOSP launcher: numeric badge not shown (only dot based on notifications).
+- Set 0 (or remove) to clear the badge.
+- Negative values are rejected.
+
+## License
+BSD.

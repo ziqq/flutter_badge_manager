@@ -2,8 +2,6 @@
 // Use of this source code is governed by a BSD-style license that can be
 // found in the LICENSE file.
 
-// ignore_for_file: sort_constructors_first
-
 import 'package:flutter/foundation.dart';
 import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_platform_interface.dart';
 import 'package:flutter_badge_manager_platform_interface/method_channel_flutter_badge_manger.dart';
@@ -22,16 +20,17 @@ class FlutterBadgeManagerAndroid extends FlutterBadgeManagerPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   factory FlutterBadgeManagerAndroid._instanceFor({
     @visibleForOverriding MethodChannelFlutterBadgeManager? channel,
-  }) =>
-      FlutterBadgeManagerAndroid._(channel: channel);
+  }) => FlutterBadgeManagerAndroid._(channel: channel);
 
   final MethodChannelFlutterBadgeManager _channel;
 
-  static FlutterBadgeManagerAndroid? _instance;
+  /// Returns the default instance
+  /// of [FlutterBadgeManagerAndroid].
+  static FlutterBadgeManagerAndroid get instance => _instance;
 
   /// Returns an instance using the default [FlutterBadgeManagerAndroid].
-  static FlutterBadgeManagerAndroid get instance =>
-      _instance ??= FlutterBadgeManagerAndroid._instanceFor();
+  static final FlutterBadgeManagerAndroid _instance =
+      FlutterBadgeManagerAndroid._instanceFor();
 
   /// Registers this class
   /// as the default instance of [SharedPreferencesAsyncPlatform].

@@ -1,3 +1,7 @@
+// Copyright 2025 Anton Ustinoff<a.a.ustinoff@gmail.com>. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_platform_interface.dart';
 
@@ -6,12 +10,15 @@ import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_p
 /// You can get an instance
 /// by calling [MethodChannelFlutterBadgeManager.instance].
 class MethodChannelFlutterBadgeManager extends FlutterBadgeManagerPlatform {
-  /// Constructs a [MethodChannelFlutterBadgeManager].
+  /// Create an instance of [MethodChannelFlutterBadgeManager].
   MethodChannelFlutterBadgeManager._();
 
-  /// Returns a stub instance to allow the platform interface to access
-  /// the class instance statically.
-  static MethodChannelFlutterBadgeManager get instance =>
+  /// Returns the default instance
+  /// of [MethodChannelFlutterBadgeManager].
+  static MethodChannelFlutterBadgeManager get instance => _instance;
+
+  /// The singleton instance of [MethodChannelFlutterBadgeManager].
+  static final MethodChannelFlutterBadgeManager _instance =
       MethodChannelFlutterBadgeManager._();
 
   /// The [MethodChannel] used to interact with the platform side of the plugin.

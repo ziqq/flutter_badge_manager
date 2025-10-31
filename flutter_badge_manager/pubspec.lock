@@ -62,6 +62,27 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_badge_manager_android:
+    dependency: "direct main"
+    description:
+      path: "../flutter_badge_manager_android"
+      relative: true
+    source: path
+    version: "0.1.0"
+  flutter_badge_manager_foundation:
+    dependency: "direct main"
+    description:
+      path: "../flutter_badge_manager_foundation"
+      relative: true
+    source: path
+    version: "0.1.0"
+  flutter_badge_manager_platform_interface:
+    dependency: transitive
+    description:
+      path: "../flutter_badge_manager_platform_interface"
+      relative: true
+    source: path
+    version: "0.1.0"
   flutter_driver:
     dependency: transitive
     description: flutter
@@ -162,6 +183,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.6"
+  plugin_platform_interface:
+    dependency: transitive
+    description:
+      name: plugin_platform_interface
+      sha256: "4820fbfdb9478b1ebae27888254d445073732dae3d6ea81f0b7e06d5dedc3f02"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.8"
   process:
     dependency: transitive
     description:
@@ -257,4 +286,4 @@ packages:
     version: "3.0.4"
 sdks:
   dart: ">=3.8.0 <4.0.0"
-  flutter: ">=3.27.1"
+  flutter: ">=3.29.0"

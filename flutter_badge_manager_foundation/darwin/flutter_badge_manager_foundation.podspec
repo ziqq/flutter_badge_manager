@@ -9,8 +9,7 @@ Pod::Spec.new do |s|
   Plugin to update the app badge on the app icon.
                        DESC
   s.homepage         = 'https://github.com/ziqq/flutter_badge_manager/flutter_badge_manager_foundation'
-  # s.license          = { :type => 'BSD', :file => '../LICENSE' }
-  s.license          = { :file => '../LICENSE' }
+  s.license          = { :type => 'BSD', :file => '../LICENSE' }
   s.author           = 'Anton Ustinoff'
 
   # Use local path (plugin shipped from local packages directory for Flutter). Remote :http not needed.

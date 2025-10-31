@@ -2,11 +2,13 @@ name: flutter_badge_manager
 description: Plugin to update the app badge on the launcher (both for Android, iOS and macOS)
 version: 0.1.0
 
+publish_to: 'none'
+
 homepage: https://github.com/ziqq/flutter_badge_manager
 
 repository: https://github.com/ziqq/flutter_badge_manager
 
-issue_tracker: https://github.com/ziqq/flutter_badge_manager/issues
+issue_tracker: https://github.com/ziqq/flutter_badge_manager/issues?q=is%3Aissue+is%3Aopen+label%3A%22p%3A+flutter_badge_manager%22
 
 funding:
   - https://www.buymeacoffee.com/ziqq
@@ -18,6 +20,10 @@ platforms:
   macos:
   ios:
 
+topics:
+  - badge
+  - manager
+
 #screenshots:
 #  - description: 'Example of using the library to check app version.'
 #    path: example.png
@@ -25,12 +31,19 @@ platforms:
 
 environment:
   sdk: '>=3.6.0 <4.0.0'
-  flutter: ">=3.27.1"
+  flutter: ">=3.29.0"
 
 
 dependencies:
   flutter:
     sdk: flutter
+  # flutter_badge_manager_android: ^0.1.0
+  flutter_badge_manager_android:
+    path: ../flutter_badge_manager_android
+
+  # flutter_badge_manager_foundation: ^0.1.0
+  flutter_badge_manager_foundation:
+    path: ../flutter_badge_manager_foundation
 
 
 dev_dependencies:
@@ -49,9 +62,8 @@ flutter:
   plugin:
     platforms:
       android:
-        package: flutter.plugins.flutterbadgemanager
-        pluginClass: FlutterBadgeManagerPlugin
+        default_package: flutter_badge_manager_android
       ios:
-        pluginClass: FlutterBadgeManagerPlugin
+        default_package: flutter_badge_manager_foundation
       macos:
-        pluginClass: FlutterBadgeManagerPlugin
+        default_package: flutter_badge_manager_foundation

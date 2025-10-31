@@ -1,7 +1,11 @@
+// Copyright 2025 Anton Ustinoff<a.a.ustinoff@gmail.com>. All rights reserved.
+// Use of this source code is governed by a BSD-style license that can be
+// found in the LICENSE file.
+
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_badge_manager_platform_interface/method_channel_flutter_badge_manger.dart';
-import 'package:meta/meta.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// The interface that implementations of flutter_badge_manager must implement.
