@@ -1,3 +1,9 @@
+/*
+ * Author: Anton Ustinoff <https://github.com/ziqq> | <a.a.ustinoff@gmail.com>
+ * Date: 31 October 2025
+ */
+
+import 'dart:async';
 import 'dart:developer' as dev;
 import 'dart:math';
 
@@ -5,14 +11,23 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager_android/flutter_badge_manager_android.dart';
 import 'package:flutter_badge_manager_example/local_notifications_manager.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() => runApp(const MyApp());
+void main() => runZonedGuarded<void>(
+  () => runApp(const App()),
+  (e, s) => dev.log('Top level exception: $e\n$s'),
+);
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/// {@template app}
+/// App widget.
+/// {@endtemplate}
+class App extends StatelessWidget {
+  /// {@macro app}
+  const App({super.key});
 
   @override
-  Widget build(BuildContext context) => const MaterialApp(home: _HomeScreen());
+  Widget build(BuildContext context) =>
+      const MaterialApp(title: 'Plugin Android Example', home: _HomeScreen());
 }
 
 /// {@template main}
@@ -28,7 +43,7 @@ class _HomeScreen extends StatefulWidget {
   State<_HomeScreen> createState() => __HomeScreenState();
 }
 
-/// State for widget _HomeScreen.
+/// State for widget [_HomeScreen].
 class __HomeScreenState extends State<_HomeScreen> {
   String _supportedString = 'Unknown';
   int _count = 0;
@@ -39,31 +54,38 @@ class __HomeScreenState extends State<_HomeScreen> {
     _initPlatformState();
   }
 
+  /// Ensure notification permission is granted
+  /// on Android 13+.
+  Future<void> _ensureNotificationPermission() async {
+    final status = await Permission.notification.status;
+    if (!status.isGranted) {
+      await Permission.notification.request();
+    }
+  }
+
   Future<void> _initPlatformState() async {
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
-    String supportedString;
+    String result;
     try {
+      await _ensureNotificationPermission();
+
       bool isSupported = await FlutterBadgeManagerAndroid.instance
           .isSupported();
       dev.log('isSupported: $isSupported');
-      if (isSupported) {
-        supportedString = 'Supported';
-      } else {
-        supportedString = 'Not supported';
-      }
+      result = isSupported ? 'Supported' : 'Not supported';
     } on PlatformException {
       dev.log('error: PlatformException');
-      supportedString = 'Badge is not supported.';
+      result = 'Badge is not supported.';
     } on Object catch (e, _) {
       dev.log('error: $e');
-      supportedString = 'Failed to get badge support.';
+      result = 'Failed to get badge support.';
     }
 
-    setState(() => _supportedString = supportedString);
+    setState(() => _supportedString = result);
   }
 
   void _addBadge() {
@@ -98,11 +120,11 @@ class __HomeScreenState extends State<_HomeScreen> {
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Plugin example app')),
+    appBar: AppBar(title: const Text('Plugin Android Example')),
     body: SizedBox.expand(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text('Badge supported: $_supportedString\n'),
           ElevatedButton(

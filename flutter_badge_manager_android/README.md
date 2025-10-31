@@ -1,79 +1,75 @@
-# flutter_badge_manager
+# flutter_badge_manager_android
 
-[![Pub](https://img.shields.io/pub/v/flutter_badge_manager.svg)](https://pub.dartlang.org/packages/flutter_badge_manager)
+The Android implementation of [`flutter_badge_manager`](https://pub.dev/packages/flutter_badge_manager).
 
+## Usage
 
-## Description
-This plugin for [Flutter](https://flutter.io) adds the ability to change the badge of the app in the launcher.
-It supports iOS, macOS, and some Android devices (the official API does not support the feature, even on Oreo).
+This package is endorsed; you normally depend only on `flutter_badge_manager` and this implementation is included automatically. You do not need to add it to `pubspec.yaml` unless you want to import it directly.
 
-<p align="center">
-  <img
-    src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.docs/ios.png"
-    style="margin:auto" width="600"
-    alt="Android badge"
-    height="228">
-</p>
+If you do import it explicitly:
 
-<p align="center">
-  <img
-    src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.docs/android.png"
-    style="margin:auto" width="600"
-    alt="Android badge"
-    height="322">
-</p>
+```yaml
+dependencies:
+  flutter_badge_manager_android: ^<latest>
+```
 
+Then:
 
-## Installation
+```dart
+import 'package:flutter_badge_manager_android/flutter_badge_manager_android.dart';
 
-### iOS
+final supported = await FlutterBadgeManagerAndroid.instance.isSupported();
+if (supported) {
+  await FlutterBadgeManagerAndroid.instance.update(5);
+  await FlutterBadgeManagerAndroid.instance.remove();
+}
+```
 
-On iOS, the notification permission is required to update the badge.
-It is automatically asked when the badge is added or removed.
+## Behavior
 
-Please also add the following to your <your project>/ios/Runner/Info.plist:
+- No official Android API for numeric launcher badges.
+- Numeric badges work only on supported OEM / third‑party launchers (Samsung, Xiaomi, Huawei, Oppo, etc.).
+- Pixel / AOSP stock launcher: only notification dot (no number).
+- If `isSupported()` returns false, `update()` silently applies fallback (may rely on notification dot only).
+- Negative counts must throw `PlatformException(code: 'invalid_args')`.
+
+## Permissions
+
+For Android 13+ request runtime notification permission before updating:
+
+```dart
+import 'package:permission_handler/permission_handler.dart';
+
+Future<void> ensureNotificationPermission() async {
+  final status = await Permission.notification.status;
+  if (!status.isGranted) {
+    await Permission.notification.request();
+  }
+}
+```
+
+Optional OEM permissions (place inside `AndroidManifest.xml`) can increase compatibility:
+
 ```xml
-<key>UIBackgroundModes</key>
-<array>
-    <string>remote-notification</string>
-</array>
+<!-- Samsung -->
+<uses-permission android:name="com.sec.android.provider.badge.permission.READ"/>
+<uses-permission android:name="com.sec.android.provider.badge.permission.WRITE"/>
+<!-- Huawei -->
+<uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE"/>
+<uses-permission android:name="com.huawei.android.launcher.permission.READ_SETTINGS"/>
+<uses-permission android:name="com.huawei.android.launcher.permission.WRITE_SETTINGS"/>
+<!-- Sony -->
+<uses-permission android:name="com.sonyericsson.home.permission.BROADCAST_BADGE"/>
+<uses-permission android:name="com.sonymobile.home.permission.PROVIDER_INSERT_BADGE"/>
+<!-- Others -->
+<uses-permission android:name="com.anddoes.launcher.permission.UPDATE_COUNT"/>
+<uses-permission android:name="com.majeur.launcher.permission.UPDATE_BADGE"/>
 ```
 
-### macOS
+## Testing
 
-On macOS, the notification permission is required to update the badge.
-It is automatically asked when the badge is added or removed.
+Use a device/emulator with a launcher that supports numeric badges (e.g. Samsung). On Pixel expect only `isSupported()==false` and notification dots.
 
-Please also add the following to your <your project>/macos/Runner/Info.plist:
-```xml
-<key>NSUserNotificationAlertStyle</key>
-<string>banner</string>
-```
+## License
 
-### Android
-
-On Android, no official API exists to show a badge in the launcher. But some devices (Samsung, HTC...) support the feature.
-Thanks to the [Shortcut Badger library](https://github.com/leolin310148/ShortcutBadger/), ~ 16 launchers are supported.
-
-
-## Example
-
-First, you just have to import the package in your dart files with:
-```dart
-import 'package:flutter_badge_manager/flutter_badge_manager.dart';
-```
-
-Then you can add a badge:
-```dart
-FlutterBadgeManager.update(1);
-```
-
-Remove a badge:
-```dart
-FlutterBadgeManager.remove();
-```
-
-Or just check if the device supports this feature with:
-```dart
-FlutterBadgeManager.isSupported();
-```
+BSD 3-Clause (see LICENSE).
