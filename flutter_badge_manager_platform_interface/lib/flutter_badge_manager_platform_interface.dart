@@ -51,17 +51,11 @@ abstract class FlutterBadgeManagerPlatform extends PlatformInterface {
   bool get isMock => false;
 
   /// Checks if the device supports app badges.
-  Future<bool> isSupported() {
-    throw UnimplementedError('isSupported is not implemented');
-  }
+  Future<bool> isSupported() async => await instance.isSupported();
 
   /// Updates the app badge count.
-  Future<void> update(int count) {
-    throw UnimplementedError('update is not implemented');
-  }
+  Future<void> update(int count) async => await instance.update(count);
 
   /// Removes the app badge.
-  Future<void> remove() {
-    throw UnimplementedError('remove is not implemented');
-  }
+  Future<void> remove() async => await instance.remove();
 }
