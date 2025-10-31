@@ -19,7 +19,8 @@ class FlutterBadgeManagerFoundation extends FlutterBadgeManagerPlatform {
   /// Returns an instance using a specified [MethodChannelFlutterBadgeManager].
   factory FlutterBadgeManagerFoundation._instanceFor({
     @visibleForOverriding MethodChannelFlutterBadgeManager? channel,
-  }) => FlutterBadgeManagerFoundation._(channel: channel);
+  }) =>
+      FlutterBadgeManagerFoundation._(channel: channel);
 
   /// Returns the default instance
   /// of [FlutterBadgeManagerFoundation].
