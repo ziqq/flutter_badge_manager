@@ -100,15 +100,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.1"
+    version: "0.0.2"
   flutter_badge_manager_platform_interface:
     dependency: transitive
     description:
       name: flutter_badge_manager_platform_interface
-      sha256: "5ac04467275b99a9541bf857f17e39339fc500b452a80836bb0f600ca3c9c3f1"
+      sha256: "148b98efabf8ed4aad7a9fc32d345b40063806eeb9e6af332ccb1f1767627879"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1"
+    version: "0.0.2"
   flutter_driver:
     dependency: transitive
     description: flutter

@@ -18,12 +18,22 @@ public final class GeneratedPluginRegistrant {
     try {
       flutterEngine.getPlugins().add(new flutter.plugins.flutterbadgemanager.FlutterBadgeManagerPlugin());
     } catch (Exception e) {
-      Log.e(TAG, "Error registering plugin flutter_badge_manager, flutter.plugins.flutterbadgemanager.FlutterBadgeManagerPlugin", e);
+      Log.e(TAG, "Error registering plugin flutter_badge_manager_android, flutter.plugins.flutterbadgemanager.FlutterBadgeManagerPlugin", e);
+    }
+    try {
+      flutterEngine.getPlugins().add(new com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin());
+    } catch (Exception e) {
+      Log.e(TAG, "Error registering plugin flutter_local_notifications, com.dexterous.flutterlocalnotifications.FlutterLocalNotificationsPlugin", e);
     }
     try {
       flutterEngine.getPlugins().add(new dev.flutter.plugins.integration_test.IntegrationTestPlugin());
     } catch (Exception e) {
       Log.e(TAG, "Error registering plugin integration_test, dev.flutter.plugins.integration_test.IntegrationTestPlugin", e);
+    }
+    try {
+      flutterEngine.getPlugins().add(new com.baseflow.permissionhandler.PermissionHandlerPlugin());
+    } catch (Exception e) {
+      Log.e(TAG, "Error registering plugin permission_handler_android, com.baseflow.permissionhandler.PermissionHandlerPlugin", e);
     }
   }
 }

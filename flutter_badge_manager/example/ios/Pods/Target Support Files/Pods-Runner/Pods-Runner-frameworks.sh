@@ -176,13 +176,19 @@ code_sign_if_enabled() {
 }
 
 if [[ "$CONFIGURATION" == "Debug" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/flutter_badge_manager/flutter_badge_manager.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_badge_manager_foundation/flutter_badge_manager_foundation.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_local_notifications/flutter_local_notifications.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/integration_test/integration_test.framework"
 fi
 if [[ "$CONFIGURATION" == "Profile" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/flutter_badge_manager/flutter_badge_manager.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_badge_manager_foundation/flutter_badge_manager_foundation.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_local_notifications/flutter_local_notifications.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/integration_test/integration_test.framework"
 fi
 if [[ "$CONFIGURATION" == "Release" ]]; then
-  install_framework "${BUILT_PRODUCTS_DIR}/flutter_badge_manager/flutter_badge_manager.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_badge_manager_foundation/flutter_badge_manager_foundation.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/flutter_local_notifications/flutter_local_notifications.framework"
+  install_framework "${BUILT_PRODUCTS_DIR}/integration_test/integration_test.framework"
 fi
 if [ "${COCOAPODS_PARALLEL_CODE_SIGN}" == "true" ]; then
   wait

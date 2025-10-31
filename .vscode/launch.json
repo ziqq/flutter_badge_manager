@@ -5,7 +5,7 @@
       "name": "Run Example",
       "type": "dart",
       "request": "launch",
-      "cwd": "${workspaceFolder}/example",
+      "cwd": "${workspaceFolder}/flutter_badge_manager/example",
       "args": [],
       "env": {}
     },

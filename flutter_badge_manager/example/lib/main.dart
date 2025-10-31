@@ -1,16 +1,33 @@
-import 'dart:developer';
+/*
+ * Author: Anton Ustinoff <https://github.com/ziqq> | <a.a.ustinoff@gmail.com>
+ * Date: 31 October 2025
+ */
+
+import 'dart:async';
+import 'dart:developer' as dev;
+import 'dart:math' show Random;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager/flutter_badge_manager.dart';
+import 'package:flutter_badge_manager_example/local_notifications_manager.dart';
+import 'package:permission_handler/permission_handler.dart';
 
-void main() => runApp(const MyApp());
+void main() => runZonedGuarded<void>(
+  () => runApp(const App()),
+  (e, s) => dev.log('Top level exception: $e\n$s'),
+);
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+/// {@template app}
+/// App widget.
+/// {@endtemplate}
+class App extends StatelessWidget {
+  /// {@macro app}
+  const App({super.key});
 
   @override
-  Widget build(BuildContext context) => const MaterialApp(home: _HomeScreen());
+  Widget build(BuildContext context) =>
+      const MaterialApp(title: 'Badge Manager Example', home: _HomeScreen());
 }
 
 /// {@template main}
@@ -37,30 +54,37 @@ class __HomeScreenState extends State<_HomeScreen> {
     _initPlatformState();
   }
 
+  /// Ensure notification permission is granted
+  /// on Android 13+.
+  Future<void> _ensureNotificationPermission() async {
+    final status = await Permission.notification.status;
+    if (!status.isGranted) {
+      await Permission.notification.request();
+    }
+  }
+
   Future<void> _initPlatformState() async {
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
     if (!mounted) return;
 
-    String supportedString;
+    String result;
     try {
+      await _ensureNotificationPermission();
+
       bool isSupported = await FlutterBadgeManager.isSupported();
-      log('isSupported: $isSupported');
-      if (isSupported) {
-        supportedString = 'Supported';
-      } else {
-        supportedString = 'Not supported';
-      }
+      dev.log('isSupported: $isSupported');
+      result = isSupported ? 'Supported' : 'Not supported';
     } on PlatformException {
-      log('error: PlatformException');
-      supportedString = 'Failed to get badge support.';
-    } on Object catch (_, __) {
-      log('error: Object');
-      supportedString = 'Failed to get badge support.';
+      dev.log('error: PlatformException');
+      result = 'Failed to get badge support.';
+    } on Object catch (_, _) {
+      dev.log('error: Object');
+      result = 'Failed to get badge support.';
     }
 
-    setState(() => _supportedString = supportedString);
+    setState(() => _supportedString = result);
   }
 
   void _addBadge() {
@@ -68,9 +92,18 @@ class __HomeScreenState extends State<_HomeScreen> {
     final messenger = ScaffoldMessenger.maybeOf(context);
     _count++;
     messenger?.clearSnackBars();
+    LocalNotificationsManager.instance
+        .showNotification(
+          id: Random().nextInt(1 << 31),
+          body: 'This is body',
+          title: 'This is title',
+          payload: 'This is payload',
+        )
+        .ignore();
     FlutterBadgeManager.update(_count);
-    messenger
-        ?.showSnackBar(SnackBar(content: Text('Badge count updated: $_count')));
+    messenger?.showSnackBar(
+      SnackBar(content: Text('Badge count updated: $_count')),
+    );
   }
 
   void _remove() {
@@ -79,30 +112,31 @@ class __HomeScreenState extends State<_HomeScreen> {
     _count = 0;
     messenger?.clearSnackBars();
     FlutterBadgeManager.remove();
-    messenger
-        ?.showSnackBar(SnackBar(content: Text('Badge count updated: $_count')));
+    messenger?.showSnackBar(
+      SnackBar(content: Text('Badge count updated: $_count')),
+    );
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: const Text('Plugin example app')),
-        body: SizedBox.expand(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: <Widget>[
-              Text('Badge supported: $_supportedString\n'),
-              ElevatedButton(
-                child: const Text('Add badge'),
-                onPressed: () => _addBadge(),
-              ),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                child: const Text('Remove badge'),
-                onPressed: () => _remove(),
-              ),
-            ],
+    appBar: AppBar(title: const Text('Badge Manager Example')),
+    body: SizedBox.expand(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Text('Badge supported: $_supportedString\n'),
+          ElevatedButton(
+            child: const Text('Add badge'),
+            onPressed: () => _addBadge(),
           ),
-        ),
-      );
+          const SizedBox(height: 16),
+          ElevatedButton(
+            child: const Text('Remove badge'),
+            onPressed: () => _remove(),
+          ),
+        ],
+      ),
+    ),
+  );
 }

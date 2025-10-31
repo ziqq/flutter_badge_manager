@@ -1,22 +1,23 @@
 PODS:
-  - flutter_badge_manager (0.0.1):
+  - flutter_badge_manager_foundation (0.1.0):
+    - Flutter
     - FlutterMacOS
   - FlutterMacOS (1.0.0)
 
 DEPENDENCIES:
-  - flutter_badge_manager (from `Flutter/ephemeral/.symlinks/plugins/flutter_badge_manager/macos`)
+  - flutter_badge_manager_foundation (from `Flutter/ephemeral/.symlinks/plugins/flutter_badge_manager_foundation/darwin`)
   - FlutterMacOS (from `Flutter/ephemeral`)
 
 EXTERNAL SOURCES:
-  flutter_badge_manager:
-    :path: Flutter/ephemeral/.symlinks/plugins/flutter_badge_manager/macos
+  flutter_badge_manager_foundation:
+    :path: Flutter/ephemeral/.symlinks/plugins/flutter_badge_manager_foundation/darwin
   FlutterMacOS:
     :path: Flutter/ephemeral
 
 SPEC CHECKSUMS:
-  flutter_badge_manager: 3604783d2f3395cca35fe42e1360a30c1f1587a4
-  FlutterMacOS: 8f6f14fa908a6fb3fba0cd85dbd81ec4b251fb24
+  flutter_badge_manager_foundation: bcd1f1a72a8a3dcd77ce4f29682bb1776440c5d6
+  FlutterMacOS: d0db08ddef1a9af05a5ec4b724367152bb0500b1
 
-PODFILE CHECKSUM: 7eb978b976557c8c1cd717d8185ec483fd090a82
+PODFILE CHECKSUM: 54d867c82ac51cbd61b565781b9fada492027009
 
 COCOAPODS: 1.16.2

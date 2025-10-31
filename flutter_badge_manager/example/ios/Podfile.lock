@@ -1,22 +1,41 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_badge_manager (0.0.1):
+  - flutter_badge_manager_foundation (0.1.0):
+    - Flutter
+    - FlutterMacOS
+  - flutter_local_notifications (0.0.1):
+    - Flutter
+  - integration_test (0.0.1):
+    - Flutter
+  - permission_handler_apple (9.3.0):
     - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
-  - flutter_badge_manager (from `.symlinks/plugins/flutter_badge_manager/ios`)
+  - flutter_badge_manager_foundation (from `.symlinks/plugins/flutter_badge_manager_foundation/darwin`)
+  - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
+  - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
     :path: Flutter
-  flutter_badge_manager:
-    :path: ".symlinks/plugins/flutter_badge_manager/ios"
+  flutter_badge_manager_foundation:
+    :path: ".symlinks/plugins/flutter_badge_manager_foundation/darwin"
+  flutter_local_notifications:
+    :path: ".symlinks/plugins/flutter_local_notifications/ios"
+  integration_test:
+    :path: ".symlinks/plugins/integration_test/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
 
 SPEC CHECKSUMS:
-  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
-  flutter_badge_manager: cc8853438c2003a59cddf2ed4117a6b93c6e29ef
+  Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
+  flutter_badge_manager_foundation: c0961a8a10be830b2b4b715ac3c992a0624be470
+  flutter_local_notifications: ff50f8405aaa0ccdc7dcfb9022ca192e8ad9688f
+  integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
 
-PODFILE CHECKSUM: 7b44deb7c63bf455c436abb2e50f27e815e57633
+PODFILE CHECKSUM: 9033ba3f6af960faf780f37b4acba278cb77c66f
 
 COCOAPODS: 1.16.2
