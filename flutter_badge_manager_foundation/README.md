@@ -1,79 +1,69 @@
-# flutter_badge_manager
+# flutter_badge_manager_foundation
 
-[![Pub](https://img.shields.io/pub/v/flutter_badge_manager.svg)](https://pub.dartlang.org/packages/flutter_badge_manager)
+The iOS and macOS implementation of [`flutter_badge_manager`](https://pub.dev/packages/flutter_badge_manager).
 
+## Usage
 
-## Description
-This plugin for [Flutter](https://flutter.io) adds the ability to change the badge of the app in the launcher.
-It supports iOS, macOS, and some Android devices (the official API does not support the feature, even on Oreo).
+This is the federated foundation (Darwin) implementation. You normally just depend on `flutter_badge_manager` and this package is pulled in automatically. You do not need to add it to `pubspec.yaml` unless you want to import it directly.
 
-<p align="center">
-  <img
-    src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.docs/ios.png"
-    style="margin:auto" width="600"
-    alt="Android badge"
-    height="228">
-</p>
+If you do import it explicitly, add to your `pubspec.yaml`:
+```yaml
+dependencies:
+  flutter_badge_manager_foundation: ^<latest>
+```
 
-<p align="center">
-  <img
-    src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.docs/android.png"
-    style="margin:auto" width="600"
-    alt="Android badge"
-    height="322">
-</p>
+Then:
+```dart
+import 'package:flutter_badge_manager/flutter_badge_manager.dart';
 
+final supported = await FlutterBadgeManager.isSupported();
+if (supported) {
+  await FlutterBadgeManager.update(3);
+  await FlutterBadgeManager.remove();
+}
+```
 
-## Installation
+## iOS
 
-### iOS
+Requires notification (badge) permission. Request it before updating the badge if you manage permissions manually.
 
-On iOS, the notification permission is required to update the badge.
-It is automatically asked when the badge is added or removed.
-
-Please also add the following to your <your project>/ios/Runner/Info.plist:
+Add (if you need remote notifications background refresh):
 ```xml
+<!-- ios/Runner/Info.plist -->
 <key>UIBackgroundModes</key>
 <array>
-    <string>remote-notification</string>
+  <string>remote-notification</string>
 </array>
 ```
 
-### macOS
+Minimum iOS version: 13.0.
 
-On macOS, the notification permission is required to update the badge.
-It is automatically asked when the badge is added or removed.
+## macOS
 
-Please also add the following to your <your project>/macos/Runner/Info.plist:
+Requires user notification authorization for badge display.
+
+Optional Info.plist key to ensure banner style:
 ```xml
+<!-- macos/Runner/Info.plist -->
 <key>NSUserNotificationAlertStyle</key>
 <string>banner</string>
 ```
 
-### Android
+Minimum macOS version: 10.15.
 
-On Android, no official API exists to show a badge in the launcher. But some devices (Samsung, HTC...) support the feature.
-Thanks to the [Shortcut Badger library](https://github.com/leolin310148/ShortcutBadger/), ~ 16 launchers are supported.
+## API (via main plugin)
 
+- `FlutterBadgeManager.isSupported()`
+- `FlutterBadgeManager.update(int count)` (count >= 0)
+- `FlutterBadgeManager.remove()`
 
-## Example
+Negative counts throw `PlatformException(code: 'invalid_args')`.
 
-First, you just have to import the package in your dart files with:
-```dart
-import 'package:flutter_badge_manager/flutter_badge_manager.dart';
-```
+## Notes
 
-Then you can add a badge:
-```dart
-FlutterBadgeManager.update(1);
-```
+- Badge changes are applied via `UIApplication.shared.applicationIconBadgeNumber` (iOS) and `NSApplication.shared.dockTile.badgeLabel` (macOS).
+- Permission prompts are not auto-triggered if you never requested notifications; make sure to request authorization when needed.
 
-Remove a badge:
-```dart
-FlutterBadgeManager.remove();
-```
+## License
 
-Or just check if the device supports this feature with:
-```dart
-FlutterBadgeManager.isSupported();
-```
+BSD 3-Clause (see LICENSE).
