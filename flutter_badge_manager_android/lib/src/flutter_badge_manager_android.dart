@@ -20,7 +20,8 @@ class FlutterBadgeManagerAndroid extends FlutterBadgeManagerPlatform {
   /// Returns an instance using a specified [FirebaseApp].
   factory FlutterBadgeManagerAndroid._instanceFor({
     @visibleForOverriding MethodChannelFlutterBadgeManager? channel,
-  }) => FlutterBadgeManagerAndroid._(channel: channel);
+  }) =>
+      FlutterBadgeManagerAndroid._(channel: channel);
 
   final MethodChannelFlutterBadgeManager _channel;
 

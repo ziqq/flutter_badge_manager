@@ -1,8 +1,6 @@
 name: flutter_badge_manager_android
 description: Android implementation of the flutter_badge_manager plugin.
-version: 0.1.0
-
-publish_to: 'none'
+version: 0.0.1
 
 homepage: https://github.com/ziqq/flutter_badge_manager/flutter_badge_manager_android
 
@@ -33,9 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # flutter_badge_manager_platform_interface: ^0.0.1
-  flutter_badge_manager_platform_interface:
-    path: ../flutter_badge_manager_platform_interface
+  flutter_badge_manager_platform_interface: ^0.0.1
+  # flutter_badge_manager_platform_interface:
+  #   path: ../flutter_badge_manager_platform_interface
 
 
 dev_dependencies:
@@ -46,7 +44,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  pigeon: ^25.1.0
+  pigeon: ^26.0.2
 
   # Linting
   flutter_lints: ^6.0.0
