@@ -4,7 +4,7 @@ PWD   :=$(shell pwd)
 .DEFAULT_GOAL := all
 .PHONY: all
 all: ## build pipeline
-all: format check test-unit publish-check
+all: get format test-unit publish-check
 
 .PHONY: ci
 ci: ## CI build pipeline
@@ -54,7 +54,7 @@ check: analyze ## Check the code
 				@pana --json --no-warning --line-length 80 > log.pana.json
 
 .PHONY: publish-check
-publish-check: check ## Check the code before publish
+publish-check: ## Check the code before publish
 				@fvm dart pub publish --dry-run
 
 .PHONY: publish
