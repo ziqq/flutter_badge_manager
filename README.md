@@ -12,7 +12,7 @@ Plugin to set / clear application badge numbers on iOS, macOS and supported Andr
 
 <p align="center">
   <img
-    src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.docs/ios.png"
+    src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.github/images/ios.png"
     style="margin:auto" width="600"
     alt="Android badge"
     height="228">
@@ -20,7 +20,7 @@ Plugin to set / clear application badge numbers on iOS, macOS and supported Andr
 
 <p align="center">
   <img
-    src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.docs/android.png"
+    src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.github/images/android.png"
     style="margin:auto" width="600"
     alt="Android badge"
     height="322">
