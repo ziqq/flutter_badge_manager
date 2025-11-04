@@ -77,7 +77,7 @@ jobs:
 
       - name: Analyze
         working-directory: ${{ matrix.path }}
-        run: dart analyze --fatal-warnings --no-fatal-infos /lib /test
+        run: dart analyze --fatal-infos --fatal-warnings lib/
 
       - name: Test (with coverage if Dart/Flutter tests exist)
         working-directory: ${{ matrix.path }}
