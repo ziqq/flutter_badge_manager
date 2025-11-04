@@ -1,4 +1,4 @@
-name: "Checkout"
+name: "Checkout platform interface"
 
 
 on:
@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./flutter_badge_manager/
+        working-directory: ./flutter_badge_manager_platform_interface/
     env:
       pub-cache-name: pub
       threshold: 50
@@ -74,7 +74,7 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
-          files: "README.md, CHANGELOG.md, LICENSE, example"
+          files: "README.md, CHANGELOG.md, LICENSE"
 
       - name: ❔ File exists
         if: steps.check_files.outputs.files_exists == 'true'
@@ -82,12 +82,6 @@ jobs:
 
       - name: 🔎 Check description
         run: echo | grep -q Description README.md ; echo $?
-
-      - name: 🔎 Check example
-        run: echo | grep -q Example README.md ; echo $?
-
-      - name: 🔎 Check installation
-        run: echo | grep -q Installation README.md ; echo $?
 
       - name: 👷 Install dependencies
         run: flutter pub get
@@ -106,74 +100,74 @@ jobs:
         run: dart analyze --fatal-warnings --no-fatal-infos lib/ test/
 
   testing:
-    name: "Testing"
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./flutter_badge_manager/
-    env:
-      pub-cache-name: pub
-      threshold: 50
-    timeout-minutes: 15
-    steps:
-      - name: 🚂 Get latest code
-        id: checkout
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            .github
-            pubspec.yaml
-            lib
-            test
-            analysis_options.yaml
-            CHANGELOG.md
+      name: "Testing"
+      runs-on: ubuntu-latest
+      defaults:
+        run:
+          working-directory: ./flutter_badge_manager_platform_interface/
+      env:
+        pub-cache-name: pub
+        threshold: 50
+      timeout-minutes: 15
+      steps:
+        - name: 🚂 Get latest code
+          id: checkout
+          uses: actions/checkout@v4
+          with:
+            sparse-checkout: |
+              .github
+              pubspec.yaml
+              lib
+              test
+              analysis_options.yaml
+              CHANGELOG.md
 
-      - name: 👷 Install flutter
-        uses: subosito/flutter-action@v2
-        id: install-flutter
-        with:
-          channel: 'stable'
+        - name: 👷 Install flutter
+          uses: subosito/flutter-action@v2
+          id: install-flutter
+          with:
+            channel: 'stable'
 
-      - name: 🔎 Check flutter version
-        id: check-flutter-version
-        run: flutter --version
+        - name: 🔎 Check flutter version
+          id: check-flutter-version
+          run: flutter --version
 
-      - name: 📤 Restore Pub modules
-        id: cache-pub-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            $PWD/.pub_cache/
-          key: ${{ runner.os }}-pub-${{ env.pub-cache-name }}-${{ hashFiles('**/pubspec.yaml') }}
+        - name: 📤 Restore Pub modules
+          id: cache-pub-restore
+          uses: actions/cache/restore@v4
+          with:
+            path: |
+              $PWD/.pub_cache/
+            key: ${{ runner.os }}-pub-${{ env.pub-cache-name }}-${{ hashFiles('**/pubspec.yaml') }}
 
-      - name: 🗄️ Export Pub cache directory
-        id: export-pub-cache
-        timeout-minutes: 1
-        run: |
-          export PUB_CACHE=$PWD/.pub_cache/
-          export PATH="$PATH":"$HOME/.pub-cache/bin"
-          echo "${HOME}/.pub-cache/bin" >> $GITHUB_PATH
+        - name: 🗄️ Export Pub cache directory
+          id: export-pub-cache
+          timeout-minutes: 1
+          run: |
+            export PUB_CACHE=$PWD/.pub_cache/
+            export PATH="$PATH":"$HOME/.pub-cache/bin"
+            echo "${HOME}/.pub-cache/bin" >> $GITHUB_PATH
 
-      - name: 👷 Install Dependencies
-        id: install-dependencies
-        timeout-minutes: 2
-        run: |
-          apt-get update && apt-get install -y lcov
-          flutter pub get --no-example
+        - name: 👷 Install Dependencies
+          id: install-dependencies
+          timeout-minutes: 2
+          run: |
+            apt-get update && apt-get install -y lcov
+            flutter pub get --no-example
 
-      - name: 📥 Save Pub modules
-        id: cache-pub-save
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            $PWD/.pub_cache/
-          key: ${{ runner.os }}-pub-${{ env.pub-cache-name }}-${{ hashFiles('**/pubspec.yaml') }}
+        - name: 📥 Save Pub modules
+          id: cache-pub-save
+          uses: actions/cache/save@v4
+          with:
+            path: |
+              $PWD/.pub_cache/
+            key: ${{ runner.os }}-pub-${{ env.pub-cache-name }}-${{ hashFiles('**/pubspec.yaml') }}
 
-      - name: 🧪 Run tests
-        timeout-minutes: 2
-        env:
-          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
-        if: success()
-        run: |
-          flutter test --coverage
-          bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info
+        - name: 🧪 Run tests
+          timeout-minutes: 2
+          env:
+            CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+          if: success()
+          run: |
+            flutter test --coverage
+            bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info
