@@ -3,6 +3,31 @@ name: "Checkout"
 
 on:
   workflow_call:
+  workflow_dispatch:
+  push:
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
+      - "feature/**"
+      - "bugfix/**"
+      - "hotfix/**"
+      - "support/**"
+    paths:
+      - "pubspec.yaml"
+      - "pubspec.lock"
+      - ".github/**.yaml"
+      - ".github/**.yml"
+      - "lib/**.dart"
+      - "test/**.dart"
+      - "packages/**"
+      - "android/**"
+      - "windows/**"
+      - "linux/**"
+      - "macos/**"
+      - "ios/**"
+      - "web/**"
 
 
 jobs:
