@@ -1,204 +1,151 @@
-name: "Checkout"
-
+name: CI
 
 on:
-  workflow_call:
-  workflow_dispatch:
   push:
-    branches:
-      - "main"
-  pull_request:
-    branches:
-      - "main"
-      - "feature/**"
-      - "bugfix/**"
-      - "hotfix/**"
-      - "support/**"
+    branches: [ main ]
     paths:
-      - "pubspec.yaml"
-      - "pubspec.lock"
-      - ".github/**.yaml"
-      - ".github/**.yml"
-      - "lib/**.dart"
-      - "test/**.dart"
-      - "packages/**"
-      - "android/**"
-      - "windows/**"
-      - "linux/**"
-      - "macos/**"
-      - "ios/**"
-      - "web/**"
+      - ".github/workflows/**"
+      - "flutter_badge_manager/**"
+      - "flutter_badge_manager_platform_interface/**"
+      - "flutter_badge_manager_android/**"
+      - "flutter_badge_manager_foundation/**"
+  pull_request:
+    branches: [ main ]
+    paths:
+      - ".github/workflows/**"
+      - "flutter_badge_manager/**"
+      - "flutter_badge_manager_platform_interface/**"
+      - "flutter_badge_manager_android/**"
+      - "flutter_badge_manager_foundation/**"
+  workflow_dispatch:
 
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  checkout:
-    name: "Checkout"
+  detect-changes:
+    name: Detect changed packages
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./flutter_badge_manager/
-    env:
-      pub-cache-name: pub
-      threshold: 50
-    timeout-minutes: 15
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - name: 🚂 Get latest code
-        id: checkout
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: set-matrix
+        run: |
+          # Простейшая логика: всегда проверяем все (можно усложнить через git diff)
+          MATRIX_JSON='{"include":[
+            {"name":"platform_interface","path":"flutter_badge_manager_platform_interface"},
+            {"name":"android","path":"flutter_badge_manager_android"},
+            {"name":"foundation","path":"flutter_badge_manager_foundation"},
+            {"name":"plugin","path":"flutter_badge_manager"}
+          ]}'
+          echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
+
+  package-ci:
+    name: Package (${{ matrix.name }})
+    needs: detect-changes
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix: ${{ fromJson(needs.detect-changes.outputs.matrix) }}
+    steps:
+      - name: Checkout
         uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            .github
-            pubspec.yaml
-            lib
-            test
-            analysis_options.yaml
-            CHANGELOG.md
 
-      - name: 👷 Install flutter
+      - name: Install Flutter
         uses: subosito/flutter-action@v2
-        id: install-flutter
         with:
-          channel: 'stable'
+          channel: stable
 
-      - name: 🔎 Check flutter version
-        id: check-flutter-version
+      - name: Flutter version
         run: flutter --version
 
-      - name: 📤 Restore Pub modules
-        id: cache-pub-restore
-        uses: actions/cache/restore@v4
+      - name: Cache pub
+        uses: actions/cache@v4
         with:
           path: |
-            $PWD/.pub_cache/
-          key: ${{ runner.os }}-pub-${{ env.pub-cache-name }}-${{ hashFiles('**/pubspec.yaml') }}
+            ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ matrix.name }}-${{ hashFiles(format('{0}/pubspec.lock', matrix.path)) }}
+          restore-keys: |
+            ${{ runner.os }}-pub-${{ matrix.name }}-
+            ${{ runner.os }}-pub-
 
-      - name: 🗄️ Export Pub cache directory
-        id: export-pub-cache
-        timeout-minutes: 1
-        run: |
-          export PUB_CACHE=$PWD/.pub_cache/
-          export PATH="$PATH":"$HOME/.pub-cache/bin"
-          echo "${HOME}/.pub-cache/bin" >> $GITHUB_PATH
-
-      - name: 👷 Install Dependencies
-        id: install-dependencies
-        timeout-minutes: 2
-        run: |
-          apt-get update && apt-get install -y lcov
-          flutter pub get --no-example
-
-      - name: 📥 Save Pub modules
-        id: cache-pub-save
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            $PWD/.pub_cache/
-          key: ${{ runner.os }}-pub-${{ env.pub-cache-name }}-${{ hashFiles('**/pubspec.yaml') }}
-
-      - name: 🔎 Check content
-        id: check_files
-        uses: andstor/file-existence-action@v1
-        with:
-          files: "README.md, CHANGELOG.md, LICENSE, example"
-
-      - name: ❔ File exists
-        if: steps.check_files.outputs.files_exists == 'true'
-        run: echo Content is ok!
-
-      - name: 🔎 Check description
-        run: echo | grep -q Description README.md ; echo $?
-
-      - name: 🔎 Check example
-        run: echo | grep -q Example README.md ; echo $?
-
-      - name: 🔎 Check installation
-        run: echo | grep -q Installation README.md ; echo $?
-
-      - name: 👷 Install dependencies
+      - name: Pub get
+        working-directory: ${{ matrix.path }}
         run: flutter pub get
 
-      - name: 🧪 Run dependency validator
+      - name: Format check
+        working-directory: ${{ matrix.path }}
+        run: dart format --set-exit-if-changed -l 80 .
+
+      - name: Analyze
+        working-directory: ${{ matrix.path }}
+        run: dart analyze --fatal-warnings --no-fatal-infos .
+
+      - name: Test (with coverage if Dart/Flutter tests exist)
+        working-directory: ${{ matrix.path }}
         run: |
-          dart pub global activate dependency_validator
-          dart pub global run dependency_validator:dependency_validator
+          if ls test/*.dart >/dev/null 2>&1; then
+            flutter test --coverage
+          else
+            echo "No tests"
+          fi
 
-      - name: 🔎 Check format
-        id: check_format
-        run: dart format --set-exit-if-changed -l 80 -o none lib/
-
-      - name: 📈 Check analyzer
-        id: check_analyzer
-        run: dart analyze --fatal-warnings --no-fatal-infos lib/ test/
-
-  testing:
-    name: "Testing"
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./flutter_badge_manager/
-    env:
-      pub-cache-name: pub
-      threshold: 50
-    timeout-minutes: 15
-    steps:
-      - name: 🚂 Get latest code
-        id: checkout
-        uses: actions/checkout@v4
-        with:
-          sparse-checkout: |
-            .github
-            pubspec.yaml
-            lib
-            test
-            analysis_options.yaml
-            CHANGELOG.md
-
-      - name: 👷 Install flutter
-        uses: subosito/flutter-action@v2
-        id: install-flutter
-        with:
-          channel: 'stable'
-
-      - name: 🔎 Check flutter version
-        id: check-flutter-version
-        run: flutter --version
-
-      - name: 📤 Restore Pub modules
-        id: cache-pub-restore
-        uses: actions/cache/restore@v4
-        with:
-          path: |
-            $PWD/.pub_cache/
-          key: ${{ runner.os }}-pub-${{ env.pub-cache-name }}-${{ hashFiles('**/pubspec.yaml') }}
-
-      - name: 🗄️ Export Pub cache directory
-        id: export-pub-cache
-        timeout-minutes: 1
-        run: |
-          export PUB_CACHE=$PWD/.pub_cache/
-          export PATH="$PATH":"$HOME/.pub-cache/bin"
-          echo "${HOME}/.pub-cache/bin" >> $GITHUB_PATH
-
-      - name: 👷 Install Dependencies
-        id: install-dependencies
-        timeout-minutes: 2
-        run: |
-          apt-get update && apt-get install -y lcov
-          flutter pub get --no-example
-
-      - name: 📥 Save Pub modules
-        id: cache-pub-save
-        uses: actions/cache/save@v4
-        with:
-          path: |
-            $PWD/.pub_cache/
-          key: ${{ runner.os }}-pub-${{ env.pub-cache-name }}-${{ hashFiles('**/pubspec.yaml') }}
-
-      - name: 🧪 Run tests
-        timeout-minutes: 2
-        env:
-          CODECOV_TOKEN: ${{secrets.CODECOV_TOKEN}}
+      - name: Upload partial coverage artifact
         if: success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-${{ matrix.name }}
+          path: ${{ matrix.path }}/coverage/lcov.info
+          if-no-files-found: ignore
+
+  coverage-merge:
+    name: Merge coverage & Codecov
+    needs: package-ci
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - uses: actions/checkout@v4
+      - name: Download coverage artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: coverage_parts
+          pattern: coverage-*
+          merge-multiple: true
+      - name: Merge lcov
         run: |
-          flutter test --coverage
-          bash <(curl -s https://codecov.io/bash) -f coverage/lcov.info
+          sudo apt-get update && sudo apt-get install -y lcov
+          mkdir merged || true
+          FILES=$(find coverage_parts -name "lcov.info")
+          if [ -z "$FILES" ]; then
+            echo "No coverage files"; exit 0
+          fi
+          # Начальный файл
+            FIRST=true
+            for f in $FILES; do
+              if $FIRST; then
+                cp "$f" merged/lcov.info
+                FIRST=false
+              else
+                lcov -a merged/lcov.info -a "$f" -o merged/lcov.tmp
+                mv merged/lcov.tmp merged/lcov.info
+              fi
+            done
+          lcov --remove merged/lcov.info '*_test.dart' -o merged/lcov.info || true
+          echo "Merged coverage:"
+          lcov --summary merged/lcov.info || true
+      - name: Upload merged artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-merged
+          path: merged/lcov.info
+          if-no-files-found: ignore
+      - name: Upload to Codecov
+        if: env.CODECOV_TOKEN != ''
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+        run: |
+          bash <(curl -s https://codecov.io/bash) -f merged/lcov.info || echo "Codecov upload skipped"
