@@ -1,6 +1,6 @@
 PODS:
   - Flutter (1.0.0)
-  - flutter_badge_manager_foundation (0.1.0):
+  - flutter_badge_manager_foundation (0.0.2):
     - Flutter
     - FlutterMacOS
   - flutter_local_notifications (0.0.1):
@@ -31,7 +31,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
-  flutter_badge_manager_foundation: c0961a8a10be830b2b4b715ac3c992a0624be470
+  flutter_badge_manager_foundation: 7166b77ac289e999b7ddfd85db08b45c718389f7
   flutter_local_notifications: ff50f8405aaa0ccdc7dcfb9022ca192e8ad9688f
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2

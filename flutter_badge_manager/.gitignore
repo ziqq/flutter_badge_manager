@@ -28,8 +28,8 @@ migrate_working_dir/
 **/build
 **/doc/api/
 **/ios/Flutter/.last_build_id
+**/ios/Pods/
 **/Flutter/ephemeral/
-**/Pods/
 .dart_tool/
 .flutter-plugins
 .flutter-plugins-dependencies
