@@ -11,6 +11,7 @@
 .svn/
 .swiftpm/
 migrate_working_dir/
+**/**/.DS_Store
 
 # IntelliJ related
 *.iml
@@ -36,42 +37,54 @@ migrate_working_dir/
 .pub-cache/
 .pub/
 
-# Platform-specific generated files
+# Platform-specific files
+
+## Platform-specific files (Android)
 **/android/**/GeneratedPluginRegistrant.*
+**/android/*.iml
+**/android/.gradle
+**/android/gradlew
+**/android/gradlew.bat
+**/android/local.properties
+**/android/.idea/workspace.xml
+**/android/.idea/libraries
+**/android/build
+**/android/captures
+**/android/**/GeneratedPluginRegistrant.java
+**/android/**/gen/*
+**/android/**/.cxx/**
+
+## Platform-specific files (iOS and macOS)
 **/ios/Runner/GeneratedPluginRegistrant.*
 **/macos/Flutter/GeneratedPluginRegistrant.*
+### Xcode-related
+**/dgph
+**/xcuserdata/
+
+## Platform-specific files (Windows)
 **/windows/flutter/generated_plugin_registrant.*
 **/windows/flutter/generated_plugins.*
+
+## Platform-specific files (Linux)
 **/linux/flutter/generated_plugin_registrant.*
 **/linux/flutter/generated_plugins.*
 
-# Xcode-related
-**/dgph
-**/xcuserdata/
 
 # Pana
 log.pana.json
 
 # Test
-coverage/
+integration_test/screenshots
 .coverage/
+coverage/
+reports/
 /test/**/*.json
 !/test/**/fixtures/*.json
 /test/.test_coverage.dart
-reports/
-integration_test/screenshots
 
 # Temp
 /tmp
 /temp
 
-# GeneratedPluginRegistrant
-**/android/**/GeneratedPluginRegistrant.java
-**/ios/Runner/GeneratedPluginRegistrant.*
-**/macos/Flutter/GeneratedPluginRegistrant.swift
-
 # FVM Version Cache
 .fvm/
-
-# Android
-**/.cxx/
