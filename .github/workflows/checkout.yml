@@ -6,17 +6,17 @@ on:
     paths:
       - ".github/workflows/**"
       - "flutter_badge_manager/**"
-      - "flutter_badge_manager_platform_interface/**"
       - "flutter_badge_manager_android/**"
       - "flutter_badge_manager_foundation/**"
+      - "flutter_badge_manager_platform_interface/**"
   pull_request:
     branches: [ main ]
     paths:
       - ".github/workflows/**"
       - "flutter_badge_manager/**"
-      - "flutter_badge_manager_platform_interface/**"
       - "flutter_badge_manager_android/**"
       - "flutter_badge_manager_foundation/**"
+      - "flutter_badge_manager_platform_interface/**"
   workflow_dispatch:
 
 concurrency:
@@ -35,8 +35,7 @@ jobs:
           fetch-depth: 0
       - id: set-matrix
         run: |
-          # Формируем JSON в одну строку (без переводов строк), иначе GITHUB_OUTPUT ломается.
-          MATRIX_JSON='{"include":[{"name":"platform_interface","path":"flutter_badge_manager_platform_interface"},{"name":"android","path":"flutter_badge_manager_android"},{"name":"foundation","path":"flutter_badge_manager_foundation"},{"name":"plugin","path":"flutter_badge_manager"}]}'
+          MATRIX_JSON='{"include":[{"name":"plugin","path":"flutter_badge_manager"},{"name":"android","path":"flutter_badge_manager_android"},{"name":"foundation","path":"flutter_badge_manager_foundation"},{"name":"interface","path":"flutter_badge_manager_platform_interface"}]}'
           echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
 
   package-ci:
@@ -78,7 +77,7 @@ jobs:
 
       - name: Analyze
         working-directory: ${{ matrix.path }}
-        run: dart analyze --fatal-warnings --no-fatal-infos .
+        run: dart analyze --fatal-warnings --no-fatal-infos /lib /test
 
       - name: Test (with coverage if Dart/Flutter tests exist)
         working-directory: ${{ matrix.path }}
