@@ -40,19 +40,20 @@ migrate_working_dir/
 # Platform-specific files
 
 ## Platform-specific files (Android)
-**/android/**/GeneratedPluginRegistrant.*
+**/android/.idea/workspace.xml
+**/android/.idea/libraries
 **/android/*.iml
 **/android/.gradle
 **/android/gradlew
 **/android/gradlew.bat
 **/android/local.properties
-**/android/.idea/workspace.xml
-**/android/.idea/libraries
 **/android/build
 **/android/captures
 **/android/**/GeneratedPluginRegistrant.java
-**/android/**/gen/*
+**/android/**/GeneratedPluginRegistrant.*
+**/android/**/gradle-wrapper.jar
 **/android/**/.cxx/**
+**/android/**/gen/*
 
 ## Platform-specific files (iOS and macOS)
 **/ios/Runner/GeneratedPluginRegistrant.*
