@@ -8,5 +8,5 @@
 import 'package:flutter_test/flutter_test.dart';
 
 void main() => group('Widget_tests -', () {
-      testWidgets('FlutterBadgeManager smoke test', (tester) async {});
-    });
+  testWidgets('FlutterBadgeManager smoke test', (tester) async {});
+});
