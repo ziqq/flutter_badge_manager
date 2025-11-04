@@ -35,14 +35,9 @@ jobs:
           fetch-depth: 0
       - id: set-matrix
         run: |
-          # Простейшая логика: всегда проверяем все (можно усложнить через git diff)
-          MATRIX_JSON='{"include":[
-            {"name":"platform_interface","path":"flutter_badge_manager_platform_interface"},
-            {"name":"android","path":"flutter_badge_manager_android"},
-            {"name":"foundation","path":"flutter_badge_manager_foundation"},
-            {"name":"plugin","path":"flutter_badge_manager"}
-          ]}'
-          echo "matrix=${MATRIX_JSON}" >> $GITHUB_OUTPUT
+          # Формируем JSON в одну строку (без переводов строк), иначе GITHUB_OUTPUT ломается.
+          MATRIX_JSON='{"include":[{"name":"platform_interface","path":"flutter_badge_manager_platform_interface"},{"name":"android","path":"flutter_badge_manager_android"},{"name":"foundation","path":"flutter_badge_manager_foundation"},{"name":"plugin","path":"flutter_badge_manager"}]}'
+          echo "matrix=$MATRIX_JSON" >> $GITHUB_OUTPUT
 
   package-ci:
     name: Package (${{ matrix.name }})
