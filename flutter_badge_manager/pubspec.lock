@@ -66,10 +66,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_badge_manager_android
-      sha256: ca9c623f09f0198304ca388337d25a9bddcd512d44c80e001f2db7b04795a3b6
+      sha256: df6f17e5715a7f957a2cdd68e94b1a6b1484d7a32d8909480ccb63284140e085
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3"
   flutter_badge_manager_foundation:
     dependency: "direct main"
     description:
