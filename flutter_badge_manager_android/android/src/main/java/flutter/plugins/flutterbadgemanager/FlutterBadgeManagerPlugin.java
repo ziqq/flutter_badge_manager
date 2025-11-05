@@ -23,6 +23,7 @@ public class FlutterBadgeManagerPlugin implements MethodCallHandler, FlutterPlug
   private static final String CHANNEL_NAME = "github.com/ziqq/flutter_badge_manager";
   private static final String NOTIF_CHANNEL_ID = "badge_channel";
   private static final int NOTIF_ID = 7001;
+  // private static final boolean ENABLE_NOTIFICATION_BADGE = false;
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
@@ -71,16 +72,18 @@ public class FlutterBadgeManagerPlugin implements MethodCallHandler, FlutterPlug
   }
 
   private void applyBadge(int count) {
-    // ShortcutBadger (попытаемся, если поддерживается)
+    // Try ShortcutBadger if possible
     try {
       if (count == 0) {
         ShortcutBadger.removeCount(applicationContext);
       } else {
         ShortcutBadger.applyCount(applicationContext, count);
       }
-    } catch (Exception ignored) {}
+    } catch (Exception ignored) {
+      // Removed: all NotificationManager / NotificationChannel logic to avoid any user-visible notifications.
+    }
 
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+    /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && ENABLE_NOTIFICATION_BADGE) {
       NotificationManager nm = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
       if (nm == null) return;
 
@@ -114,6 +117,6 @@ public class FlutterBadgeManagerPlugin implements MethodCallHandler, FlutterPlug
 
       Notification notification = builder.build();
       nm.notify(NOTIF_ID, notification);
-    }
+    } */
   }
 }
