@@ -5,7 +5,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_platform_interface.dart';
 
-/// The entry point for accessing a app badge.
+/// The entry point for accessing an app badge.
 ///
 /// You can get an instance
 /// by calling [MethodChannelFlutterBadgeManager.instance].
@@ -29,8 +29,8 @@ class MethodChannelFlutterBadgeManager extends FlutterBadgeManagerPlatform {
   /// Checks if the device supports app badges.
   @override
   Future<bool> isSupported() async {
-    final respnse = await _channel.invokeMethod('isSupported');
-    if (respnse case bool? isSupported) return isSupported ?? false;
+    final response = await _channel.invokeMethod('isSupported');
+    if (response case bool? isSupported) return isSupported ?? false;
     return false;
   }
 
