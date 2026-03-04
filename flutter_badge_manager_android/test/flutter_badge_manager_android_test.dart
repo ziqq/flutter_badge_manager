@@ -79,4 +79,44 @@ void main() => group('FlutterBadgeManagerAndroid', () {
         expect(recordedCalls.length, 1);
         expect(recordedCalls.first.method, 'update');
       });
+
+      test('update with zero count is valid', () async {
+        await FlutterBadgeManagerAndroid.instance.update(0);
+        expect(recordedCalls.length, 1);
+        expect(recordedCalls.first.method, 'update');
+        expect((recordedCalls.first.arguments as Map)['count'], 0);
+      });
+
+      test('update with large count is accepted', () async {
+        await FlutterBadgeManagerAndroid.instance.update(999999);
+        expect(recordedCalls.length, 1);
+        expect((recordedCalls.first.arguments as Map)['count'], 999999);
+      });
+
+      test('instance is FlutterBadgeManagerPlatform', () {
+        expect(
+          FlutterBadgeManagerAndroid.instance,
+          isA<FlutterBadgeManagerPlatform>(),
+        );
+      });
+
+      test('multiple sequential calls order', () async {
+        await FlutterBadgeManagerAndroid.instance.update(1);
+        await FlutterBadgeManagerAndroid.instance.update(2);
+        await FlutterBadgeManagerAndroid.instance.remove();
+        expect(
+          recordedCalls.map((c) => c.method).toList(),
+          ['update', 'update', 'remove'],
+        );
+      });
+
+      test('isSupported returns false when channel returns false', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (call) async {
+          recordedCalls.add(call);
+          return false;
+        });
+        final value = await FlutterBadgeManagerAndroid.instance.isSupported();
+        expect(value, isFalse);
+      });
     });

@@ -49,6 +49,26 @@ void main() => group('FlutterBadgeManager -', () {
         expect(calls.single.method, 'isSupported');
       });
 
+      test('isSupported returns false when channel returns false', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(methodChannel, (call) async {
+          calls.add(call);
+          return false;
+        });
+        final ok = await FlutterBadgeManager.isSupported();
+        expect(ok, isFalse);
+      });
+
+      test('isSupported returns false when channel returns null', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(methodChannel, (call) async {
+          calls.add(call);
+          return null;
+        });
+        final ok = await FlutterBadgeManager.isSupported();
+        expect(ok, isFalse);
+      });
+
       test('update sends count', () async {
         await FlutterBadgeManager.update(5);
         expect(calls.length, 1);
@@ -56,9 +76,38 @@ void main() => group('FlutterBadgeManager -', () {
         expect((calls.first.arguments as Map)['count'], 5);
       });
 
+      test('update sends zero count', () async {
+        await FlutterBadgeManager.update(0);
+        expect(calls.length, 1);
+        expect(calls.first.method, 'update');
+        expect((calls.first.arguments as Map)['count'], 0);
+      });
+
+      test('negative update throws PlatformException', () async {
+        expect(
+          () => FlutterBadgeManager.update(-1),
+          throwsA(isA<PlatformException>()),
+        );
+      });
+
       test('remove calls channel', () async {
         await FlutterBadgeManager.remove();
         expect(calls.length, 1);
         expect(calls.first.method, 'remove');
+      });
+
+      test('instance getter returns new API FlutterBadgeManager', () {
+        final instance = FlutterBadgeManager.instance;
+        expect(instance, isNotNull);
+      });
+
+      test('multiple sequential calls', () async {
+        await FlutterBadgeManager.update(1);
+        await FlutterBadgeManager.update(2);
+        await FlutterBadgeManager.remove();
+        expect(
+          calls.map((c) => c.method).toList(),
+          ['update', 'update', 'remove'],
+        );
       });
     });

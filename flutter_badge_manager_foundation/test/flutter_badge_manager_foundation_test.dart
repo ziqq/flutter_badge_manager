@@ -5,6 +5,7 @@
 
 import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager_foundation/flutter_badge_manager_foundation.dart';
+import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() => group('FlutterBadgeManagerFoundation', () {
@@ -69,5 +70,59 @@ void main() => group('FlutterBadgeManagerFoundation', () {
         await FlutterBadgeManagerFoundation.instance.update(2);
         await FlutterBadgeManagerFoundation.instance.remove();
         expect(log.map((e) => e.method).toList(), ['update', 'remove']);
+      });
+
+      test('singleton instance is stable', () {
+        final a = FlutterBadgeManagerFoundation.instance;
+        final b = FlutterBadgeManagerFoundation.instance;
+        expect(identical(a, b), isTrue);
+      });
+
+      test('registerWith sets platform instance', () {
+        FlutterBadgeManagerFoundation.registerWith();
+        expect(
+          FlutterBadgeManagerPlatform.instance,
+          same(FlutterBadgeManagerFoundation.instance),
+        );
+      });
+
+      test('instance is FlutterBadgeManagerPlatform', () {
+        expect(
+          FlutterBadgeManagerFoundation.instance,
+          isA<FlutterBadgeManagerPlatform>(),
+        );
+      });
+
+      test('update with zero count is valid', () async {
+        await FlutterBadgeManagerFoundation.instance.update(0);
+        expect(log.single.method, 'update');
+        expect((log.single.arguments as Map)['count'], 0);
+      });
+
+      test('update with large count', () async {
+        await FlutterBadgeManagerFoundation.instance.update(999999);
+        expect(log.single.method, 'update');
+        expect((log.single.arguments as Map)['count'], 999999);
+      });
+
+      test('isSupported returns false when channel returns false', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(testChannel, (methodCall) async {
+          log.add(methodCall);
+          return false;
+        });
+        final result =
+            await FlutterBadgeManagerFoundation.instance.isSupported();
+        expect(result, isFalse);
+      });
+
+      test('sequential update remove update', () async {
+        await FlutterBadgeManagerFoundation.instance.update(1);
+        await FlutterBadgeManagerFoundation.instance.remove();
+        await FlutterBadgeManagerFoundation.instance.update(3);
+        expect(
+          log.map((e) => e.method).toList(),
+          ['update', 'remove', 'update'],
+        );
       });
     });
