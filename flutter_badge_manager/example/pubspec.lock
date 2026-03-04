@@ -100,15 +100,15 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.0.3"
+    version: "0.0.4"
   flutter_badge_manager_android:
     dependency: transitive
     description:
       name: flutter_badge_manager_android
-      sha256: df6f17e5715a7f957a2cdd68e94b1a6b1484d7a32d8909480ccb63284140e085
+      sha256: feae3719161bf09a4abeee9409a0232aa55662560fe9b4647f8085a140196ae8
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4"
   flutter_badge_manager_foundation:
     dependency: transitive
     description:
@@ -121,10 +121,10 @@ packages:
     dependency: transitive
     description:
       name: flutter_badge_manager_platform_interface
-      sha256: "148b98efabf8ed4aad7a9fc32d345b40063806eeb9e6af332ccb1f1767627879"
+      sha256: b1f6046411c90ad6438e7a8766fd43d9ce361e973d02d1d11a4a6d412d15af06
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3"
   flutter_driver:
     dependency: transitive
     description: flutter

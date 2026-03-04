@@ -9,13 +9,13 @@ import 'package:flutter/services.dart';
 import 'flutter_badge_manager.dart' as badge_manager;
 
 /// {@template flutter_badge_manager}
-/// A Flutter plugin to manage app badges on Android and iOS.
+/// A Flutter plugin to manage app badges on Android, iOS and macOS.
 /// {@endtemplate}
 final class FlutterBadgeManager {
   /// {@macro flutter_badge_manager}
   const FlutterBadgeManager._();
 
-  /// Instance делегат (новый стиль): FlutterBadgeManager.instance.update(3)
+  /// Instance delegate (new style): `FlutterBadgeManager.instance.update(3)`.
   static final badge_manager.FlutterBadgeManager instance =
       badge_manager.FlutterBadgeManager.instance;
 

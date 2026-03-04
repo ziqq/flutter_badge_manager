@@ -13,7 +13,7 @@ import 'package:flutter_badge_manager/flutter_badge_manager.dart';
 /// A Flutter plugin to manage app badges on Android, iOS and macOS.
 /// {@endtemplate}
 final class FlutterBadgeManager {
-  /// Use [SharePlus.instance] to access the [share] method.
+  /// Creates a private instance bound to the given [platform].
   FlutterBadgeManager._(this._platform);
 
   /// Platform interface
