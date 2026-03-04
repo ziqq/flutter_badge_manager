@@ -1,3 +1,6 @@
+## 0.0.4
+- **CHANGED**: Updated dependencies, code cleanup, and minor refactoring. No functional changes.
+
 ## 0.0.3
 - **FIXED**: Removed empty notification badge
 -

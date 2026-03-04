@@ -16,8 +16,7 @@ class FlutterBadgeManagerAndroid extends FlutterBadgeManagerPlatform {
     @visibleForOverriding MethodChannelFlutterBadgeManager? channel,
   }) : _channel = channel ?? MethodChannelFlutterBadgeManager.instance;
 
-  //  Messaging does not yet support multiple Firebase Apps. Default app only.
-  /// Returns an instance using a specified [FirebaseApp].
+  /// Returns an instance using the specified [channel].
   factory FlutterBadgeManagerAndroid._instanceFor({
     @visibleForOverriding MethodChannelFlutterBadgeManager? channel,
   }) =>
@@ -34,7 +33,7 @@ class FlutterBadgeManagerAndroid extends FlutterBadgeManagerPlatform {
       FlutterBadgeManagerAndroid._instanceFor();
 
   /// Registers this class
-  /// as the default instance of [SharedPreferencesAsyncPlatform].
+  /// as the default instance of [FlutterBadgeManagerPlatform].
   static void registerWith() {
     FlutterBadgeManagerPlatform.instance = FlutterBadgeManagerAndroid.instance;
   }
