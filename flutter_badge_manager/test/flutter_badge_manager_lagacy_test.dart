@@ -107,7 +107,7 @@ void main() => group('FlutterBadgeManager -', () {
         test('negative does not call platform', () async {
           try {
             await manager.update(-100);
-          } catch (_) {}
+          } on Object catch (_) {}
           expect(platform.lastUpdated, isNull);
         });
       });
