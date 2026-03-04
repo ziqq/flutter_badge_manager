@@ -1,6 +1,7 @@
 # flutter_badge_manager
 
 [![Pub](https://img.shields.io/pub/v/flutter_badge_manager.svg)](https://pub.dev/packages/flutter_badge_manager)
+[![codecov](https://codecov.io/gh/ziqq/flutter_badge_manager/graph/badge.svg?token=OBTQ07RQ8B)](https://codecov.io/gh/ziqq/flutter_badge_manager)
 
 Plugin to set / clear application badge numbers on iOS, macOS and supported Android launchers (OEM / third‑party). Stock Android (Pixel / AOSP) only shows a notification dot; numeric badges depend on the launcher.
 
@@ -14,7 +15,7 @@ Plugin to set / clear application badge numbers on iOS, macOS and supported Andr
   <img
     src="https://raw.githubusercontent.com/ziqq/flutter_badge_manager/refs/heads/main/.github/images/ios.png"
     style="margin:auto" width="600"
-    alt="Android badge"
+    alt="iOS badge"
     height="228">
 </p>
 
@@ -147,10 +148,30 @@ Future<void> ensureNotificationPermission() async {
 - Badge not visible on Android: launcher does not support numeric badges or permission not granted.
 - iOS badge not updating: check notification authorization and that app not restricted in settings.
 
+## Project Structure
+
+```
+flutter_badge_manager/                     # App-facing package (what users depend on)
+flutter_badge_manager_platform_interface/   # Platform interface (abstract contract)
+flutter_badge_manager_android/              # Android implementation
+flutter_badge_manager_foundation/           # iOS & macOS (Darwin) implementation
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for build commands and development workflow.
+
 ## Contributing
 
-Issues / PRs welcome. Keep changes non-breaking for static API (`FlutterBadgeManager.update`). Add new instance methods instead of altering existing signatures.
+Issues / PRs welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
-## License
 
-BSD 3-Clause (see LICENSE).
+## Funding
+
+If you want to support the development of our library, there are several ways you can do it:
+
+- [Buy me a coffee](https://www.buymeacoffee.com/ziqq)
+- [Subscribe through Boosty](https://boosty.to/ziqq)
+
+
+## Coverage
+
+<img src="https://codecov.io/gh/ziqq/contactos/graphs/sunburst.svg?token=OBTQ07RQ8B" width="375">
