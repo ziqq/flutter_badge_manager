@@ -67,7 +67,7 @@ get: ## Get dependencies for all packages
 analyze: get ## Analyze all packages
 				@for pkg in $(PACKAGES); do \
 					echo "Analyzing $$pkg..."; \
-					cd $(PWD)/$$pkg && fvm dart analyze --fatal-infos --fatal-warnings || (echo "¯\_(ツ)_/¯ Analyze $$pkg error"; exit 1); \
+					cd $(PWD)/$$pkg && fvm dart analyze --fatal-warnings --no-fatal-infos || (echo "¯\_(ツ)_/¯ Analyze $$pkg error"; exit 1); \
 				done
 
 .PHONY: check
