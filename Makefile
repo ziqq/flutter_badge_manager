@@ -1,84 +1,105 @@
 SHELL :=/bin/bash -e -o pipefail
 PWD   :=$(shell pwd)
 
+# All packages in dependency order
+PACKAGES := flutter_badge_manager_platform_interface flutter_badge_manager_android flutter_badge_manager_foundation flutter_badge_manager
+
 .DEFAULT_GOAL := all
 .PHONY: all
-all: ## build pipeline
-all: format analyze test-unit
+all: ## Full pipeline: format + check + test-unit
+all: format check test-unit
 
 .PHONY: ci
 ci: ## CI build pipeline
 ci: all
 
 .PHONY: precommit
-precommit: ## validate the branch before commit
+precommit: ## Validate the branch before commit
 precommit: all
 
 .PHONY: help
 help: ## Help dialog
-				@echo 'Usage: make <OPTIONS> ... <TARGETS>'
+				@echo 'Usage: make <OPTIONS> <TARGETS>'
 				@echo ''
 				@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 .PHONY: doctor
-doctor: ## Check fvm flutter doctor
+doctor: ## Check flutter doctor
 				@fvm flutter doctor
 
 .PHONY: version
-version: ## Check fvm flutter version
+version: ## Check flutter version
 				@fvm flutter --version
 
-
 .PHONY: format
-format: ## Format code
-				@echo "╠ RUN FORMAT THE CODE"
-				@fvm dart format --fix -l 80 . || (echo "¯\_(ツ)_/¯ Format code error"; exit 1)
-				@echo "╠ CODE FORMATED SUCCESSFULLY"
+format: ## Format all packages
+				@for pkg in $(PACKAGES); do \
+					echo "Formatting $$pkg..."; \
+					cd $(PWD)/$$pkg && fvm dart format -l 80 lib test || (echo "¯\_(ツ)_/¯ Format $$pkg error"; exit 1); \
+				done
 
 .PHONY: fix
-fix: format ## Fix code
-				@fvm dart fix --apply lib
+fix: ## Fix all packages
+				@for pkg in $(PACKAGES); do \
+					echo "Fixing $$pkg..."; \
+					cd $(PWD)/$$pkg && fvm dart fix --apply lib || (echo "¯\_(ツ)_/¯ Fix $$pkg error"; exit 1); \
+				done
+
+.PHONY: clean-cache
+clean-cache: ## Clean the pub cache
+				@fvm flutter pub cache repair
+
+.PHONY: clean
+clean: ## Clean all packages
+				@for pkg in $(PACKAGES); do \
+					echo "Cleaning $$pkg..."; \
+					cd $(PWD)/$$pkg && fvm flutter clean || true; \
+				done
 
 .PHONY: get
-get: ## Get dependencies
-				@echo "╠ RUN GET DEPENDENCIES..."
-				@cd flutter_badge_manager_platform_interface; fvm flutter pub get || (echo "¯\_(ツ)_/¯ Get dependencies in flutter_badge_manager_platform_interface error ¯\_(ツ)_/¯"; exit 1)
-				@cd flutter_badge_manager_android; fvm flutter pub get || (echo "¯\_(ツ)_/¯ Get dependencies in flutter_badge_manager_android error ¯\_(ツ)_/¯"; exit 2)
-				@cd flutter_badge_manager_foundation; fvm flutter pub get || (echo "¯\_(ツ)_/¯ Get dependencies in flutter_badge_manager_foundation error ¯\_(ツ)_/¯"; exit 3)
-				@cd flutter_badge_manager; fvm flutter pub get || (echo "¯\_(ツ)_/¯ Get dependencies in flutter_badge_manager error ¯\_(ツ)_/¯"; exit 4)
-				@echo "╠ DEPENDENCIES GETED SUCCESSFULLY"
+get: ## Get dependencies for all packages
+				@for pkg in $(PACKAGES); do \
+					echo "Getting dependencies for $$pkg..."; \
+					cd $(PWD)/$$pkg && fvm flutter pub get || (echo "¯\_(ツ)_/¯ Get $$pkg dependencies error"; exit 1); \
+				done
 
 .PHONY: analyze
-analyze: get format ## Analyze code
-				@echo "╠ RUN ANALYZE THE CODE..."
-				@fvm dart analyze --fatal-infos --fatal-warnings
-				@echo "╠ ANALYZED CODE SUCCESSFULLY"
+analyze: get ## Analyze all packages
+				@for pkg in $(PACKAGES); do \
+					echo "Analyzing $$pkg..."; \
+					cd $(PWD)/$$pkg && fvm dart analyze --fatal-infos --fatal-warnings || (echo "¯\_(ツ)_/¯ Analyze $$pkg error"; exit 1); \
+				done
 
 .PHONY: check
-check: analyze ## Check code
-				@echo "╠ RUN CECK CODE..."
-				@fvm dart pub publish --dry-run
+check: analyze ## Analyze + pana for all packages
+				@fvm dart pub global deactivate pana > /dev/null 2>&1 || true
 				@fvm dart pub global activate pana
-				@pana --json --no-warning --line-length 80 > log.pana.json
-				@echo "╠ CECKED CODE SUCCESSFULLY"
+				@for pkg in $(PACKAGES); do \
+					echo "Running pana for $$pkg..."; \
+					cd $(PWD)/$$pkg && fvm dart pub global run pana --json > log.pana.json || (echo "¯\_(ツ)_/¯ Pana $$pkg error"; exit 1); \
+				done
 
-.PHONY: publish
-publish: ## Publish package
-				@echo "╠ RUN PUBLISHING..."
-				@fvm dart pub publish --server=https://pub.dartlang.org || (echo "¯\_(ツ)_/¯ Publish error ¯\_(ツ)_/¯"; exit 1)
-				@echo "╠ PUBLISH PACKAGE SUCCESSFULLY"
+.PHONY: publish-check
+publish-check: ## Dry-run publish for all packages
+				@for pkg in $(PACKAGES); do \
+					echo "Publish check $$pkg..."; \
+					cd $(PWD)/$$pkg && fvm dart pub publish --dry-run || (echo "¯\_(ツ)_/¯ Publish check $$pkg error"; exit 1); \
+				done
 
-.PHONY: coverage
-coverage: ## Runs get coverage
-				@lcov --summary coverage/lcov.info
+.PHONY: test-unit
+test-unit: ## Run unit tests for all packages
+				@for pkg in $(PACKAGES); do \
+					echo "Testing $$pkg..."; \
+					cd $(PWD)/$$pkg && fvm flutter test --coverage || (echo "¯\_(ツ)_/¯ Test $$pkg error"; exit 1); \
+				done
 
-.PHONY: run-genhtml
-run-genhtml: ## Runs generage coverage html
-				@genhtml coverage/lcov.info -o coverage/html
+.PHONY: tag
+tag: ## Add a tag to the current commit
+	@dart run tool/tag.dart
 
 .PHONY: tag-add
-tag-add: ## Make command to add TAG. E.g: make tag-add TAG=v1.0.0
-				@if [ -z "$(TAG)" ]; then echo "TAG is not set"; exit 1; fi
+tag-add: ## Add TAG. E.g: make tag-add TAG=v1.0.0
+				@if [ -z "$(TAG)" ]; then echo "¯\_(ツ)_/¯ TAG is not set"; exit 1; fi
 				@echo ""
 				@echo "START ADDING TAG: $(TAG)"
 				@echo ""
@@ -89,8 +110,8 @@ tag-add: ## Make command to add TAG. E.g: make tag-add TAG=v1.0.0
 				@echo ""
 
 .PHONY: tag-remove
-tag-remove: ## Make command to delete TAG. E.g: make tag-delete TAG=v1.0.0
-				@if [ -z "$(TAG)" ]; then echo "TAG is not set"; exit 1; fi
+tag-remove: ## Delete TAG. E.g: make tag-remove TAG=v1.0.0
+				@if [ -z "$(TAG)" ]; then echo "¯\_(ツ)_/¯ TAG is not set"; exit 1; fi
 				@echo ""
 				@echo "START REMOVING TAG: $(TAG)"
 				@echo ""
@@ -99,19 +120,3 @@ tag-remove: ## Make command to delete TAG. E.g: make tag-delete TAG=v1.0.0
 				@echo ""
 				@echo "DELETED TAG $(TAG) LOCALLY AND REMOTELY"
 				@echo ""
-
-.PHONY: build
-build: clean analyze test-unit ## Build test apk for android on example apps
-				@echo "╠ START BUILD EXAMPLES..."
-				@echo "║"
-				@cd example && fvm flutter clean && fvm flutter pub get && fvm flutter build apk --release && fvm flutter build ios --release --no-codesign
-				@echo "║"
-				@echo "╠ FINISH BUILD EXAMPLES..."
-
-.PHONY: test-unit
-test-unit: ## Runs unit tests for all packages
-	@echo "╠ RUNNING UNIT TESTS FOR flutter_badge_manager_platform_interface..."
-	@cd flutter_badge_manager_platform_interface && flutter test --coverage test/flutter_badge_manager_platform_interface_test.dart && flutter test --coverage test/method_channel_flutter_badge_manger_test.dart || (echo "¯\_(ツ)_/¯ Error while running tests in flutter_badge_manager_platform_interface"; exit 1)
-
-	@echo "╠ RUNNING UNIT TESTS FOR flutter_badge_manager_foundation..."
-	@cd flutter_badge_manager_foundation && flutter test --coverage test/flutter_badge_manager_foundation_test.dart || (echo "¯\_(ツ)_/¯ Error while running tests in flutter_badge_manager_foundation"; exit 1)
