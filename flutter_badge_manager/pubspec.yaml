@@ -1,12 +1,12 @@
 name: flutter_badge_manager
 description: Plugin to update the app badge on the launcher (both for Android, iOS and macOS)
-version: 0.0.4
+version: 0.0.5
 
 homepage: https://github.com/ziqq/flutter_badge_manager
 
-repository: https://github.com/ziqq/flutter_badge_manager
+repository: https://github.com/ziqq/flutter_badge_manager/tree/main/flutter_badge_manager
 
-issue_tracker: https://github.com/ziqq/flutter_badge_manager/issues?q=is%3Aissue+is%3Aopen+label%3A%22p%3A+flutter_badge_manager%22
+issue_tracker: https://github.com/ziqq/flutter_badge_manager/issues
 
 funding:
   - https://www.buymeacoffee.com/ziqq
@@ -34,15 +34,15 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_badge_manager_android: ^0.0.4
+  flutter_badge_manager_android: ^0.0.5
   # flutter_badge_manager_android:
   #   path: ../flutter_badge_manager_android
 
-  flutter_badge_manager_foundation: ^0.0.2
+  flutter_badge_manager_foundation: ^0.0.3
   # flutter_badge_manager_foundation:
   #   path: ../flutter_badge_manager_foundation
 
-  flutter_badge_manager_platform_interface: ^0.0.3
+  flutter_badge_manager_platform_interface: ^0.0.4
   # flutter_badge_manager_platform_interface:
   #   path: ../flutter_badge_manager_platform_interface
 

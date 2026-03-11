@@ -1,3 +1,8 @@
+# Changelog
+
+## 0.0.5
+- **CHANGED**: Updated documentation and code comments for clarity. No functional changes.
+
 ## 0.0.4
 - **CHANGED**: Updated dependencies, code cleanup, and minor refactoring. No functional changes.
 
