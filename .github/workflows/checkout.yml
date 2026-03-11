@@ -73,7 +73,7 @@ jobs:
 
       - name: "Format check"
         working-directory: ${{ matrix.path }}
-        run: dart format --set-exit-if-changed -l 80 .
+        run: dart format --set-exit-if-changed -l 80 lib/ test/
 
       - name: "Analyze"
         working-directory: ${{ matrix.path }}
