@@ -66,26 +66,26 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_badge_manager_android
-      sha256: feae3719161bf09a4abeee9409a0232aa55662560fe9b4647f8085a140196ae8
+      sha256: "67cbc636da5b273c54de33f4d1a25d159afd7048ec971631e851541261f9afbf"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.4"
+    version: "0.0.5"
   flutter_badge_manager_foundation:
     dependency: "direct main"
     description:
       name: flutter_badge_manager_foundation
-      sha256: "8926b397b80277938188771dd91b68b5fbbff4ee581caf623415ad838a33f105"
+      sha256: "3cfd9fa7aed7cc7d71cf7e3fe1bfbafe71fd64b17d2cb5f9c5ade67608f4a221"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.2"
+    version: "0.0.3"
   flutter_badge_manager_platform_interface:
     dependency: "direct main"
     description:
       name: flutter_badge_manager_platform_interface
-      sha256: b1f6046411c90ad6438e7a8766fd43d9ce361e973d02d1d11a4a6d412d15af06
+      sha256: "7f76272c08512434313fbba0f6fa7f793851e0726ad47c7695baa3789a6932d7"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.3"
+    version: "0.0.4"
   flutter_driver:
     dependency: transitive
     description: flutter
