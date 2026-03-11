@@ -137,4 +137,4 @@ Issues / PRs welcome. Keep changes non-breaking for static API (`FlutterBadgeMan
 
 ## License
 
-BSD 3-Clause (see LICENSE).
+MIT License (see LICENSE).

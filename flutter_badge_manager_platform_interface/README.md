@@ -53,4 +53,4 @@ Avoid breaking the interface. Prefer adding new optional methods with sensible f
 
 ## License
 
-BSD 3-Clause (see LICENSE).
+MIT License (see LICENSE).

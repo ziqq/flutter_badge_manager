@@ -1,5 +1,5 @@
 pubspec.lock
-reports/
+.coverage/
 coverage/
+reports/
 build/
-example/

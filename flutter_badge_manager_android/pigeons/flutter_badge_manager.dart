@@ -1,5 +1,5 @@
-// Copyright 2025 Anton Ustinoff<a.a.ustinoff@gmail.com>. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
+// Copyright 2025 Anton Ustinoff<a.a.ustinoff@gmail.com>.
+// Use of this source code is governed by an MIT license that can be
 // found in the LICENSE file.
 
 import 'package:pigeon/pigeon.dart';

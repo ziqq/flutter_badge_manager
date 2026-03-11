@@ -66,4 +66,4 @@ Negative counts throw `PlatformException(code: 'invalid_args')`.
 
 ## License
 
-BSD 3-Clause (see LICENSE).
+MIT License (see LICENSE).

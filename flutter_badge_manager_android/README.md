@@ -72,4 +72,4 @@ Use a device/emulator with a launcher that supports numeric badges (e.g. Samsung
 
 ## License
 
-BSD 3-Clause (see LICENSE).
+MIT License (see LICENSE).

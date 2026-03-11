@@ -1,7 +1,7 @@
 // swift-tools-version: 5.9
 
 // Copyright 2025 Anton Ustinoff
-// Use of this source code is governed by a BSD-style license that can be
+// Use of this source code is governed by an MIT license that can be
 // found in the LICENSE file.
 
 import PackageDescription
