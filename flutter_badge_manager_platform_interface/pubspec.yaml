@@ -2,11 +2,11 @@ name: flutter_badge_manager_platform_interface
 description: A common platform interface for the flutter_badge_manager plugin.
 version: 0.0.4
 
-homepage: https://github.com/ziqq/flutter_badge_manager/flutter_badge_manager_platform_interface
+homepage: https://github.com/ziqq/flutter_badge_manager
 
-repository: https://github.com/ziqq/flutter_badge_manager/flutter_badge_manager_platform_interface
+repository: https://github.com/ziqq/flutter_badge_manager/tree/main/flutter_badge_manager_platform_interface
 
-issue_tracker: https://github.com/ziqq/flutter_badge_manager/issues?q=is%3Aissue+is%3Aopen+label%3A%22p%3A+flutter_badge_manager%22
+issue_tracker: https://github.com/ziqq/flutter_badge_manager/issues
 
 funding:
   - https://www.buymeacoffee.com/ziqq

@@ -1,3 +1,5 @@
+# Changelog
+
 ## 0.0.4
 - **CHANGED**: Updated documentation and code comments for clarity. No functional changes.
 
