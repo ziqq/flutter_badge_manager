@@ -7,7 +7,7 @@
  */
 
 import 'package:flutter/services.dart';
-import 'package:flutter_badge_manager/src/flutter_badge_manager_lagacy.dart';
+import 'package:flutter_badge_manager/flutter_badge_manager.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() => group('FlutterBadgeManager -', () {
@@ -90,15 +90,98 @@ void main() => group('FlutterBadgeManager -', () {
         );
       });
 
+      test('isSupported surfaces PlatformException', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(methodChannel, (call) async {
+          calls.add(call);
+          throw PlatformException(code: 'support_failed');
+        });
+
+        expect(
+          FlutterBadgeManager.isSupported,
+          throwsA(
+            isA<PlatformException>().having(
+              (e) => e.code,
+              'code',
+              'support_failed',
+            ),
+          ),
+        );
+      });
+
+      test('update surfaces PlatformException from channel', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(methodChannel, (call) async {
+          calls.add(call);
+          throw PlatformException(code: 'write_failed');
+        });
+
+        expect(
+          () => FlutterBadgeManager.update(8),
+          throwsA(
+            isA<PlatformException>().having(
+              (e) => e.code,
+              'code',
+              'write_failed',
+            ),
+          ),
+        );
+      });
+
       test('remove calls channel', () async {
         await FlutterBadgeManager.remove();
         expect(calls.length, 1);
         expect(calls.first.method, 'remove');
       });
 
+      test('remove surfaces PlatformException from channel', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(methodChannel, (call) async {
+          calls.add(call);
+          throw PlatformException(code: 'remove_failed');
+        });
+
+        expect(
+          FlutterBadgeManager.remove,
+          throwsA(
+            isA<PlatformException>().having(
+              (e) => e.code,
+              'code',
+              'remove_failed',
+            ),
+          ),
+        );
+      });
+
       test('instance getter returns new API FlutterBadgeManager', () {
         final instance = FlutterBadgeManager.instance;
         expect(instance, isNotNull);
+      });
+
+      test('instance delegate forwards calls through public package API',
+          () async {
+        final dynamic instance = FlutterBadgeManager.instance;
+
+        expect(await instance.isSupported(), isTrue);
+        await instance.update(3);
+        await instance.remove();
+
+        expect(
+          calls.map((call) => call.method).toList(growable: false),
+          ['isSupported', 'update', 'remove'],
+        );
+      });
+
+      test('instance delegate rejects negative count before channel call',
+          () async {
+        final dynamic instance = FlutterBadgeManager.instance;
+
+        expect(() => instance.update(-1), throwsA(isA<ArgumentError>()));
+        expect(calls, isEmpty);
+      });
+
+      test('package exports FlutterBadgeManagerPlatform symbol', () {
+        expect(FlutterBadgeManagerPlatform.instance, isNotNull);
       });
 
       test('multiple sequential calls', () async {

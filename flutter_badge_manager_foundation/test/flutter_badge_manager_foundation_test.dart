@@ -116,6 +116,52 @@ void main() => group('FlutterBadgeManagerFoundation', () {
         expect(result, isFalse);
       });
 
+      test('isSupported returns false when channel returns null', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(testChannel, (methodCall) async {
+          log.add(methodCall);
+          return null;
+        });
+
+        final result =
+            await FlutterBadgeManagerFoundation.instance.isSupported();
+
+        expect(result, isFalse);
+      });
+
+      test('isSupported returns false when channel returns unexpected type',
+          () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(testChannel, (methodCall) async {
+          log.add(methodCall);
+          return 'unexpected';
+        });
+
+        final result =
+            await FlutterBadgeManagerFoundation.instance.isSupported();
+
+        expect(result, isFalse);
+      });
+
+      test('remove surfaces PlatformException from channel', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(testChannel, (methodCall) async {
+          log.add(methodCall);
+          throw PlatformException(code: 'remove_failed');
+        });
+
+        await expectLater(
+          FlutterBadgeManagerFoundation.instance.remove(),
+          throwsA(
+            isA<PlatformException>().having(
+              (e) => e.code,
+              'code',
+              'remove_failed',
+            ),
+          ),
+        );
+      });
+
       test('sequential update remove update', () async {
         await FlutterBadgeManagerFoundation.instance.update(1);
         await FlutterBadgeManagerFoundation.instance.remove();

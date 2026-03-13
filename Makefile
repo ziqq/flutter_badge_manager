@@ -89,8 +89,15 @@ publish-check: ## Dry-run publish for all packages
 .PHONY: test-unit
 test-unit: ## Run unit tests for all packages
 				@for pkg in $(PACKAGES); do \
-					echo "Testing $$pkg..."; \
-					cd $(PWD)/$$pkg && fvm flutter test --coverage || (echo "¯\_(ツ)_/¯ Test $$pkg error"; exit 1); \
+						echo "Testing $$pkg..."; \
+						cd "$(PWD)/$$pkg" && fvm flutter test --coverage || { echo "¯\_(ツ)_/¯ Test $$pkg error"; exit 1; }; \
+						cd "$(PWD)/$$pkg" && genhtml coverage/lcov.info --output=coverage -o coverage/html || { echo "¯\_(ツ)_/¯ Error while running genhtml in $(PWD)/$$pkg"; exit 2; }; \
+						if [ -d "$(PWD)/$$pkg/example" ]; then \
+								cd "$(PWD)/$$pkg/example" && fvm flutter test --coverage || { echo "¯\_(ツ)_/¯ Test $$pkg example error"; exit 3; }; \
+								cd "$(PWD)/$$pkg/example" && genhtml coverage/lcov.info --output=coverage -o coverage/html || { echo "¯\_(ツ)_/¯ Error while running genhtml in $$pkg/example"; exit 4; }; \
+						else \
+								echo "Skipping $$pkg/example tests..."; \
+						fi; \
 				done
 
 .PHONY: tag

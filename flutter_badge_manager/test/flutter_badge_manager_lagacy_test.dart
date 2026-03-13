@@ -14,17 +14,31 @@ class _TestPlatform extends FlutterBadgeManagerPlatform {
   bool supported;
   int? lastUpdated;
   bool removeCalled = false;
+  StateError? isSupportedError;
+  StateError? updateError;
+  StateError? removeError;
 
   @override
-  Future<bool> isSupported() async => supported;
+  Future<bool> isSupported() async {
+    if (isSupportedError case final StateError error) {
+      throw error;
+    }
+    return supported;
+  }
 
   @override
   Future<void> update(int count) async {
+    if (updateError case final StateError error) {
+      throw error;
+    }
     lastUpdated = count;
   }
 
   @override
   Future<void> remove() async {
+    if (removeError case final StateError error) {
+      throw error;
+    }
     removeCalled = true;
   }
 }
@@ -47,6 +61,16 @@ void main() => group('FlutterBadgeManager -', () {
         expect(await manager.isSupported(), isTrue);
         platform.supported = false;
         expect(await manager.isSupported(), isFalse);
+      });
+
+      test('custom instance stays bound to injected platform', () async {
+        final firstPlatform = _TestPlatform(supported: true);
+        final secondPlatform = _TestPlatform(supported: false);
+        final customManager = FlutterBadgeManager.custom(firstPlatform);
+
+        FlutterBadgeManagerPlatform.instance = secondPlatform;
+
+        expect(await customManager.isSupported(), isTrue);
       });
 
       test('instance singleton is non-null', () {
@@ -123,6 +147,37 @@ void main() => group('FlutterBadgeManager -', () {
           await manager.remove();
           await manager.remove();
           expect(platform.removeCalled, isTrue);
+        });
+      });
+
+      group('error propagation -', () {
+        test('isSupported surfaces platform errors', () async {
+          platform.isSupportedError = StateError('support check failed');
+
+          await expectLater(
+            manager.isSupported(),
+            throwsA(isA<StateError>()),
+          );
+        });
+
+        test('update surfaces platform errors for valid count', () async {
+          platform.updateError = StateError('update failed');
+
+          await expectLater(
+            manager.update(7),
+            throwsA(isA<StateError>()),
+          );
+          expect(platform.lastUpdated, isNull);
+        });
+
+        test('remove surfaces platform errors', () async {
+          platform.removeError = StateError('remove failed');
+
+          await expectLater(
+            manager.remove(),
+            throwsA(isA<StateError>()),
+          );
+          expect(platform.removeCalled, isFalse);
         });
       });
 

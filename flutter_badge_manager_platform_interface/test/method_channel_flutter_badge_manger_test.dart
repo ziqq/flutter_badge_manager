@@ -68,6 +68,36 @@ void main() => group('MethodChannelFlutterBadgeManager', () {
         expect(supported, isFalse);
       });
 
+      test('isSupported returns false when channel returns unexpected type',
+          () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(testChannel, (call) async {
+          calls.add(call);
+          return 'unexpected';
+        });
+        final supported = await manager.isSupported();
+        expect(supported, isFalse);
+      });
+
+      test('isSupported surfaces PlatformException', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(testChannel, (call) async {
+          calls.add(call);
+          throw PlatformException(code: 'support_failed');
+        });
+
+        await expectLater(
+          manager.isSupported(),
+          throwsA(
+            isA<PlatformException>().having(
+              (e) => e.code,
+              'code',
+              'support_failed',
+            ),
+          ),
+        );
+      });
+
       test('update sends count argument', () async {
         await manager.update(42);
         expect(calls.single.method, 'update');
@@ -89,6 +119,43 @@ void main() => group('MethodChannelFlutterBadgeManager', () {
       test('remove invokes remove', () async {
         await manager.remove();
         expect(calls.single.method, 'remove');
+      });
+
+      test('remove surfaces PlatformException from channel', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(testChannel, (call) async {
+          calls.add(call);
+          throw PlatformException(code: 'remove_failed');
+        });
+
+        await expectLater(
+          manager.remove(),
+          throwsA(
+            isA<PlatformException>().having(
+              (e) => e.code,
+              'code',
+              'remove_failed',
+            ),
+          ),
+        );
+      });
+
+      test('update surfaces PlatformException from channel', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(testChannel, (call) async {
+          calls.add(call);
+          throw PlatformException(code: 'invalid_args');
+        });
+        expect(
+          () => manager.update(42),
+          throwsA(
+            isA<PlatformException>().having(
+              (e) => e.code,
+              'code',
+              'invalid_args',
+            ),
+          ),
+        );
       });
 
       test('multiple sequential calls order', () async {

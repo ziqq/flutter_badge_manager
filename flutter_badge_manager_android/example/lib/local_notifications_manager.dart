@@ -117,6 +117,7 @@ final class LocalNotificationsManager {
     return const NotificationDetails(
       android: androidNotificationDetails,
       iOS: darwinNotificationDetails,
+      macOS: darwinNotificationDetails,
     );
   }
 
@@ -125,6 +126,7 @@ final class LocalNotificationsManager {
     const initializationSettings = InitializationSettings(
       android: AndroidInitializationSettings('app_icon_rounded'),
       iOS: DarwinInitializationSettings(),
+      macOS: DarwinInitializationSettings(),
       /* onDidReceiveLocalNotification: (id, title, body, payload) async {
           _receivedNotificationsStreamController.add(
             ReceivedNotification(

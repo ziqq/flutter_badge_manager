@@ -72,4 +72,6 @@ run-genhtml: ## Runs generage coverage html
 .PHONY: test-unit
 test-unit: ## Runs unit tests
 				@fvm flutter test --coverage || (echo "¯\_(ツ)_/¯ Error while running test-unit"; exit 1)
-				@genhtml coverage/lcov.info --output=coverage -o coverage/html || (echo "¯\_(ツ)_/¯ Error while running genhtml with coverage"; exit 2)
+				@genhtml coverage/lcov.info --output=coverage -o coverage/html || (echo "¯\_(ツ)_/¯ Error while running genhtml"; exit 2)
+				@cd example && fvm flutter test --coverage || (echo "¯\_(ツ)_/¯ Error while running test-unit in example"; exit 3)
+				@cd example && genhtml coverage/lcov.info --output=coverage -o coverage/html || (echo "¯\_(ツ)_/¯ Error while running genhtml in example"; exit 4)

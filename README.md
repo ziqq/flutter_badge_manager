@@ -104,18 +104,9 @@ final supported = await FlutterBadgeManager.isSupported();
 
 Instance style:
 ```dart
-final badge = FlutterBadgeManager.instance;
-if (await badge.isSupported()) {
-  await badge.update(7);
-  await badge.remove();
-}
-```
-
-Basic helper:
-```dart
-Future<void> setUnread(int unread) async {
-  if (!await FlutterBadgeManager.isSupported()) return;
-  await FlutterBadgeManager.update(unread.clamp(0, 9999));
+if (await FlutterBadgeManager.instance.isSupported()) {
+  await FlutterBadgeManager.instance.update(7);
+  await FlutterBadgeManager.instance.remove();
 }
 ```
 
@@ -130,9 +121,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 Future<void> ensureNotificationPermission() async {
   final status = await Permission.notification.status;
-  if (!status.isGranted) {
-    await Permission.notification.request();
-  }
+  if (!status.isGranted) await Permission.notification.request();
 }
 ```
 
@@ -151,7 +140,7 @@ Future<void> ensureNotificationPermission() async {
 ## Project Structure
 
 ```
-flutter_badge_manager/                     # App-facing package (what users depend on)
+flutter_badge_manager/                      # App-facing package (what users depend on)
 flutter_badge_manager_platform_interface/   # Platform interface (abstract contract)
 flutter_badge_manager_android/              # Android implementation
 flutter_badge_manager_foundation/           # iOS & macOS (Darwin) implementation

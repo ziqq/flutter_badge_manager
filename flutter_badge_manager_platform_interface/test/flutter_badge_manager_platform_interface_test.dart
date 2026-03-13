@@ -3,9 +3,9 @@ import 'package:flutter_test/flutter_test.dart';
 
 /// Mock platform implementation for testing.
 class _MockPlatform extends FlutterBadgeManagerPlatform {
-  bool verifyCalled = false;
   int? lastUpdated;
   bool removeCalled = false;
+  bool verifyCalled = false;
 
   @override
   bool get isMock => true; // bypass token verification for mock
@@ -43,6 +43,23 @@ class _AnotherMockPlatform extends FlutterBadgeManagerPlatform {
 /// to trigger UnimplementedError for base methods.
 class _StubPlatform extends FlutterBadgeManagerPlatform {}
 
+class _InvalidPlatform implements FlutterBadgeManagerPlatform {
+  @override
+  bool get isMock => false;
+
+  @override
+  Future<bool> isSupported() async => true;
+
+  @override
+  Future<void> remove() async {}
+
+  @override
+  Future<void> update(int count) async {}
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
 void main() => group('FlutterBadgeManagerPlatform interface', () {
       test('default instance is MethodChannelFlutterBadgeManager', () {
         expect(FlutterBadgeManagerPlatform.instance.runtimeType.toString(),
@@ -67,6 +84,13 @@ void main() => group('FlutterBadgeManagerPlatform interface', () {
         expect(FlutterBadgeManagerPlatform.instance, same(mock2));
         expect(
             await FlutterBadgeManagerPlatform.instance.isSupported(), isFalse);
+      });
+
+      test('rejects implementations that do not extend platform interface', () {
+        expect(
+          () => FlutterBadgeManagerPlatform.instance = _InvalidPlatform(),
+          throwsA(isA<AssertionError>()),
+        );
       });
 
       test('mock delegates update and remove correctly', () async {

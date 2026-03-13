@@ -13,7 +13,7 @@ import 'flutter_badge_manager.dart' as badge_manager;
 /// {@endtemplate}
 final class FlutterBadgeManager {
   /// {@macro flutter_badge_manager}
-  const FlutterBadgeManager._();
+  const FlutterBadgeManager._(); // coverage:ignore-line
 
   /// Instance delegate (new style): `FlutterBadgeManager.instance.update(3)`.
   static final badge_manager.FlutterBadgeManager instance =

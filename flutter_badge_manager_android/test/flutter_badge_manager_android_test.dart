@@ -119,4 +119,48 @@ void main() => group('FlutterBadgeManagerAndroid', () {
         final value = await FlutterBadgeManagerAndroid.instance.isSupported();
         expect(value, isFalse);
       });
+
+      test('isSupported returns false when channel returns null', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (call) async {
+          recordedCalls.add(call);
+          return null;
+        });
+
+        final value = await FlutterBadgeManagerAndroid.instance.isSupported();
+
+        expect(value, isFalse);
+      });
+
+      test('isSupported returns false when channel returns unexpected type',
+          () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (call) async {
+          recordedCalls.add(call);
+          return 'unexpected';
+        });
+
+        final value = await FlutterBadgeManagerAndroid.instance.isSupported();
+
+        expect(value, isFalse);
+      });
+
+      test('remove surfaces PlatformException from channel', () async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+            .setMockMethodCallHandler(channel, (call) async {
+          recordedCalls.add(call);
+          throw PlatformException(code: 'remove_failed');
+        });
+
+        await expectLater(
+          FlutterBadgeManagerAndroid.instance.remove(),
+          throwsA(
+            isA<PlatformException>().having(
+              (e) => e.code,
+              'code',
+              'remove_failed',
+            ),
+          ),
+        );
+      });
     });
