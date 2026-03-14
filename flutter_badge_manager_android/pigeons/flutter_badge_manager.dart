@@ -8,7 +8,7 @@ import 'package:pigeon/pigeon.dart';
   dartOut: 'lib/src/flutter_badge_manager_android.g.dart',
   dartTestOut: 'test/test_api.g.dart',
   javaOut:
-      'android/src/main/java/flutter/plugins/flutterbadgemanager/generated/FlutterBadgeManager.g.java',
+      'android/src/main/java/flutter/plugins/flutterbadgemanager/generated/FlutterBadgeManagerPlugin.java',
   javaOptions: JavaOptions(
     package: 'flutter.plugins.flutterbadgemanager.generated',
     className: 'FlutterBadgeManager',
