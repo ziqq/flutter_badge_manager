@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.1
+- **FIXED**: Republished the `0.1` platform interface after retracting `0.1.0`, excluding local `pubspec_overrides.yaml` development files from the published archive.
+
 ## 0.1.0
 - **CHANGED**: Updated the platform interface for the Pigeon-based federated release: documented federated registration, and marked the old `MethodChannelFlutterBadgeManager` implementation as a deprecated legacy fallback.
 
