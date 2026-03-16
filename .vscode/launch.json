@@ -30,7 +30,7 @@
       "request": "launch",
       "type": "dart",
       "cwd": "${workspaceFolder}/flutter_badge_manager",
-      "program": "test/flutter_badge_manager_test.dart && test/flutter_badge_manager_lagacy_test.dart",
+      "program": "test/flutter_badge_manager_test.dart",
       "env": {
         "ENVIRONMENT": "test"
       },
