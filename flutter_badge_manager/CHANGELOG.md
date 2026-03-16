@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.1.0
+- **CHANGED**: Released the first stable Pigeon-based federated API surface, migrated the Android, iOS, and macOS transports to Pigeon, and aligned package documentation around the instance-first migration path while preserving the legacy MethodChannel compatibility path.
+
 ## 0.0.6
 - **FIXED**: Android plugin Pigeon configuration to generate Java class with the expected name, resolving build issues.
 

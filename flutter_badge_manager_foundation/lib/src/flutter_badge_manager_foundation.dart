@@ -3,24 +3,24 @@
 // found in the LICENSE file.
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_badge_manager_foundation/src/flutter_badge_manager_foundation.g.dart';
 import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_platform_interface.dart';
-import 'package:flutter_badge_manager_platform_interface/method_channel_flutter_badge_manger.dart';
 
 /// The iOS and macOS implementation of [FlutterBadgeManagerPlatform].
 ///
 /// This class implements the `package:flutter_badge_manager`
-/// functionality for iOS and macOS.
+/// functionality for iOS and macOS through the generated Pigeon host API.
 class FlutterBadgeManagerFoundation extends FlutterBadgeManagerPlatform {
   /// Creates a new plugin for iOS and macOS implementation instance.
   FlutterBadgeManagerFoundation._({
-    @visibleForOverriding MethodChannelFlutterBadgeManager? channel,
-  }) : _channel = channel ?? MethodChannelFlutterBadgeManager.instance;
+    @visibleForTesting FlutterBadgeManagerApi? api,
+  }) : _api = api ?? FlutterBadgeManagerApi();
 
-  /// Returns an instance using a specified [MethodChannelFlutterBadgeManager].
+  /// Returns an instance using a specified [api].
   factory FlutterBadgeManagerFoundation._instanceFor({
-    @visibleForOverriding MethodChannelFlutterBadgeManager? channel,
+    @visibleForTesting FlutterBadgeManagerApi? api,
   }) =>
-      FlutterBadgeManagerFoundation._(channel: channel);
+      FlutterBadgeManagerFoundation._(api: api);
 
   /// Returns the default instance
   /// of [FlutterBadgeManagerFoundation].
@@ -30,11 +30,11 @@ class FlutterBadgeManagerFoundation extends FlutterBadgeManagerPlatform {
   static final FlutterBadgeManagerFoundation _instance =
       FlutterBadgeManagerFoundation._instanceFor();
 
-  /// The channel used to interact with the platform side of the plugin.
-  final MethodChannelFlutterBadgeManager _channel;
+  /// The API used to interact with the platform side of the plugin.
+  final FlutterBadgeManagerApi _api;
 
-  /// Registers this class
-  /// as the default instance of [FlutterBadgeManagerPlatform].
+  /// Registers this class as the default Darwin implementation of
+  /// [FlutterBadgeManagerPlatform].
   static void registerWith() {
     FlutterBadgeManagerPlatform.instance =
         FlutterBadgeManagerFoundation.instance;
@@ -42,13 +42,13 @@ class FlutterBadgeManagerFoundation extends FlutterBadgeManagerPlatform {
 
   /// Checks if the device supports app badges.
   @override
-  Future<bool> isSupported() => _channel.isSupported();
+  Future<bool> isSupported() async => await _api.isSupported() ?? false;
 
   /// Updates the app badge count.
   @override
-  Future<void> update(int count) => _channel.update(count);
+  Future<void> update(int count) => _api.update(count);
 
   /// Removes the app badge.
   @override
-  Future<void> remove() => _channel.remove();
+  Future<void> remove() => _api.remove();
 }

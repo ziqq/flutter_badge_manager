@@ -73,7 +73,7 @@ class __HomeScreenState extends State<_HomeScreen> {
     try {
       await _ensureNotificationPermission();
 
-      bool isSupported = await FlutterBadgeManager.isSupported();
+      bool isSupported = await FlutterBadgeManager.instance.isSupported();
       dev.log('isSupported: $isSupported');
       result = isSupported ? 'Supported' : 'Not supported';
     } on PlatformException {
@@ -100,7 +100,7 @@ class __HomeScreenState extends State<_HomeScreen> {
           payload: 'This is payload',
         )
         .ignore();
-    FlutterBadgeManager.update(_count);
+    FlutterBadgeManager.instance.update(_count);
     messenger?.showSnackBar(
       SnackBar(content: Text('Badge count updated: $_count')),
     );
@@ -111,7 +111,7 @@ class __HomeScreenState extends State<_HomeScreen> {
     final messenger = ScaffoldMessenger.maybeOf(context);
     _count = 0;
     messenger?.clearSnackBars();
-    FlutterBadgeManager.remove();
+    FlutterBadgeManager.instance.remove();
     messenger?.showSnackBar(
       SnackBar(content: Text('Badge count updated: $_count')),
     );

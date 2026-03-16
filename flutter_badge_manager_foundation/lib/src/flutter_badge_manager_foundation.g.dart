@@ -50,10 +50,10 @@ class _PigeonCodec extends StandardMessageCodec {
   }
 }
 
-/// Package-local Pigeon schema for the Android implementation.
+/// Package-local Pigeon schema for the iOS and macOS implementation.
 ///
-/// This contract intentionally lives in the Android package because it
-/// generates Android-specific bindings and Android-specific channel names.
+/// This contract intentionally lives in the foundation package because it
+/// generates Swift bindings and foundation-specific channel names.
 class FlutterBadgeManagerApi {
   /// Constructor for [FlutterBadgeManagerApi].  The [binaryMessenger] named argument is
   /// available for dependency injection.  If it is left null, the default
@@ -67,9 +67,9 @@ class FlutterBadgeManagerApi {
 
   final String pigeonVar_messageChannelSuffix;
 
-  /// Returns whether the current launcher supports numeric badges.
+  /// Returns whether the current platform supports badge updates.
   Future<bool?> isSupported() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.flutter_badge_manager_android.FlutterBadgeManagerApi.isSupported$pigeonVar_messageChannelSuffix';
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi.isSupported$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -93,7 +93,7 @@ class FlutterBadgeManagerApi {
 
   /// Applies the given badge count.
   Future<void> update(int count) async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.flutter_badge_manager_android.FlutterBadgeManagerApi.update$pigeonVar_messageChannelSuffix';
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi.update$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,
@@ -117,7 +117,7 @@ class FlutterBadgeManagerApi {
 
   /// Clears the current badge.
   Future<void> remove() async {
-    final String pigeonVar_channelName = 'dev.flutter.pigeon.flutter_badge_manager_android.FlutterBadgeManagerApi.remove$pigeonVar_messageChannelSuffix';
+    final String pigeonVar_channelName = 'dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi.remove$pigeonVar_messageChannelSuffix';
     final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
       pigeonVar_channelName,
       pigeonChannelCodec,

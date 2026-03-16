@@ -3,6 +3,7 @@ PWD   :=$(shell pwd)
 
 # All packages in dependency order
 PACKAGES := flutter_badge_manager_platform_interface flutter_badge_manager_android flutter_badge_manager_foundation flutter_badge_manager
+PIGEON_PACKAGES := flutter_badge_manager_android flutter_badge_manager_foundation
 
 .DEFAULT_GOAL := all
 .PHONY: all
@@ -35,8 +36,43 @@ version: ## Check flutter version
 format: ## Format all packages
 				@for pkg in $(PACKAGES); do \
 					echo "Formatting $$pkg..."; \
-					cd $(PWD)/$$pkg && fvm dart format -l 80 lib test || (echo "¯\_(ツ)_/¯ Format $$pkg error"; exit 1); \
+					dirs="lib test"; \
+					if [ -d "$(PWD)/$$pkg/pigeons" ]; then dirs="$$dirs pigeons"; fi; \
+					cd $(PWD)/$$pkg && find $$dirs -type f -name '*.dart' ! -name '*.g.dart' -exec fvm dart format -l 80 {} + || (echo "¯\_(ツ)_/¯ Format $$pkg error"; exit 1); \
 				done
+
+.PHONY: pigeon
+pigeon: get ## Regenerate Pigeon bindings
+				@for pkg in $(PIGEON_PACKAGES); do \
+					echo "Generating Pigeon for $$pkg..."; \
+					cd $(PWD)/$$pkg && fvm dart run pigeon --input pigeons/flutter_badge_manager.dart || (echo "¯\_(ツ)_/¯ Pigeon $$pkg error"; exit 1); \
+				done
+
+.PHONY: pigeon-check
+pigeon-check: ## Verify generated Pigeon bindings
+				@before="$$(for file in \
+					flutter_badge_manager_android/lib/src/flutter_badge_manager_android.g.dart \
+					flutter_badge_manager_android/test/test_api.g.dart \
+					flutter_badge_manager_android/android/src/main/java/flutter/plugins/flutterbadgemanager/FlutterBadgeManagerPlugin.g.java \
+					flutter_badge_manager_foundation/lib/src/flutter_badge_manager_foundation.g.dart \
+					flutter_badge_manager_foundation/test/test_api.g.dart \
+					flutter_badge_manager_foundation/darwin/flutter_badge_manager_foundation/Sources/flutter_badge_manager_foundation/FlutterBadgeManagerPlugin.g.swift; do \
+						if [ -f "$$file" ]; then shasum "$$file"; else echo "missing $$file"; fi; \
+					done)"; \
+				$(MAKE) pigeon > /dev/null; \
+				after="$$(for file in \
+					flutter_badge_manager_android/lib/src/flutter_badge_manager_android.g.dart \
+					flutter_badge_manager_android/test/test_api.g.dart \
+					flutter_badge_manager_android/android/src/main/java/flutter/plugins/flutterbadgemanager/FlutterBadgeManagerPlugin.g.java \
+					flutter_badge_manager_foundation/lib/src/flutter_badge_manager_foundation.g.dart \
+					flutter_badge_manager_foundation/test/test_api.g.dart \
+					flutter_badge_manager_foundation/darwin/flutter_badge_manager_foundation/Sources/flutter_badge_manager_foundation/FlutterBadgeManagerPlugin.g.swift; do \
+						if [ -f "$$file" ]; then shasum "$$file"; else echo "missing $$file"; fi; \
+					done)"; \
+				if [ "$$before" != "$$after" ]; then \
+					echo "¯\_(ツ)_/¯ Pigeon generated files are out of date"; \
+					exit 1; \
+				fi
 
 .PHONY: fix
 fix: ## Fix all packages
@@ -71,7 +107,7 @@ analyze: get ## Analyze all packages
 				done
 
 .PHONY: check
-check: analyze ## Analyze + pana for all packages
+check: analyze pigeon-check ## Analyze + pana for all packages
 				@fvm dart pub global deactivate pana > /dev/null 2>&1 || true
 				@fvm dart pub global activate pana
 				@for pkg in $(PACKAGES); do \

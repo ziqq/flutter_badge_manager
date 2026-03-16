@@ -1,21 +1,16 @@
 package flutter.plugins.flutterbadgemanager;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
-import android.os.Build;
-
-import androidx.core.app.NotificationCompat;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
+import flutter.plugins.flutterbadgemanager.generated.FlutterBadgeManager;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
-public class FlutterBadgeManagerPlugin implements MethodCallHandler, FlutterPlugin {
+public class FlutterBadgeManagerPlugin implements MethodCallHandler, FlutterPlugin, FlutterBadgeManager.FlutterBadgeManagerApi {
 
   private Context applicationContext;
   private MethodChannel channel;
@@ -27,14 +22,17 @@ public class FlutterBadgeManagerPlugin implements MethodCallHandler, FlutterPlug
 
   @Override
   public void onAttachedToEngine(FlutterPluginBinding binding) {
+    applicationContext = binding.getApplicationContext();
     channel = new MethodChannel(binding.getBinaryMessenger(), CHANNEL_NAME);
     channel.setMethodCallHandler(this);
-    applicationContext = binding.getApplicationContext();
+    FlutterBadgeManager.FlutterBadgeManagerApi.setUp(binding.getBinaryMessenger(), this);
   }
 
   @Override
   public void onDetachedFromEngine(FlutterPluginBinding binding) {
     channel.setMethodCallHandler(null);
+    FlutterBadgeManager.FlutterBadgeManagerApi.setUp(binding.getBinaryMessenger(), null);
+    channel = null;
     applicationContext = null;
   }
 
@@ -42,21 +40,21 @@ public class FlutterBadgeManagerPlugin implements MethodCallHandler, FlutterPlug
   public void onMethodCall(MethodCall call, Result result) {
     switch (call.method) {
       case "isSupported": {
-        result.success(ShortcutBadger.isBadgeCounterSupported(applicationContext));
+        result.success(isSupported());
         break;
       }
       case "update": {
         Integer count = safeCount(call.argument("count"));
-        if (count == null || count < 0) {
-          result.error("invalid_args", "count must be non-negative int", null);
-          return;
+        try {
+          update(count == null ? null : count.longValue());
+          result.success(null);
+        } catch (FlutterBadgeManager.FlutterError error) {
+          result.error(error.code, error.getMessage(), error.details);
         }
-        applyBadge(count);
-        result.success(null);
         break;
       }
       case "remove": {
-        applyBadge(0);
+        remove();
         result.success(null);
         break;
       }
@@ -69,6 +67,28 @@ public class FlutterBadgeManagerPlugin implements MethodCallHandler, FlutterPlug
     if (raw == null) return null;
     if (raw instanceof Integer) return (Integer) raw;
     try { return Integer.valueOf(raw.toString()); } catch (Exception e) { return null; }
+  }
+
+  @Override
+  public Boolean isSupported() {
+    return ShortcutBadger.isBadgeCounterSupported(applicationContext);
+  }
+
+  @Override
+  public void update(Long count) {
+    if (count == null || count < 0) {
+      throw new FlutterBadgeManager.FlutterError(
+        "invalid_args",
+        "count must be non-negative int",
+        null
+      );
+    }
+    applyBadge(count.intValue());
+  }
+
+  @Override
+  public void remove() {
+    applyBadge(0);
   }
 
   private void applyBadge(int count) {

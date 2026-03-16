@@ -2,32 +2,19 @@ import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager_example/main.dart' as example_app;
 import 'package:flutter_test/flutter_test.dart';
 
+import 'badge_api_mock.dart';
+
 void main() {
-  const badgeChannel = MethodChannel('github.com/ziqq/flutter_badge_manager');
   final badgeCalls = <MethodCall>[];
 
   setUp(() {
     TestWidgetsFlutterBinding.ensureInitialized();
     badgeCalls.clear();
-
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(badgeChannel, (call) async {
-          badgeCalls.add(call);
-          switch (call.method) {
-            case 'isSupported':
-              return true;
-            case 'update':
-            case 'remove':
-              return null;
-            default:
-              throw PlatformException(code: 'unimplemented');
-          }
-        });
+    setUpBadgeApiMock(badgeCalls: badgeCalls);
   });
 
   tearDown(() {
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(badgeChannel, null);
+    tearDownBadgeApiMock();
   });
 
   group('App startup -', () {

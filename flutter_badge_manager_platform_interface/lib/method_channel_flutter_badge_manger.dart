@@ -5,10 +5,17 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_platform_interface.dart';
 
-/// The entry point for accessing an app badge.
+/// Legacy [MethodChannel]-based fallback implementation of
+/// [FlutterBadgeManagerPlatform].
 ///
-/// You can get an instance
-/// by calling [MethodChannelFlutterBadgeManager.instance].
+/// Federated platform packages now register their own Pigeon-backed
+/// implementations during plugin registration. This class remains available
+/// only as a compatibility fallback when no federated implementation has been
+/// registered yet.
+@Deprecated(
+  'Use FlutterBadgeManager.instance or a federated platform implementation. '
+  'This class remains as a legacy fallback only.',
+)
 class MethodChannelFlutterBadgeManager extends FlutterBadgeManagerPlatform {
   /// Create an instance of [MethodChannelFlutterBadgeManager].
   MethodChannelFlutterBadgeManager._();
@@ -21,7 +28,8 @@ class MethodChannelFlutterBadgeManager extends FlutterBadgeManagerPlatform {
   static final MethodChannelFlutterBadgeManager _instance =
       MethodChannelFlutterBadgeManager._();
 
-  /// The [MethodChannel] used to interact with the platform side of the plugin.
+  /// The legacy [MethodChannel] used to interact with the platform side of the
+  /// plugin.
   static const MethodChannel _channel = MethodChannel(
     'github.com/ziqq/flutter_badge_manager',
   );

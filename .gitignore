@@ -27,12 +27,13 @@ migrate_working_dir/
 # Libraries should not include pubspec.lock, per https://dart.dev/guides/libraries/private-files#pubspeclock.
 **/build
 **/doc/api/
-**/ios/Flutter/.last_build_id
-**/Flutter/ephemeral/
 **/Pods/
-.dart_tool/
+**/Flutter/ephemeral/
+**/ios/Flutter/.last_build_id
+**/**/pubspec_overrides.yaml
 .flutter-plugins
 .flutter-plugins-dependencies
+.dart_tool/
 .pub-cache/
 .pub/
 
@@ -49,16 +50,20 @@ migrate_working_dir/
 **/dgph
 **/xcuserdata/
 
+# Android
+**/.cxx/
+
 # Pana
 log.pana.json
 
 # Test
-coverage/
 .coverage/
+coverage/
+.reports/
+reports/
 /test/**/*.json
 !/test/**/fixtures/*.json
 /test/.test_coverage.dart
-reports/
 integration_test/screenshots
 
 # Temp
@@ -72,6 +77,3 @@ integration_test/screenshots
 
 # FVM Version Cache
 .fvm/
-
-# Android
-**/.cxx/

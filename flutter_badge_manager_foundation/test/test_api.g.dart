@@ -11,7 +11,7 @@ import 'package:flutter/foundation.dart' show ReadBuffer, WriteBuffer;
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:flutter_badge_manager_android/src/flutter_badge_manager_android.g.dart';
+import 'package:flutter_badge_manager_foundation/src/flutter_badge_manager_foundation.g.dart';
 
 
 class _PigeonCodec extends StandardMessageCodec {
@@ -35,15 +35,15 @@ class _PigeonCodec extends StandardMessageCodec {
   }
 }
 
-/// Package-local Pigeon schema for the Android implementation.
+/// Package-local Pigeon schema for the iOS and macOS implementation.
 ///
-/// This contract intentionally lives in the Android package because it
-/// generates Android-specific bindings and Android-specific channel names.
+/// This contract intentionally lives in the foundation package because it
+/// generates Swift bindings and foundation-specific channel names.
 abstract class TestFlutterBadgeManagerApi {
   static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding => TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
-  /// Returns whether the current launcher supports numeric badges.
+  /// Returns whether the current platform supports badge updates.
   bool? isSupported();
 
   /// Applies the given badge count.
@@ -56,7 +56,7 @@ abstract class TestFlutterBadgeManagerApi {
     messageChannelSuffix = messageChannelSuffix.isNotEmpty ? '.$messageChannelSuffix' : '';
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.flutter_badge_manager_android.FlutterBadgeManagerApi.isSupported$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi.isSupported$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
@@ -75,18 +75,18 @@ abstract class TestFlutterBadgeManagerApi {
     }
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.flutter_badge_manager_android.FlutterBadgeManagerApi.update$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi.update$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);
       } else {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, (Object? message) async {
           assert(message != null,
-          'Argument for dev.flutter.pigeon.flutter_badge_manager_android.FlutterBadgeManagerApi.update was null.');
+          'Argument for dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi.update was null.');
           final List<Object?> args = (message as List<Object?>?)!;
           final int? arg_count = (args[0] as int?);
           assert(arg_count != null,
-              'Argument for dev.flutter.pigeon.flutter_badge_manager_android.FlutterBadgeManagerApi.update was null, expected non-null int.');
+              'Argument for dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi.update was null, expected non-null int.');
           try {
             api.update(arg_count!);
             return wrapResponse(empty: true);
@@ -100,7 +100,7 @@ abstract class TestFlutterBadgeManagerApi {
     }
     {
       final BasicMessageChannel<Object?> pigeonVar_channel = BasicMessageChannel<Object?>(
-          'dev.flutter.pigeon.flutter_badge_manager_android.FlutterBadgeManagerApi.remove$messageChannelSuffix', pigeonChannelCodec,
+          'dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi.remove$messageChannelSuffix', pigeonChannelCodec,
           binaryMessenger: binaryMessenger);
       if (api == null) {
         _testBinaryMessengerBinding!.defaultBinaryMessenger.setMockDecodedMessageHandler<Object?>(pigeonVar_channel, null);

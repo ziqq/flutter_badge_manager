@@ -30,7 +30,9 @@ Registration (typically in your plugin's `registerWith` or static init):
 FlutterBadgeManagerPlatform.instance = MyBadgeManager();
 ```
 
-The provided MethodChannel implementation (`MethodChannelFlutterBadgeManager`) is used as the default on supported platforms.
+Federated platform packages should register Pigeon-backed implementations.
+The provided `MethodChannelFlutterBadgeManager` is deprecated and kept only as
+the legacy fallback when nothing has registered a platform implementation yet.
 
 ## Methods
 
@@ -46,6 +48,7 @@ Negative counts must throw a `PlatformException` with code `invalid_args`.
 2. Depend on `flutter_badge_manager_platform_interface`.
 3. Implement `FlutterBadgeManagerPlatform`.
 4. Set `FlutterBadgeManagerPlatform.instance` to your class during plugin registration.
+5. Prefer a generated transport such as Pigeon instead of adding a new MethodChannel fallback.
 
 ## Breaking changes
 

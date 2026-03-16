@@ -27,8 +27,10 @@ abstract class FlutterBadgeManagerPlatform extends PlatformInterface {
 
   /// The current default [FlutterBadgeManagerPlatform] instance.
   ///
-  /// It will always default to [MethodChannelFlutterBadgeManager]
-  /// if no other implementation was provided.
+  /// Federated platform packages replace this with their own Pigeon-backed
+  /// implementations during registration. If nothing registers a platform
+  /// implementation, the package falls back to
+  /// [MethodChannelFlutterBadgeManager] for legacy compatibility.
   static FlutterBadgeManagerPlatform get instance =>
       _instance ??= MethodChannelFlutterBadgeManager.instance;
 
@@ -46,8 +48,8 @@ abstract class FlutterBadgeManagerPlatform extends PlatformInterface {
   /// which is forbidden for anything other than mocks (see class docs).
   /// This property provides a backdoor for mockito mocks to
   /// skip the verification that the class isn't implemented with `implements`.
-  @visibleForTesting
   // @Deprecated('Use MockPlatformInterfaceMixin instead')
+  @visibleForTesting
   bool get isMock => false;
 
   /// Checks if the device supports app badges.

@@ -11,6 +11,9 @@ import 'package:flutter_badge_manager/flutter_badge_manager.dart';
 
 /// {@template flutter_badge_manager}
 /// A Flutter plugin to manage app badges on Android, iOS and macOS.
+///
+/// Use [FlutterBadgeManager.instance] from the public package export to access
+/// this instance-based API.
 /// {@endtemplate}
 final class FlutterBadgeManager {
   /// Creates a private instance bound to the given [platform].
@@ -32,10 +35,12 @@ final class FlutterBadgeManager {
   factory FlutterBadgeManager.custom(FlutterBadgeManagerPlatform platform) =>
       FlutterBadgeManager._(platform);
 
-  /// Check if the device supports app badges.
+  /// Checks whether the current platform can apply numeric app badges.
   Future<bool> isSupported() async => await _platform.isSupported();
 
-  /// Update the app badge.
+  /// Updates the app badge count.
+  ///
+  /// Throws an [ArgumentError] if [count] is negative.
   Future<void> update(int count) async {
     if (count < 0) throw ArgumentError('count must be non-negative');
     await _platform.update(count);

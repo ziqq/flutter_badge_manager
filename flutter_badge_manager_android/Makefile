@@ -4,7 +4,7 @@ PWD   :=$(shell pwd)
 .DEFAULT_GOAL := all
 .PHONY: all
 all: ## build pipeline
-all: get format analyze test-unit publish-check
+all: get format analyze pigeon-check test-unit publish-check
 
 .PHONY: ci
 ci: ## CI build pipeline
@@ -30,7 +30,31 @@ version: ## Check flutter version
 
 .PHONY: format
 format: ## Format code
-				@fvm dart format -l 80 lib test || (echo "¯\_(ツ)_/¯ Format code error"; exit 1)
+				@find lib test pigeons -type f -name '*.dart' ! -name '*.g.dart' -exec fvm dart format -l 80 {} + || (echo "¯\_(ツ)_/¯ Format code error"; exit 1)
+
+.PHONY: pigeon
+pigeon: ## Regenerate Pigeon bindings
+				@fvm dart run pigeon --input pigeons/flutter_badge_manager.dart || (echo "¯\_(ツ)_/¯ Pigeon generation error"; exit 1)
+
+.PHONY: pigeon-check
+pigeon-check: ## Verify generated Pigeon bindings
+				@before="$$(for file in \
+					lib/src/flutter_badge_manager_android.g.dart \
+					test/test_api.g.dart \
+					android/src/main/java/flutter/plugins/flutterbadgemanager/FlutterBadgeManagerPlugin.g.java; do \
+						if [ -f "$$file" ]; then shasum "$$file"; else echo "missing $$file"; fi; \
+					done)"; \
+				$(MAKE) pigeon > /dev/null; \
+				after="$$(for file in \
+					lib/src/flutter_badge_manager_android.g.dart \
+					test/test_api.g.dart \
+					android/src/main/java/flutter/plugins/flutterbadgemanager/FlutterBadgeManagerPlugin.g.java; do \
+						if [ -f "$$file" ]; then shasum "$$file"; else echo "missing $$file"; fi; \
+					done)"; \
+				if [ "$$before" != "$$after" ]; then \
+					echo "¯\_(ツ)_/¯ Pigeon generated files are out of date"; \
+					exit 1; \
+				fi
 
 .PHONY: fix
 fix: format ## Fix code
@@ -50,6 +74,7 @@ analyze: ## Analyze code
 
 .PHONY: check
 check: ## Check the code
+				@$(MAKE) pigeon-check
 				@fvm dart pub global activate pana
 				@pana --json --no-warning --line-length 80 > log.pana.json || (echo "¯\_(ツ)_/¯ Check code error"; exit 1)
 

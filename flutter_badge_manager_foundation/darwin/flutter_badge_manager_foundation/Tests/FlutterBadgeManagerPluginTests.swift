@@ -47,7 +47,18 @@ final class FlutterBadgeManagerPluginTests: XCTestCase {
         let messenger = DummyMessenger()
         let registrar = DummyRegistrar(messenger: messenger)
         FlutterBadgeManagerPlugin.register(with: registrar)
-        XCTAssertNotNil(messenger.handlers["flutter_badge_manager_foundation"], "Channel handler should be installed")
+        XCTAssertNotNil(
+            messenger.handlers["dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi.isSupported"],
+            "Pigeon isSupported handler should be installed"
+        )
+        XCTAssertNotNil(
+            messenger.handlers["dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi.update"],
+            "Pigeon update handler should be installed"
+        )
+        XCTAssertNotNil(
+            messenger.handlers["dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi.remove"],
+            "Pigeon remove handler should be installed"
+        )
     }
 
     func testHandleIsSupported() {

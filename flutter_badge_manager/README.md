@@ -13,9 +13,9 @@ Plugin to set / clear application badge numbers on iOS, macOS and supported Andr
 ## Features
 
 - Unified API with automatic federated implementation selection.
-- Legacy static calls still work (`FlutterBadgeManager.update(3)`).
-- New instance style (`FlutterBadgeManager.instance.update(3)`).
-- Fallback to legacy method channel if federated platform not registered.
+- Preferred instance style (`FlutterBadgeManager.instance.update(3)`).
+- Deprecated static calls still work (`FlutterBadgeManager.update(3)`).
+- Falls back to the legacy MethodChannel transport only if no federated implementation is registered.
 - Simple support check: `isSupported()`.
 
 ## Installation
@@ -78,14 +78,7 @@ Import:
 import 'package:flutter_badge_manager/flutter_badge_manager.dart';
 ```
 
-Static (legacy style):
-```dart
-await FlutterBadgeManager.update(5);
-await FlutterBadgeManager.remove();
-final supported = await FlutterBadgeManager.isSupported();
-```
-
-Instance style:
+Instance style (recommended):
 ```dart
 final badge = FlutterBadgeManager.instance;
 if (await badge.isSupported()) {
@@ -94,13 +87,23 @@ if (await badge.isSupported()) {
 }
 ```
 
+Static (deprecated legacy style):
+```dart
+await FlutterBadgeManager.update(5);
+await FlutterBadgeManager.remove();
+final supported = await FlutterBadgeManager.isSupported();
+```
+
 Basic helper:
 ```dart
 Future<void> setUnread(int unread) async {
-  if (!await FlutterBadgeManager.isSupported()) return;
-  await FlutterBadgeManager.update(unread.clamp(0, 9999));
+  final badge = FlutterBadgeManager.instance;
+  if (!await badge.isSupported()) return;
+  await badge.update(unread.clamp(0, 9999));
 }
 ```
+
+For migration details, see `../MIGRATION.md`.
 
 ## Permissions (recommended flow)
 
@@ -133,7 +136,7 @@ Future<void> ensureNotificationPermission() async {
 
 ## Contributing
 
-Issues / PRs welcome. Keep changes non-breaking for static API (`FlutterBadgeManager.update`). Add new instance methods instead of altering existing signatures.
+Issues / PRs welcome. Keep changes non-breaking for the deprecated static API (`FlutterBadgeManager.update`). Prefer evolving the instance API instead of altering legacy signatures.
 
 ## License
 
