@@ -24,6 +24,9 @@ final class FlutterBadgeManager {
   static FlutterBadgeManager? _instance;
 
   /// The default instance of [FlutterBadgeManager].
+  ///
+  /// If the registered platform implementation changes, this getter refreshes
+  /// the bound instance so tests can replace the platform safely.
   // ignore: prefer_constructors_over_static_methods
   static FlutterBadgeManager get instance {
     final platform = FlutterBadgeManagerPlatform.instance;

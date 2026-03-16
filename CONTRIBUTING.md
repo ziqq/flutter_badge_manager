@@ -61,7 +61,8 @@ cd flutter_badge_manager_foundation && make all
 - **No `dynamic`** in JSON parsing — use pattern matching + `switch`. Errors → `FormatException`.
 - **Immutability**: models are immutable, use `copyWith`, `const` constructors where possible.
 - **Platform interface**: extend `FlutterBadgeManagerPlatform`, do **not** implement it.
-- **Generated files**: never edit `**/generated/**`, `*.g.dart`, `*.gen.dart`.
+- **Generated files**: never edit `**/generated/**`, `*.g.dart`, `*.gen.dart` manually.
+- **Generated Dart formatting**: the generic format check skips `*.g.dart`; validate generated bindings through `make pigeon-check`, and regenerate them with the package-local `make pigeon` target.
 
 ## Branching and commits
 
@@ -79,7 +80,7 @@ Always run `make precommit` before pushing.
 4. Run `make precommit` — all formatting, analysis, and tests must pass.
 5. Open a pull request describing the change.
 
-Keep changes aligned with the instance API and federated platform architecture. Do not reintroduce the removed legacy static wrapper or MethodChannel fallback.
+Keep changes aligned with the instance API and federated Pigeon-backed platform architecture. Do not reintroduce the removed static wrapper or channel fallback.
 
 ## License
 

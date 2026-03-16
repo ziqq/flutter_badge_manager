@@ -31,6 +31,8 @@ Replace those calls with `FlutterBadgeManager.instance`.
 
 - `FlutterBadgeManager.instance` is the preferred API surface.
 - The old static wrapper is no longer exported by `flutter_badge_manager`.
+- `FlutterBadgeManager.instanceFor(...)` is the supported way to bind a test
+  instance to an injected platform implementation.
 - Android and Foundation implementations now use generated Pigeon bindings for
   Dart-to-native transport.
 - If no federated implementation is registered, platform calls now fail fast
@@ -47,9 +49,14 @@ Replace those calls with `FlutterBadgeManager.instance`.
 
 If you maintain this plugin or write tests against the federated packages:
 
+- Bind tests to an injected platform with `FlutterBadgeManager.instanceFor(...)`
+  instead of assuming the shared singleton will stay attached to the same test
+  double across cases.
 - Prefer testing Android and Foundation through the generated Pigeon test
   handlers instead of mocking plugin transport channels directly.
 - Keep the package-local Pigeon schemas in the platform packages.
+- Keep generated Dart bindings out of the generic format check and validate
+  them through the package `make pigeon` / `make pigeon-check` flow instead.
 
 The small `FlutterBadgeManagerApi` contract appears in both platform packages on
 purpose. Each package generates a different set of bindings and uses a distinct

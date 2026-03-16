@@ -31,7 +31,7 @@ Plugin to set / clear application badge numbers on iOS, macOS and supported Andr
 
 - Unified API with automatic federated implementation selection.
 - Preferred instance style (`FlutterBadgeManager.instance.update(3)`).
-- No legacy static wrapper or MethodChannel fallback in `0.2.0`.
+- `0.2.0` exposes only the instance API and federated Pigeon-backed platform implementations.
 - Fails fast if no federated implementation is registered for the current platform.
 - Simple support check: `isSupported()`.
 
@@ -103,6 +103,10 @@ if (await badge.isSupported()) {
   await badge.remove();
 }
 ```
+
+For tests, bind a specific platform implementation with
+`FlutterBadgeManager.instanceFor(...)` instead of relying on the shared
+singleton.
 
 For migration details, see [MIGRATION.md](MIGRATION.md).
 

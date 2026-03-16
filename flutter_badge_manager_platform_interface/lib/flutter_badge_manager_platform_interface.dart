@@ -27,7 +27,8 @@ abstract class FlutterBadgeManagerPlatform extends PlatformInterface {
   /// The current default [FlutterBadgeManagerPlatform] instance.
   ///
   /// Federated platform packages replace this with their own Pigeon-backed
-  /// implementations during registration.
+  /// implementations during registration. If nothing registers an
+  /// implementation, platform calls fail fast with a [StateError].
   static FlutterBadgeManagerPlatform get instance =>
       _instance ??= _MissingFlutterBadgeManagerPlatform.instance;
 
