@@ -5,8 +5,8 @@ analyzer:
     # Build
     - "build/**"
     # Tests
-    - "test/**.mocks.dart"
     - ".test_coverage.dart"
+    - "test/**.mocks.dart"
     - ".coverage/**"
     - "coverage/**"
     # Assets
@@ -14,29 +14,29 @@ analyzer:
     # Generated
     - "**/generated/**"
     # - '**/lib/l10n/**.arb'
-    - "**.g.dart"
-    - "**.gr.dart"
-    - "**.gql.dart"
-    - "**.freezed.dart"
-    - "**.config.dart"
-    - "**.mocks.dart"
-    - "**.gen.dart"
-    - "**.pb.dart"
-    - "**.pbenum.dart"
-    - "**.pbjson.dart"
+    - "**/**.g.dart"
+    - "**/**.gr.dart"
+    - "**/**.gql.dart"
+    - "**/**.freezed.dart"
+    - "**/**.config.dart"
+    - "**/**.mocks.dart"
+    - "**/**.gen.dart"
+    - "**/**.pb.dart"
+    - "**/**.pbenum.dart"
+    - "**/**.pbjson.dart"
     # Flutter Version Manager
-    - ".fvm/**"
     # Tools
     - ".dart_tool/**"
+    - ".fvm/**"
     - "scripts/**"
     - "tool/**"
     # Platform
-    - "ios/**"
     - "android/**"
-    - "web/**"
-    - "macos/**"
-    - "windows/**"
     - "linux/**"
+    - "ios/**"
+    - "macos/**"
+    - "web/**"
+    - "windows/**"
 
   # Enable the following options to enable strong mode.
   language:
@@ -166,7 +166,7 @@ linter:
     annotate_overrides: true
     avoid_empty_else: true
     avoid_init_to_null: true
-    avoid_null_checks_in_equality_operators: true
+    # avoid_null_checks_in_equality_operators: true
     avoid_return_types_on_setters: true
     avoid_shadowing_type_parameters: true
     avoid_types_as_parameter_names: true
