@@ -73,7 +73,14 @@ jobs:
 
       - name: "Format check"
         working-directory: ${{ matrix.path }}
-        run: dart format --set-exit-if-changed -l 80 lib/ test/
+        run: |
+          find lib test \
+          -path '*/generated/*' -prune -o \
+          -type f -name '*.dart' \
+          ! -name '*.*.dart' \
+          ! -name '*.g.*.dart' \
+          -print0 |
+          xargs -0 dart format --set-exit-if-changed --line-length 80 -o none
 
       - name: "Analyze"
         working-directory: ${{ matrix.path }}
