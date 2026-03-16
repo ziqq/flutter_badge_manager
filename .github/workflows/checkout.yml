@@ -49,6 +49,30 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v4
 
+      - name: "Create local dependency overrides"
+        shell: bash
+        run: |
+          case "${{ matrix.path }}" in
+            flutter_badge_manager)
+              cat <<'EOF' > "${{ matrix.path }}/pubspec_overrides.yaml"
+              dependency_overrides:
+                flutter_badge_manager_android:
+                  path: ../flutter_badge_manager_android
+                flutter_badge_manager_foundation:
+                  path: ../flutter_badge_manager_foundation
+                flutter_badge_manager_platform_interface:
+                  path: ../flutter_badge_manager_platform_interface
+              EOF
+              ;;
+            flutter_badge_manager_android|flutter_badge_manager_foundation)
+              cat <<'EOF' > "${{ matrix.path }}/pubspec_overrides.yaml"
+              dependency_overrides:
+                flutter_badge_manager_platform_interface:
+                  path: ../flutter_badge_manager_platform_interface
+              EOF
+              ;;
+          esac
+
       - name: "Install Flutter"
         uses: subosito/flutter-action@v2
         with:
