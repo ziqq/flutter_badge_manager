@@ -31,8 +31,7 @@ FlutterBadgeManagerPlatform.instance = MyBadgeManager();
 ```
 
 Federated platform packages should register Pigeon-backed implementations.
-The provided `MethodChannelFlutterBadgeManager` is deprecated and kept only as
-the legacy fallback when nothing has registered a platform implementation yet.
+If nothing registers an implementation, calls fail fast with a `StateError`.
 
 ## Methods
 
@@ -48,7 +47,7 @@ Negative counts must throw a `PlatformException` with code `invalid_args`.
 2. Depend on `flutter_badge_manager_platform_interface`.
 3. Implement `FlutterBadgeManagerPlatform`.
 4. Set `FlutterBadgeManagerPlatform.instance` to your class during plugin registration.
-5. Prefer a generated transport such as Pigeon instead of adding a new MethodChannel fallback.
+5. Prefer a generated transport such as Pigeon instead of adding a new fallback transport.
 
 ## Breaking changes
 

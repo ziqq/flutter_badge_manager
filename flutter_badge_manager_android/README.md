@@ -30,7 +30,7 @@ if (supported) {
 - No official Android API for numeric launcher badges.
 - Numeric badges work only on supported OEM / third‑party launchers (Samsung, Xiaomi, Huawei, Oppo, etc.).
 - Pixel / AOSP stock launcher: only notification dot (no number).
-- If `isSupported()` returns false, `update()` silently applies fallback (may rely on notification dot only).
+- Call `isSupported()` before `update()` if you need an explicit capability check.
 - Negative counts must throw `PlatformException(code: 'invalid_args')`.
 
 ## Permissions

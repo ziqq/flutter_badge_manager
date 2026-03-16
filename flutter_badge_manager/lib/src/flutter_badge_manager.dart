@@ -31,11 +31,12 @@ final class FlutterBadgeManager {
     if (instance == null || !identical(instance._platform, platform)) {
       _instance = FlutterBadgeManager._(platform);
     }
-    return _instance ??= FlutterBadgeManager._(platform);
+    return _instance!;
   }
 
-  /// Create a custom instance of [FlutterBadgeManager].
-  /// Use this constructor for testing purposes only.
+  /// Creates an instance bound to the given [platform].
+  ///
+  /// Use this factory from tests to bypass the default singleton.
   @visibleForTesting
   // ignore: sort_constructors_first
   factory FlutterBadgeManager.instanceFor(

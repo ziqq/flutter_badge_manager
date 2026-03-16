@@ -1,9 +1,9 @@
 # Migration Guide
 
-This repository now uses Pigeon as the primary transport for the federated
-Android and Foundation implementations.
+This repository now uses Pigeon as the only supported transport for the
+federated Android and Foundation implementations.
 
-For app developers, the main migration is from the deprecated static API to the
+For app developers, the main migration is from the removed static API to the
 instance API.
 
 ## Consumer Migration
@@ -18,29 +18,27 @@ if (await badge.isSupported()) {
 }
 ```
 
-Deprecated, but still supported for compatibility:
+Removed in `0.2.0`:
 
 ```dart
 await FlutterBadgeManager.update(3);
 await FlutterBadgeManager.remove();
 final supported = await FlutterBadgeManager.isSupported();
 ```
-> Will be removed in a future release. Please migrate to the instance API.
+Replace those calls with `FlutterBadgeManager.instance`.
 
 ### What changed
 
 - `FlutterBadgeManager.instance` is the preferred API surface.
-- The static methods on `FlutterBadgeManager` are deprecated compatibility
-  shims.
+- The old static wrapper is no longer exported by `flutter_badge_manager`.
 - Android and Foundation implementations now use generated Pigeon bindings for
-  their primary Dart-to-native transport.
-- The old `MethodChannel` transport is still present as a fallback to avoid
-  breaking existing behavior when no federated implementation has registered.
+  Dart-to-native transport.
+- If no federated implementation is registered, platform calls now fail fast
+  with a `StateError`.
 
 ### What did not change
 
 - The public `FlutterBadgeManager` symbol stays the same.
-- Existing static calls still work.
 - Negative counts are still invalid.
 - Platform behavior stays the same: Android launcher support is device-specific,
   while iOS and macOS rely on notification authorization.
@@ -50,7 +48,7 @@ final supported = await FlutterBadgeManager.isSupported();
 If you maintain this plugin or write tests against the federated packages:
 
 - Prefer testing Android and Foundation through the generated Pigeon test
-  handlers instead of mocking the legacy `MethodChannel` directly.
+  handlers instead of mocking plugin transport channels directly.
 - Keep the package-local Pigeon schemas in the platform packages.
 
 The small `FlutterBadgeManagerApi` contract appears in both platform packages on

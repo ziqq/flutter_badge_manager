@@ -14,8 +14,8 @@ Plugin to set / clear application badge numbers on iOS, macOS and supported Andr
 
 - Unified API with automatic federated implementation selection.
 - Preferred instance style (`FlutterBadgeManager.instance.update(3)`).
-- Deprecated static calls still work (`FlutterBadgeManager.update(3)`).
-- Falls back to the legacy MethodChannel transport only if no federated implementation is registered.
+- No legacy static wrapper or MethodChannel fallback in `0.2.0`.
+- Fails fast if no federated implementation is registered for the current platform.
 - Simple support check: `isSupported()`.
 
 ## Installation
@@ -87,13 +87,6 @@ if (await badge.isSupported()) {
 }
 ```
 
-Static (deprecated legacy style):
-```dart
-await FlutterBadgeManager.update(5);
-await FlutterBadgeManager.remove();
-final supported = await FlutterBadgeManager.isSupported();
-```
-
 Basic helper:
 ```dart
 Future<void> setUnread(int unread) async {
@@ -136,7 +129,7 @@ Future<void> ensureNotificationPermission() async {
 
 ## Contributing
 
-Issues / PRs welcome. Keep changes non-breaking for the deprecated static API (`FlutterBadgeManager.update`). Prefer evolving the instance API instead of altering legacy signatures.
+Issues / PRs welcome. Prefer evolving the instance API and federated platform implementations without reintroducing a legacy static wrapper.
 
 ## License
 

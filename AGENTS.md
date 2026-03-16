@@ -75,7 +75,7 @@ Each package has a `test/` directory with unit tests. The main test file matches
 - **No `dynamic`** in JSON parsing — use pattern matching + `switch`. Errors → `FormatException`.
 - **Immutability**: models are immutable, use `copyWith`, `const` constructors where possible.
 - **Platform interface**: extend `FlutterBadgeManagerPlatform`, do **not** implement it.
-- **Transport**: prefer the federated Pigeon-backed platform implementations. `MethodChannelFlutterBadgeManager` remains only as a legacy compatibility fallback.
+- **Transport**: use the federated Pigeon-backed platform implementations. Do not reintroduce a `MethodChannelFlutterBadgeManager` fallback.
 - **Dart format**: line length **80**, enforced via `make format`.
 - **Linting**: `flutter_lints` with strict casts, strict raw types, strict inference.
 

@@ -51,27 +51,26 @@ void main() => group('FlutterBadgeManager -', () {
     platform = _TestPlatform(supported: true);
     // Inject our fake platform implementation.
     FlutterBadgeManagerPlatform.instance = platform;
-    // Use custom to bind this platform
-    // (DO NOT use singleton which may have cached old stub).
+    // Bind directly to this platform instead of using the cached singleton.
     manager = FlutterBadgeManager.instanceFor(
       FlutterBadgeManagerPlatform.instance,
     );
   });
 
-  test('custom instance uses injected platform', () async {
+  test('bound instance uses injected platform', () async {
     expect(await manager.isSupported(), isTrue);
     platform.supported = false;
     expect(await manager.isSupported(), isFalse);
   });
 
-  test('custom instance stays bound to injected platform', () async {
+  test('bound instance stays bound to injected platform', () async {
     final firstPlatform = _TestPlatform(supported: true);
     final secondPlatform = _TestPlatform(supported: false);
-    final customManager = FlutterBadgeManager.instanceFor(firstPlatform);
+    final boundManager = FlutterBadgeManager.instanceFor(firstPlatform);
 
     FlutterBadgeManagerPlatform.instance = secondPlatform;
 
-    expect(await customManager.isSupported(), isTrue);
+    expect(await boundManager.isSupported(), isTrue);
   });
 
   test('instance singleton is non-null', () {

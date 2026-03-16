@@ -35,6 +35,7 @@ format: ## Format code
 .PHONY: pigeon
 pigeon: ## Regenerate Pigeon bindings
 				@fvm dart run pigeon --input pigeons/flutter_badge_manager.dart || (echo "¯\_(ツ)_/¯ Pigeon generation error"; exit 1)
+				@fvm dart format -l 80 lib/src/flutter_badge_manager_foundation.g.dart test/test_api.g.dart || (echo "¯\_(ツ)_/¯ Pigeon Dart format error"; exit 1)
 
 .PHONY: pigeon-check
 pigeon-check: ## Verify generated Pigeon bindings

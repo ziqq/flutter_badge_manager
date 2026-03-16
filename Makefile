@@ -38,7 +38,7 @@ format: ## Format all packages
 					echo "Formatting $$pkg..."; \
 					dirs="lib test"; \
 					if [ -d "$(PWD)/$$pkg/pigeons" ]; then dirs="$$dirs pigeons"; fi; \
-					cd $(PWD)/$$pkg && find $$dirs -type f -name '*.dart' ! -name '*.g.dart' -exec fvm dart format -l 80 {} + || (echo "¯\_(ツ)_/¯ Format $$pkg error"; exit 1); \
+					cd $(PWD)/$$pkg && find $$dirs -prune -o -type f -name '*.dart' ! -name '*.*.dart' ! -name '*.g.*.dart' -print0 | xargs -0 dart format --set-exit-if-changed --line-length 80 -o none || (echo "¯\_(ツ)_/¯ Format $$pkg error"; exit 1); \
 				done
 
 .PHONY: pigeon

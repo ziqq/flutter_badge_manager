@@ -79,7 +79,7 @@ Always run `make precommit` before pushing.
 4. Run `make precommit` — all formatting, analysis, and tests must pass.
 5. Open a pull request describing the change.
 
-Keep changes non-breaking for the legacy static API (`FlutterBadgeManager.update`). Add new instance methods instead of altering existing signatures.
+Keep changes aligned with the instance API and federated platform architecture. Do not reintroduce the removed legacy static wrapper or MethodChannel fallback.
 
 ## License
 
