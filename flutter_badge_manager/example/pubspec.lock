@@ -107,21 +107,21 @@ packages:
       path: "../../flutter_badge_manager_android"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.1.1"
   flutter_badge_manager_foundation:
     dependency: "direct overridden"
     description:
       path: "../../flutter_badge_manager_foundation"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.1.1"
   flutter_badge_manager_platform_interface:
     dependency: "direct overridden"
     description:
       path: "../../flutter_badge_manager_platform_interface"
       relative: true
     source: path
-    version: "0.1.0"
+    version: "0.1.1"
   flutter_driver:
     dependency: transitive
     description: flutter
