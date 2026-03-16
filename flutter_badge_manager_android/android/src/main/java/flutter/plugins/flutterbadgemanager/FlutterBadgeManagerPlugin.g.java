@@ -25,7 +25,7 @@ import java.util.Objects;
 
 /** Generated class from Pigeon. */
 @SuppressWarnings({"unused", "unchecked", "CodeBlock2Expr", "RedundantSuppression", "serial"})
-public class FlutterBadgeManagerPlugin {
+class FlutterBadgeManagerPluginPigeon {
 
   /** Error class for passing custom error details to Flutter via a thrown PlatformException. */
   public static class FlutterError extends RuntimeException {

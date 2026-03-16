@@ -61,55 +61,26 @@ final class FlutterBadgeManagerPluginTests: XCTestCase {
         )
     }
 
-    func testHandleIsSupported() {
+    func testIsSupported() throws {
         let plugin = FlutterBadgeManagerPlugin()
-        let expectation = self.expectation(description: "isSupported")
-        plugin.handle(FlutterMethodCall(methodName: "isSupported", arguments: nil)) { value in
-            XCTAssertTrue(value as? Bool ?? false)
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: 1)
+        XCTAssertEqual(try plugin.isSupported(), true)
     }
 
-    func testHandleUpdateValid() {
+    func testUpdateValid() throws {
         let plugin = FlutterBadgeManagerPlugin()
-        let expectation = self.expectation(description: "update")
-        plugin.handle(FlutterMethodCall(methodName: "update", arguments: ["count": 3])) { value in
-            XCTAssertNil(value)
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: 1)
+        XCTAssertNoThrow(try plugin.update(count: 3))
     }
 
-    func testHandleUpdateInvalid() {
+    func testUpdateInvalid() {
         let plugin = FlutterBadgeManagerPlugin()
-        let expectation = self.expectation(description: "update_invalid")
-        plugin.handle(FlutterMethodCall(methodName: "update", arguments: ["count": -1])) { value in
-            let error = value as? FlutterError
-            XCTAssertEqual(error?.code, "invalid_args")
-            expectation.fulfill()
+        XCTAssertThrowsError(try plugin.update(count: -1)) { error in
+            let pigeonError = error as? PigeonError
+            XCTAssertEqual(pigeonError?.code, "invalid_args")
         }
-        waitForExpectations(timeout: 1)
     }
 
-    func testHandleRemove() {
+    func testRemove() throws {
         let plugin = FlutterBadgeManagerPlugin()
-        let expectation = self.expectation(description: "remove")
-        plugin.handle(FlutterMethodCall(methodName: "remove", arguments: nil)) { value in
-            XCTAssertNil(value)
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: 1)
-    }
-
-    func testUnsupportedMethod() {
-        let plugin = FlutterBadgeManagerPlugin()
-        let expectation = self.expectation(description: "unsupported")
-        plugin.handle(FlutterMethodCall(methodName: "unknown", arguments: nil)) { value in
-            let error = value as? FlutterMethodNotImplemented
-            XCTAssertNotNil(error)
-            expectation.fulfill()
-        }
-        waitForExpectations(timeout: 1)
+        XCTAssertNoThrow(try plugin.remove())
     }
 }

@@ -1,20 +1,50 @@
 import 'package:flutter/services.dart';
+import 'package:flutter_badge_manager/flutter_badge_manager.dart'
+    show FlutterBadgeManagerPlatform;
 import 'package:flutter_badge_manager_example/main.dart' as example_app;
 import 'package:flutter_test/flutter_test.dart';
 
+class _FakeBadgePlatform extends FlutterBadgeManagerPlatform {
+  bool supported = true;
+  PlatformException? isSupportedError;
+  final calls = <String>[];
+
+  @override
+  bool get isMock => true;
+
+  @override
+  Future<bool> isSupported() async {
+    calls.add('isSupported');
+    if (isSupportedError case final PlatformException error) {
+      throw error;
+    }
+    return supported;
+  }
+
+  @override
+  Future<void> update(int count) async {
+    calls.add('update');
+  }
+
+  @override
+  Future<void> remove() async {
+    calls.add('remove');
+  }
+}
+
 void main() {
-  const badgeChannel = MethodChannel('github.com/ziqq/flutter_badge_manager');
   const permissionChannel = MethodChannel(
     'flutter.baseflow.com/permissions/methods',
   );
 
-  final badgeCalls = <MethodCall>[];
   final permissionCalls = <MethodCall>[];
+  late _FakeBadgePlatform badgePlatform;
 
   setUp(() {
     TestWidgetsFlutterBinding.ensureInitialized();
-    badgeCalls.clear();
     permissionCalls.clear();
+    badgePlatform = _FakeBadgePlatform();
+    FlutterBadgeManagerPlatform.instance = badgePlatform;
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(permissionChannel, (call) async {
@@ -28,27 +58,11 @@ void main() {
               return null;
           }
         });
-
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(badgeChannel, (call) async {
-          badgeCalls.add(call);
-          switch (call.method) {
-            case 'isSupported':
-              return true;
-            case 'update':
-            case 'remove':
-              return null;
-            default:
-              throw PlatformException(code: 'unimplemented');
-          }
-        });
   });
 
   tearDown(() {
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(permissionChannel, null);
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(badgeChannel, null);
   });
 
   group('App startup -', () {
@@ -80,7 +94,7 @@ void main() {
           permissionCalls.map((call) => call.method),
           containsAll(<String>['checkPermissionStatus', 'requestPermissions']),
         );
-        expect(badgeCalls.single.method, 'isSupported');
+        expect(badgePlatform.calls.single, 'isSupported');
       },
       variant: const TargetPlatformVariant(<TargetPlatform>{
         TargetPlatform.android,
@@ -102,6 +116,7 @@ void main() {
                   return null;
               }
             });
+        badgePlatform.isSupportedError = PlatformException(code: 'boom');
 
         await tester.pumpWidget(const example_app.App());
         await tester.pumpAndSettle();

@@ -11,7 +11,7 @@ import 'package:pigeon/pigeon.dart';
       'android/src/main/java/flutter/plugins/flutterbadgemanager/FlutterBadgeManagerPlugin.g.java',
   javaOptions: JavaOptions(
     package: 'flutter.plugins.flutterbadgemanager',
-    className: 'FlutterBadgeManagerPlugin',
+    className: 'FlutterBadgeManagerPluginPigeon',
   ),
   copyrightHeader: 'pigeons/copyright.txt',
 ))

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.2.0
+- **CHANGED**: Removed the legacy static `MethodChannel` wrapper and now rely exclusively on federated Pigeon-backed platform implementations.
+- **FIXED**: Finalized the instance-first release line by removing the legacy static export, updating the testing factory to `instanceFor`, and switching example coverage to injected platform implementations.
+
 ## 0.1.0
 - **CHANGED**: Released the first stable Pigeon-based federated API surface, migrated the Android, iOS, and macOS transports to Pigeon, and aligned package documentation around the instance-first migration path while preserving the legacy MethodChannel compatibility path.
 

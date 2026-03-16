@@ -5,5 +5,4 @@
 export 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_platform_interface.dart'
     show FlutterBadgeManagerPlatform;
 
-export 'src/flutter_badge_manager.dart' hide FlutterBadgeManager;
-export 'src/flutter_badge_manager_lagacy.dart';
+export 'src/flutter_badge_manager.dart';

@@ -61,9 +61,17 @@ class _InvalidPlatform implements FlutterBadgeManagerPlatform {
 }
 
 void main() => group('FlutterBadgeManagerPlatform interface', () {
-      test('default instance is MethodChannelFlutterBadgeManager', () {
-        expect(FlutterBadgeManagerPlatform.instance.runtimeType.toString(),
-            contains('MethodChannelFlutterBadgeManager'));
+      test('default instance throws until implementation is registered', () {
+        expect(
+          FlutterBadgeManagerPlatform.instance.isSupported,
+          throwsA(
+            isA<StateError>().having(
+              (e) => e.message,
+              'message',
+              contains('No FlutterBadgeManagerPlatform implementation'),
+            ),
+          ),
+        );
       });
 
       test('can replace instance with mock (isMock bypass)', () async {

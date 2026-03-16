@@ -148,7 +148,7 @@ packages:
       path: "../flutter_badge_manager_platform_interface"
       relative: true
     source: path
-    version: "0.1.1"
+    version: "0.2.0"
   flutter_driver:
     dependency: transitive
     description: flutter

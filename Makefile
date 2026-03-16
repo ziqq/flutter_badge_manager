@@ -45,7 +45,7 @@ format: ## Format all packages
 pigeon: get ## Regenerate Pigeon bindings
 				@for pkg in $(PIGEON_PACKAGES); do \
 					echo "Generating Pigeon for $$pkg..."; \
-					cd $(PWD)/$$pkg && fvm dart run pigeon --input pigeons/flutter_badge_manager.dart || (echo "¯\_(ツ)_/¯ Pigeon $$pkg error"; exit 1); \
+					cd $(PWD)/$$pkg && $(MAKE) pigeon || (echo "¯\_(ツ)_/¯ Pigeon $$pkg error"; exit 1); \
 				done
 
 .PHONY: pigeon-check
