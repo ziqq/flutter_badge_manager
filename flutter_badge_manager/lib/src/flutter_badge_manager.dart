@@ -27,6 +27,10 @@ final class FlutterBadgeManager {
   // ignore: prefer_constructors_over_static_methods
   static FlutterBadgeManager get instance {
     final platform = FlutterBadgeManagerPlatform.instance;
+    final instance = _instance;
+    if (instance == null || !identical(instance._platform, platform)) {
+      _instance = FlutterBadgeManager._(platform);
+    }
     return _instance ??= FlutterBadgeManager._(platform);
   }
 
