@@ -30,7 +30,6 @@ migrate_working_dir/
 **/Pods/
 **/Flutter/ephemeral/
 **/ios/Flutter/.last_build_id
-**/**/pubspec_overrides.yaml
 .flutter-plugins
 .flutter-plugins-dependencies
 .dart_tool/

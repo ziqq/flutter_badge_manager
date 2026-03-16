@@ -1,0 +1,7 @@
+dependency_overrides:
+  flutter_badge_manager_android:
+    path: ../flutter_badge_manager_android
+  flutter_badge_manager_foundation:
+    path: ../flutter_badge_manager_foundation
+  flutter_badge_manager_platform_interface:
+    path: ../flutter_badge_manager_platform_interface
