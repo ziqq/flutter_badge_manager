@@ -8,21 +8,26 @@ import 'package:pigeon/pigeon.dart';
   dartOut: 'lib/src/flutter_badge_manager_android.g.dart',
   dartTestOut: 'test/test_api.g.dart',
   javaOut:
-      'android/src/main/java/flutter/plugins/flutterbadgemanager/generated/FlutterBadgeManagerPlugin.java',
+      'android/src/main/java/flutter/plugins/flutterbadgemanager/FlutterBadgeManagerPlugin.g.java',
   javaOptions: JavaOptions(
-    package: 'flutter.plugins.flutterbadgemanager.generated',
-    className: 'FlutterBadgeManager',
+    package: 'flutter.plugins.flutterbadgemanager',
+    className: 'FlutterBadgeManagerPluginPigeon',
   ),
-  // kotlinOut: 'android/src/main/kotlin/flutter/plugins/flutterbadgemanager/generated/FlutterBadgeManager.g.kt',
-  // kotlinOptions: KotlinOptions(
-  //   package: 'flutter.plugins.flutterbadgemanager.generated',
-  //   errorClassName: 'FlutterBadgeManagerError',
-  // ),
   copyrightHeader: 'pigeons/copyright.txt',
 ))
+
+/// Package-local Pigeon schema for the Android implementation.
+///
+/// This contract intentionally lives in the Android package because it
+/// generates Android-specific bindings and Android-specific channel names.
 @HostApi(dartHostTestHandler: 'TestFlutterBadgeManagerApi')
 abstract class FlutterBadgeManagerApi {
+  /// Returns whether the current launcher supports numeric badges.
   bool? isSupported();
+
+  /// Applies the given badge count.
   void update(int count);
+
+  /// Clears the current badge.
   void remove();
 }

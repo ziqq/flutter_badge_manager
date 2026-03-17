@@ -10,7 +10,7 @@ import AppKit
 
 /// The iOS and macOS implementation of the Flutter badge manager plugin.
 /// This class handles method calls from Flutter to manage app icon badges.
-public class FlutterBadgeManagerPlugin: NSObject, FlutterPlugin {
+public class FlutterBadgeManagerPlugin: NSObject, FlutterPlugin, FlutterBadgeManagerApi {
 
   // Registers the plugin with the Flutter framework.
   public static func register(with registrar: FlutterPluginRegistrar) {
@@ -25,6 +25,7 @@ public class FlutterBadgeManagerPlugin: NSObject, FlutterPlugin {
     )
     let instance = FlutterBadgeManagerPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
+    FlutterBadgeManagerApiSetup.setUp(binaryMessenger: messenger, api: instance)
   }
 
   // Handles method calls from Flutter.
@@ -32,7 +33,13 @@ public class FlutterBadgeManagerPlugin: NSObject, FlutterPlugin {
     switch call.method {
     case "isSupported":
       // iOS and macOS always support badges
-      result(true)
+      do {
+        result(try isSupported())
+      } catch let error as PigeonError {
+        result(FlutterError(code: error.code, message: error.message, details: error.details))
+      } catch {
+        result(FlutterError(code: "error", message: error.localizedDescription, details: nil))
+      }
 
     // Update the badge count
     case "update":
@@ -44,18 +51,50 @@ public class FlutterBadgeManagerPlugin: NSObject, FlutterPlugin {
         result(FlutterError(code: "invalid_args", message: "Missing non-negative count", details: nil))
         return
       }
-      setBadge(count)
-      result(nil)
+      do {
+        try update(count: Int64(count))
+        result(nil)
+      } catch let error as PigeonError {
+        result(FlutterError(code: error.code, message: error.message, details: error.details))
+      } catch {
+        result(FlutterError(code: "error", message: error.localizedDescription, details: nil))
+      }
 
     // Remove the badge
     case "remove":
-      setBadge(0)
-      result(nil)
+      do {
+        try remove()
+        result(nil)
+      } catch let error as PigeonError {
+        result(FlutterError(code: error.code, message: error.message, details: error.details))
+      } catch {
+        result(FlutterError(code: "error", message: error.localizedDescription, details: nil))
+      }
 
     // Unsupported method
     default:
       result(FlutterMethodNotImplemented)
     }
+  }
+
+  func isSupported() throws -> Bool? {
+    true
+  }
+
+  func update(count: Int64) throws {
+    guard count >= 0 else {
+      throw PigeonError(
+        code: "invalid_args",
+        message: "Missing non-negative count",
+        details: nil
+      )
+    }
+
+    setBadge(Int(count))
+  }
+
+  func remove() throws {
+    setBadge(0)
   }
 
   // Sets the badge count on the app icon.

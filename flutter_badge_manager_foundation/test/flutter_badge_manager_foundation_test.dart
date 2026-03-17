@@ -8,53 +8,79 @@ import 'package:flutter_badge_manager_foundation/flutter_badge_manager_foundatio
 import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_platform_interface.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-void main() => group('FlutterBadgeManagerFoundation', () {
-      const testChannel =
-          MethodChannel('github.com/ziqq/flutter_badge_manager');
+import 'test_api.g.dart';
 
-      final log = <MethodCall>[];
+class _TestApi extends TestFlutterBadgeManagerApi {
+  bool? supported = true;
+  int? lastUpdated;
+  bool removeCalled = false;
+  final calls = <String>[];
+  PlatformException? isSupportedError;
+  PlatformException? updateError;
+  PlatformException? removeError;
+
+  @override
+  bool? isSupported() {
+    calls.add('isSupported');
+    if (isSupportedError case final PlatformException error) {
+      throw error;
+    }
+    return supported;
+  }
+
+  @override
+  void update(int count) {
+    calls.add('update');
+    lastUpdated = count;
+    if (count < 0) {
+      throw PlatformException(code: 'invalid_args');
+    }
+    if (updateError case final PlatformException error) {
+      throw error;
+    }
+  }
+
+  @override
+  void remove() {
+    calls.add('remove');
+    if (removeError case final PlatformException error) {
+      throw error;
+    }
+    removeCalled = true;
+  }
+}
+
+void main() => group('FlutterBadgeManagerFoundation', () {
+      late _TestApi api;
 
       setUp(() {
         TestWidgetsFlutterBinding.ensureInitialized();
-        log.clear();
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(testChannel, (methodCall) async {
-          log.add(methodCall);
-          switch (methodCall.method) {
-            case 'isSupported':
-              return true;
-            case 'update':
-              final count = (methodCall.arguments as Map)['count'] as int?;
-              if (count == null || count < 0) {
-                throw PlatformException(code: 'invalid_args');
-              }
-              return null;
-            case 'remove':
-              return null;
-            default:
-              throw PlatformException(code: 'unimplemented');
-          }
-        });
-        // Register dart side implementation explicitly if not already.
+        api = _TestApi();
+        TestFlutterBadgeManagerApi.setUp(api);
         FlutterBadgeManagerFoundation.registerWith();
+      });
+
+      tearDown(() {
+        TestFlutterBadgeManagerApi.setUp(null);
       });
 
       test('isSupported returns true', () async {
         final result =
             await FlutterBadgeManagerFoundation.instance.isSupported();
         expect(result, isTrue);
-        expect(log.single.method, 'isSupported');
+        expect(api.calls.single, 'isSupported');
       });
 
       test('update sends count', () async {
         await FlutterBadgeManagerFoundation.instance.update(5);
-        expect(log.single.method, 'update');
-        expect((log.single.arguments as Map)['count'], 5);
+        expect(api.calls.single, 'update');
+        expect(api.lastUpdated, 5);
       });
 
       test('remove clears badge', () async {
         await FlutterBadgeManagerFoundation.instance.remove();
-        expect(log.single.method, 'remove');
+        expect(api.calls.single, 'remove');
+        expect(api.removeCalled, isTrue);
       });
 
       test('negative badge throws error', () async {
@@ -69,7 +95,7 @@ void main() => group('FlutterBadgeManagerFoundation', () {
       test('multiple calls order', () async {
         await FlutterBadgeManagerFoundation.instance.update(2);
         await FlutterBadgeManagerFoundation.instance.remove();
-        expect(log.map((e) => e.method).toList(), ['update', 'remove']);
+        expect(api.calls, ['update', 'remove']);
       });
 
       test('singleton instance is stable', () {
@@ -95,33 +121,25 @@ void main() => group('FlutterBadgeManagerFoundation', () {
 
       test('update with zero count is valid', () async {
         await FlutterBadgeManagerFoundation.instance.update(0);
-        expect(log.single.method, 'update');
-        expect((log.single.arguments as Map)['count'], 0);
+        expect(api.calls.single, 'update');
+        expect(api.lastUpdated, 0);
       });
 
       test('update with large count', () async {
         await FlutterBadgeManagerFoundation.instance.update(999999);
-        expect(log.single.method, 'update');
-        expect((log.single.arguments as Map)['count'], 999999);
+        expect(api.calls.single, 'update');
+        expect(api.lastUpdated, 999999);
       });
 
-      test('isSupported returns false when channel returns false', () async {
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(testChannel, (methodCall) async {
-          log.add(methodCall);
-          return false;
-        });
+      test('isSupported returns false when host returns false', () async {
+        api.supported = false;
         final result =
             await FlutterBadgeManagerFoundation.instance.isSupported();
         expect(result, isFalse);
       });
 
-      test('isSupported returns false when channel returns null', () async {
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(testChannel, (methodCall) async {
-          log.add(methodCall);
-          return null;
-        });
+      test('isSupported returns false when host returns null', () async {
+        api.supported = null;
 
         final result =
             await FlutterBadgeManagerFoundation.instance.isSupported();
@@ -129,26 +147,23 @@ void main() => group('FlutterBadgeManagerFoundation', () {
         expect(result, isFalse);
       });
 
-      test('isSupported returns false when channel returns unexpected type',
-          () async {
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(testChannel, (methodCall) async {
-          log.add(methodCall);
-          return 'unexpected';
-        });
+      test('isSupported surfaces PlatformException from host', () async {
+        api.isSupportedError = PlatformException(code: 'support_failed');
 
-        final result =
-            await FlutterBadgeManagerFoundation.instance.isSupported();
-
-        expect(result, isFalse);
+        await expectLater(
+          FlutterBadgeManagerFoundation.instance.isSupported(),
+          throwsA(
+            isA<PlatformException>().having(
+              (e) => e.code,
+              'code',
+              'support_failed',
+            ),
+          ),
+        );
       });
 
-      test('remove surfaces PlatformException from channel', () async {
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(testChannel, (methodCall) async {
-          log.add(methodCall);
-          throw PlatformException(code: 'remove_failed');
-        });
+      test('remove surfaces PlatformException from host', () async {
+        api.removeError = PlatformException(code: 'remove_failed');
 
         await expectLater(
           FlutterBadgeManagerFoundation.instance.remove(),
@@ -166,9 +181,6 @@ void main() => group('FlutterBadgeManagerFoundation', () {
         await FlutterBadgeManagerFoundation.instance.update(1);
         await FlutterBadgeManagerFoundation.instance.remove();
         await FlutterBadgeManagerFoundation.instance.update(3);
-        expect(
-          log.map((e) => e.method).toList(),
-          ['update', 'remove', 'update'],
-        );
+        expect(api.calls, ['update', 'remove', 'update']);
       });
     });

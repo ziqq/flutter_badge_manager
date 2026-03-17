@@ -2,7 +2,7 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Run Example",
+      "name": "run:example",
       "type": "dart",
       "request": "launch",
       "cwd": "${workspaceFolder}/flutter_badge_manager/example",
@@ -10,7 +10,7 @@
       "env": {}
     },
     {
-      "name": "Run Android",
+      "name": "run:example:android",
       "type": "dart",
       "request": "launch",
       "cwd": "${workspaceFolder}/flutter_badge_manager_android/example",
@@ -18,7 +18,7 @@
       "env": {}
     },
     {
-      "name": "Run IOS",
+      "name": "run:example:ios",
       "type": "dart",
       "request": "launch",
       "cwd": "${workspaceFolder}/flutter_badge_manager_foundation/example",
@@ -26,10 +26,11 @@
       "env": {}
     },
     {
-      "name": "Flutter Test",
+      "name": "run:tests",
       "request": "launch",
       "type": "dart",
-      "program": "test/contacts_test.dart",
+      "cwd": "${workspaceFolder}/flutter_badge_manager",
+      "program": "test/flutter_badge_manager_test.dart",
       "env": {
         "ENVIRONMENT": "test"
       },
@@ -37,11 +38,11 @@
       "runTestsOnDevice": false,
       "templateFor": "test",
       "toolArgs": [
-        "--color",
-        "--reporter=expanded",
         "--file-reporter=json:coverage/tests.json",
+        "--color",
+        "--concurrency=12",
+        "--reporter=expanded",
         "--timeout=30s",
-        "--concurrency=12"
         /* "--name=handles failed connection attempts" */
       ],
       "args": []

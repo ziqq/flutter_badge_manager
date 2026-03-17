@@ -14,12 +14,12 @@ dependencies:
 
 Then:
 ```dart
-import 'package:flutter_badge_manager/flutter_badge_manager.dart';
+import 'package:flutter_badge_manager_foundation/flutter_badge_manager_foundation.dart';
 
-final supported = await FlutterBadgeManager.isSupported();
+final supported = await FlutterBadgeManagerFoundation.instance.isSupported();
 if (supported) {
-  await FlutterBadgeManager.update(3);
-  await FlutterBadgeManager.remove();
+  await FlutterBadgeManagerFoundation.instance.update(3);
+  await FlutterBadgeManagerFoundation.instance.remove();
 }
 ```
 
@@ -53,14 +53,15 @@ Minimum macOS version: 10.15.
 
 ## API (via main plugin)
 
-- `FlutterBadgeManager.isSupported()`
-- `FlutterBadgeManager.update(int count)` (count >= 0)
-- `FlutterBadgeManager.remove()`
+- `FlutterBadgeManagerFoundation.instance.isSupported()`
+- `FlutterBadgeManagerFoundation.instance.update(int count)` (count >= 0)
+- `FlutterBadgeManagerFoundation.instance.remove()`
 
 Negative counts throw `PlatformException(code: 'invalid_args')`.
 
 ## Notes
 
+- This package uses a generated Pigeon host API for Dart-to-native calls.
 - Badge changes are applied via `UIApplication.shared.applicationIconBadgeNumber` (iOS) and `NSApplication.shared.dockTile.badgeLabel` (macOS).
 - Permission prompts are not auto-triggered if you never requested notifications; make sure to request authorization when needed.
 

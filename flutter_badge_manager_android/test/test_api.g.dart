@@ -34,15 +34,22 @@ class _PigeonCodec extends StandardMessageCodec {
   }
 }
 
+/// Package-local Pigeon schema for the Android implementation.
+///
+/// This contract intentionally lives in the Android package because it
+/// generates Android-specific bindings and Android-specific channel names.
 abstract class TestFlutterBadgeManagerApi {
   static TestDefaultBinaryMessengerBinding? get _testBinaryMessengerBinding =>
       TestDefaultBinaryMessengerBinding.instance;
   static const MessageCodec<Object?> pigeonChannelCodec = _PigeonCodec();
 
+  /// Returns whether the current launcher supports numeric badges.
   bool? isSupported();
 
+  /// Applies the given badge count.
   void update(int count);
 
+  /// Clears the current badge.
   void remove();
 
   static void setUp(

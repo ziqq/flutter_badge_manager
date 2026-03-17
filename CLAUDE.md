@@ -12,8 +12,8 @@ flutter_badge_manager_foundation/           # iOS & macOS (Darwin) implementatio
 ```
 
 - `flutter_badge_manager/lib/src/flutter_badge_manager.dart` — `FlutterBadgeManager` class, delegates to `FlutterBadgeManagerPlatform`
-- `flutter_badge_manager/lib/src/flutter_badge_manager_lagacy.dart` — deprecated static API wrapper
-- `flutter_badge_manager_platform_interface/lib/` — `FlutterBadgeManagerPlatform`, `MethodChannelFlutterBadgeManager`
+- `flutter_badge_manager/lib/src/flutter_badge_manager.dart` — `FlutterBadgeManager` instance API, delegates to `FlutterBadgeManagerPlatform`
+- `flutter_badge_manager_platform_interface/lib/` — `FlutterBadgeManagerPlatform`, fail-fast default when no implementation is registered
 - `flutter_badge_manager_android/lib/src/` — `FlutterBadgeManagerAndroid` extends `FlutterBadgeManagerPlatform`
 - `flutter_badge_manager_foundation/lib/src/` — `FlutterBadgeManagerFoundation` extends `FlutterBadgeManagerPlatform`
 

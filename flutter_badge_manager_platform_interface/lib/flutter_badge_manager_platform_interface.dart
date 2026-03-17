@@ -5,7 +5,6 @@
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter_badge_manager_platform_interface/method_channel_flutter_badge_manger.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 /// The interface that implementations of flutter_badge_manager must implement.
@@ -27,10 +26,11 @@ abstract class FlutterBadgeManagerPlatform extends PlatformInterface {
 
   /// The current default [FlutterBadgeManagerPlatform] instance.
   ///
-  /// It will always default to [MethodChannelFlutterBadgeManager]
-  /// if no other implementation was provided.
+  /// Federated platform packages replace this with their own Pigeon-backed
+  /// implementations during registration. If nothing registers an
+  /// implementation, platform calls fail fast with a [StateError].
   static FlutterBadgeManagerPlatform get instance =>
-      _instance ??= MethodChannelFlutterBadgeManager.instance;
+      _instance ??= _MissingFlutterBadgeManagerPlatform.instance;
 
   /// Platform-specific plugins should set this with their own platform-specific
   /// class that extends [FlutterBadgeManagerPlatform]
@@ -46,8 +46,8 @@ abstract class FlutterBadgeManagerPlatform extends PlatformInterface {
   /// which is forbidden for anything other than mocks (see class docs).
   /// This property provides a backdoor for mockito mocks to
   /// skip the verification that the class isn't implemented with `implements`.
-  @visibleForTesting
   // @Deprecated('Use MockPlatformInterfaceMixin instead')
+  @visibleForTesting
   bool get isMock => false;
 
   /// Checks if the device supports app badges.
@@ -64,4 +64,29 @@ abstract class FlutterBadgeManagerPlatform extends PlatformInterface {
   Future<void> remove() {
     throw UnimplementedError('remove is not implemented');
   }
+}
+
+final class _MissingFlutterBadgeManagerPlatform
+    extends FlutterBadgeManagerPlatform {
+  _MissingFlutterBadgeManagerPlatform._();
+
+  static final FlutterBadgeManagerPlatform instance =
+      _MissingFlutterBadgeManagerPlatform._();
+
+  static StateError _missingImplementationError() => StateError(
+        'No FlutterBadgeManagerPlatform implementation was registered. '
+        'Ensure a federated platform package is available for the current '
+        'platform or inject a test implementation explicitly.',
+      );
+
+  @override
+  Future<bool> isSupported() =>
+      Future<bool>.error(_missingImplementationError());
+
+  @override
+  Future<void> update(int count) =>
+      Future<void>.error(_missingImplementationError());
+
+  @override
+  Future<void> remove() => Future<void>.error(_missingImplementationError());
 }

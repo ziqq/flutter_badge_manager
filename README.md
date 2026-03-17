@@ -30,9 +30,9 @@ Plugin to set / clear application badge numbers on iOS, macOS and supported Andr
 ## Features
 
 - Unified API with automatic federated implementation selection.
-- Legacy static calls still work (`FlutterBadgeManager.update(3)`).
-- New instance style (`FlutterBadgeManager.instance.update(3)`).
-- Fallback to legacy method channel if federated platform not registered.
+- Preferred instance style (`FlutterBadgeManager.instance.update(3)`).
+- `0.2.0` exposes only the instance API and federated Pigeon-backed platform implementations.
+- Fails fast if no federated implementation is registered for the current platform.
 - Simple support check: `isSupported()`.
 
 ## Installation
@@ -95,20 +95,20 @@ Import:
 import 'package:flutter_badge_manager/flutter_badge_manager.dart';
 ```
 
-Static (legacy style):
+Instance style (recommended):
 ```dart
-await FlutterBadgeManager.update(5);
-await FlutterBadgeManager.remove();
-final supported = await FlutterBadgeManager.isSupported();
-```
-
-Instance style:
-```dart
-if (await FlutterBadgeManager.instance.isSupported()) {
-  await FlutterBadgeManager.instance.update(7);
-  await FlutterBadgeManager.instance.remove();
+final badge = FlutterBadgeManager.instance;
+if (await badge.isSupported()) {
+  await badge.update(7);
+  await badge.remove();
 }
 ```
+
+For tests, bind a specific platform implementation with
+`FlutterBadgeManager.instanceFor(...)` instead of relying on the shared
+singleton.
+
+For migration details, see [MIGRATION.md](MIGRATION.md).
 
 ## Permissions (recommended flow)
 

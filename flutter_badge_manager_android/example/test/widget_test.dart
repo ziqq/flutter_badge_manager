@@ -3,8 +3,9 @@ import 'package:flutter_badge_manager_example/main.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'badge_api_mock.dart';
+
 void main() {
-  const badgeChannel = MethodChannel('github.com/ziqq/flutter_badge_manager');
   const permissionChannel = MethodChannel(
     'flutter.baseflow.com/permissions/methods',
   );
@@ -21,6 +22,7 @@ void main() {
 
     badgeCalls.clear();
     notificationCalls.clear();
+    setUpBadgeApiMock(badgeCalls: badgeCalls);
 
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(permissionChannel, (call) async {
@@ -48,20 +50,6 @@ void main() {
               return null;
           }
         });
-
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(badgeChannel, (call) async {
-          badgeCalls.add(call);
-          switch (call.method) {
-            case 'isSupported':
-              return true;
-            case 'update':
-            case 'remove':
-              return null;
-            default:
-              throw PlatformException(code: 'unimplemented');
-          }
-        });
   });
 
   tearDown(() {
@@ -69,8 +57,7 @@ void main() {
         .setMockMethodCallHandler(permissionChannel, null);
     TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
         .setMockMethodCallHandler(localNotificationsChannel, null);
-    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-        .setMockMethodCallHandler(badgeChannel, null);
+    tearDownBadgeApiMock();
   });
 
   group('Widget_tests -', () {
@@ -94,11 +81,10 @@ void main() {
     testWidgets(
       'shows platform-specific failure message',
       (tester) async {
-        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
-            .setMockMethodCallHandler(badgeChannel, (call) async {
-              badgeCalls.add(call);
-              throw PlatformException(code: 'boom');
-            });
+        setUpBadgeApiMock(
+          badgeCalls: badgeCalls,
+          isSupportedError: PlatformException(code: 'boom'),
+        );
 
         await tester.pumpWidget(const App());
         await tester.pumpAndSettle();

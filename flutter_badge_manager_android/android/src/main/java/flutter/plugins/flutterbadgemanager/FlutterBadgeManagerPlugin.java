@@ -1,122 +1,66 @@
 package flutter.plugins.flutterbadgemanager;
 
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
 import android.content.Context;
-import android.os.Build;
-
-import androidx.core.app.NotificationCompat;
-
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
-import io.flutter.plugin.common.MethodCall;
-import io.flutter.plugin.common.MethodChannel;
-import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
-import io.flutter.plugin.common.MethodChannel.Result;
 import me.leolin.shortcutbadger.ShortcutBadger;
 
-public class FlutterBadgeManagerPlugin implements MethodCallHandler, FlutterPlugin {
+public class FlutterBadgeManagerPlugin
+    implements FlutterPlugin, FlutterBadgeManagerPluginPigeon.FlutterBadgeManagerApi {
 
-  private Context applicationContext;
-  private MethodChannel channel;
-
-  private static final String CHANNEL_NAME = "github.com/ziqq/flutter_badge_manager";
-  private static final String NOTIF_CHANNEL_ID = "badge_channel";
-  private static final int NOTIF_ID = 7001;
-  // private static final boolean ENABLE_NOTIFICATION_BADGE = false;
+  @Nullable private Context applicationContext;
 
   @Override
-  public void onAttachedToEngine(FlutterPluginBinding binding) {
-    channel = new MethodChannel(binding.getBinaryMessenger(), CHANNEL_NAME);
-    channel.setMethodCallHandler(this);
+  public void onAttachedToEngine(@NonNull FlutterPluginBinding binding) {
     applicationContext = binding.getApplicationContext();
+    FlutterBadgeManagerPluginPigeon.FlutterBadgeManagerApi.setUp(
+        binding.getBinaryMessenger(), this);
   }
 
   @Override
-  public void onDetachedFromEngine(FlutterPluginBinding binding) {
-    channel.setMethodCallHandler(null);
+  public void onDetachedFromEngine(@NonNull FlutterPluginBinding binding) {
+    FlutterBadgeManagerPluginPigeon.FlutterBadgeManagerApi.setUp(
+        binding.getBinaryMessenger(), null);
     applicationContext = null;
   }
 
   @Override
-  public void onMethodCall(MethodCall call, Result result) {
-    switch (call.method) {
-      case "isSupported": {
-        result.success(ShortcutBadger.isBadgeCounterSupported(applicationContext));
-        break;
-      }
-      case "update": {
-        Integer count = safeCount(call.argument("count"));
-        if (count == null || count < 0) {
-          result.error("invalid_args", "count must be non-negative int", null);
-          return;
-        }
-        applyBadge(count);
-        result.success(null);
-        break;
-      }
-      case "remove": {
-        applyBadge(0);
-        result.success(null);
-        break;
-      }
-      default:
-        result.notImplemented();
-    }
+  public @Nullable Boolean isSupported() {
+    return ShortcutBadger.isBadgeCounterSupported(requireContext());
   }
 
-  private Integer safeCount(Object raw) {
-    if (raw == null) return null;
-    if (raw instanceof Integer) return (Integer) raw;
-    try { return Integer.valueOf(raw.toString()); } catch (Exception e) { return null; }
+  @Override
+  public void update(@NonNull Long count) {
+    if (count < 0) {
+      throw new FlutterBadgeManagerPluginPigeon.FlutterError(
+          "invalid_args", "count must be non-negative int", null);
+    }
+
+    applyBadge(count.intValue());
+  }
+
+  @Override
+  public void remove() {
+    applyBadge(0);
   }
 
   private void applyBadge(int count) {
-    // Try ShortcutBadger if possible
-    try {
-      if (count == 0) {
-        ShortcutBadger.removeCount(applicationContext);
-      } else {
-        ShortcutBadger.applyCount(applicationContext, count);
-      }
-    } catch (Exception ignored) {
-      // Removed: all NotificationManager / NotificationChannel logic to avoid any user-visible notifications.
+    if (count == 0) {
+      ShortcutBadger.removeCount(requireContext());
+      return;
     }
 
-    /* if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && ENABLE_NOTIFICATION_BADGE) {
-      NotificationManager nm = (NotificationManager) applicationContext.getSystemService(Context.NOTIFICATION_SERVICE);
-      if (nm == null) return;
+    ShortcutBadger.applyCount(requireContext(), count);
+  }
 
-      NotificationChannel ch = nm.getNotificationChannel(NOTIF_CHANNEL_ID);
-      if (ch == null) {
-        ch = new NotificationChannel(
-          NOTIF_CHANNEL_ID,
-          "Badge Updates",
-          NotificationManager.IMPORTANCE_DEFAULT // Важность >= DEFAULT
-        );
-        ch.setShowBadge(true);
-        nm.createNotificationChannel(ch);
-      } else if (!ch.canShowBadge()) {
-        ch.setShowBadge(true); // Для некоторых прошивок
-      }
+  private @NonNull Context requireContext() {
+    final Context context = applicationContext;
+    if (context == null) {
+      throw new IllegalStateException(
+          "FlutterBadgeManagerPlugin is not attached to an engine.");
+    }
 
-      if (count == 0) {
-        nm.cancel(NOTIF_ID);
-        return;
-      }
-
-      NotificationCompat.Builder builder = new NotificationCompat.Builder(applicationContext, NOTIF_CHANNEL_ID)
-        .setSmallIcon(applicationContext.getApplicationInfo().icon)
-        .setContentTitle("Badge")
-        .setContentText("Unread: " + count)
-        .setNumber(count) // Используется некоторыми лаунчерами
-        .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
-        .setAutoCancel(false)
-        .setOngoing(false)
-        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-      Notification notification = builder.build();
-      nm.notify(NOTIF_ID, notification);
-    } */
+    return context;
   }
 }
