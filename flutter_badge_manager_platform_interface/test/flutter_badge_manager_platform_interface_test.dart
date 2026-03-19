@@ -74,6 +74,39 @@ void main() => group('FlutterBadgeManagerPlatform interface', () {
         );
       });
 
+      test('default instance update fails fast without implementation', () {
+        expect(
+          () => FlutterBadgeManagerPlatform.instance.update(1),
+          throwsA(
+            isA<StateError>().having(
+              (e) => e.message,
+              'message',
+              contains('No FlutterBadgeManagerPlatform implementation'),
+            ),
+          ),
+        );
+      });
+
+      test('default instance remove fails fast without implementation', () {
+        expect(
+          FlutterBadgeManagerPlatform.instance.remove,
+          throwsA(
+            isA<StateError>().having(
+              (e) => e.message,
+              'message',
+              contains('No FlutterBadgeManagerPlatform implementation'),
+            ),
+          ),
+        );
+      });
+
+      test('default instance getter reuses the missing singleton', () {
+        expect(
+          FlutterBadgeManagerPlatform.instance,
+          same(FlutterBadgeManagerPlatform.instance),
+        );
+      });
+
       test('can replace instance with mock (isMock bypass)', () async {
         final mock = _MockPlatform();
         FlutterBadgeManagerPlatform.instance = mock; // should not throw

@@ -79,6 +79,27 @@ void main() => group('FlutterBadgeManager -', () {
     expect(instance, isA<FlutterBadgeManager>());
   });
 
+  test('instance singleton is cached while platform stays the same', () {
+    final first = FlutterBadgeManager.instance;
+    final second = FlutterBadgeManager.instance;
+
+    expect(identical(first, second), isTrue);
+  });
+
+  test('instance singleton refreshes when platform instance changes', () async {
+    final firstPlatform = _TestPlatform(supported: true);
+    final secondPlatform = _TestPlatform(supported: false);
+
+    FlutterBadgeManagerPlatform.instance = firstPlatform;
+    final first = FlutterBadgeManager.instance;
+
+    FlutterBadgeManagerPlatform.instance = secondPlatform;
+    final second = FlutterBadgeManager.instance;
+
+    expect(identical(first, second), isFalse);
+    expect(await second.isSupported(), isFalse);
+  });
+
   group('isSupported -', () {
     test('forwards true', () async {
       platform.supported = true;
@@ -169,6 +190,17 @@ void main() => group('FlutterBadgeManager -', () {
 
       await expectLater(manager.remove(), throwsA(isA<StateError>()));
       expect(platform.removeCalled, isFalse);
+    });
+
+    test('singleton forwards errors from refreshed platform', () async {
+      final failingPlatform = _TestPlatform(supported: true)
+        ..isSupportedError = StateError('support check failed');
+      FlutterBadgeManagerPlatform.instance = failingPlatform;
+
+      await expectLater(
+        FlutterBadgeManager.instance.isSupported(),
+        throwsA(isA<StateError>()),
+      );
     });
   });
 
