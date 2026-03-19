@@ -49,6 +49,33 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v4
 
+      - name: "Write monorepo overrides"
+        working-directory: ${{ matrix.path }}
+        run: |
+          case "${{ matrix.name }}" in
+            plugin)
+              cat > pubspec_overrides.yaml <<'EOF'
+              dependency_overrides:
+                flutter_badge_manager_android:
+                  path: ../flutter_badge_manager_android
+                flutter_badge_manager_foundation:
+                  path: ../flutter_badge_manager_foundation
+                flutter_badge_manager_platform_interface:
+                  path: ../flutter_badge_manager_platform_interface
+              EOF
+              ;;
+            android|foundation)
+              cat > pubspec_overrides.yaml <<'EOF'
+              dependency_overrides:
+                flutter_badge_manager_platform_interface:
+                  path: ../flutter_badge_manager_platform_interface
+              EOF
+              ;;
+            interface)
+              rm -f pubspec_overrides.yaml
+              ;;
+          esac
+
       - name: "Install Flutter"
         uses: subosito/flutter-action@v2
         with:
@@ -108,6 +135,11 @@ jobs:
     needs: package-ci
     runs-on: ubuntu-latest
     if: always()
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+    permissions:
+      contents: read
+      id-token: write
     steps:
       - uses: actions/checkout@v4
       - name: "Download coverage artifacts"
@@ -167,9 +199,23 @@ jobs:
           name: coverage-merged
           path: merged/lcov.info
           if-no-files-found: ignore
-      - name: "Upload to Codecov"
+
+      - name: "Upload to Codecov with token"
+        if: hashFiles('merged/lcov.info') != '' && env.CODECOV_TOKEN != ''
         uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: merged/lcov.info
+          disable_search: true
+          verbose: true
+          fail_ci_if_error: false
+
+      - name: "Upload to Codecov with OIDC"
+        if: hashFiles('merged/lcov.info') != '' && env.CODECOV_TOKEN == ''
+        uses: codecov/codecov-action@v5
+        with:
+          use_oidc: true
+          files: merged/lcov.info
+          disable_search: true
+          verbose: true
           fail_ci_if_error: false
