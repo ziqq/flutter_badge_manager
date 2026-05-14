@@ -17,6 +17,7 @@ dependencies:
   flutter_badge_manager_foundation:
     path: ../
 
+  flutter_local_notifications: ^19.5.0
   cupertino_icons: ^1.0.8
 
 

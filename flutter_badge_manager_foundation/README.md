@@ -25,7 +25,7 @@ if (supported) {
 
 ## iOS
 
-Badge visibility can still be affected by the app's notification settings. If your app also posts notifications, request authorization through your normal notification flow.
+Badge visibility can still be affected by the app's notification settings. For the tested iOS flow, request badge notification authorization on iOS versions below 26 before relying on badge display or persistence. If your app also posts notifications, do that through your normal notification flow.
 
 Add (if you need remote notifications background refresh):
 ```xml
@@ -65,6 +65,7 @@ Negative counts throw `PlatformException(code: 'invalid_args')`.
 - Badge changes are applied via `UIApplication.shared.applicationIconBadgeNumber` on all supported iOS versions and additionally synchronized through `UNUserNotificationCenter.setBadgeCount` on iOS 16+ so the system badge state persists after the app leaves the foreground. On macOS the package uses `NSApplication.shared.dockTile.badgeLabel`.
 - `isSupported()` reports whether the Darwin platform implementation supports badges at all. Notification permission still affects whether the badge is shown, but it does not change capability detection.
 - Permission prompts are not triggered by this package. Request notification authorization only if your app's own notification flow needs it.
+- The package example requests badge permission through `flutter_local_notifications` so it behaves predictably on iOS and macOS versions that require an explicit notification authorization flow before showing badge changes. On tested iOS versions below 26, that permission request is required for reliable badge behavior.
 
 ## License
 

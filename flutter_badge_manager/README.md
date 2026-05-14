@@ -30,7 +30,7 @@ Federated platform packages (Android, iOS/macOS) are auto-included when you buil
 
 ## iOS Setup
 
-If your app also posts notifications, request notification authorization through your app's normal notification flow. Badge visibility can still be affected by system notification settings.
+If your app also posts notifications, request notification authorization through your app's normal notification flow. On tested iOS versions below 26, request badge notification permission before relying on badge display or persistence. Badge visibility can still be affected by system notification settings.
 
 Optional (for remote notification background handling) add to `ios/Runner/Info.plist`:
 ```xml
@@ -105,7 +105,7 @@ singleton.
 ## Permissions (recommended flow)
 
 iOS/macOS:
-- Request notification authorization as part of your app's notification flow when needed. Badge capability detection does not depend on that authorization state.
+- Request notification authorization as part of your app's notification flow when needed. On tested iOS versions below 26, request badge permission before relying on badge display or persistence. Badge capability detection does not depend on that authorization state.
 
 Android (API 33+):
 ```dart
@@ -129,7 +129,7 @@ Future<void> ensureNotificationPermission() async {
 
 - Returns false on `isSupported()` on Pixel: expected (numeric not available).
 - Badge not visible on Android: launcher does not support numeric badges or permission not granted.
-- iOS badge not updating or not persisting: check app notification settings and badge allowance in iOS Settings.
+- iOS badge not updating or not persisting: check app notification settings and badge allowance in iOS Settings. On tested iOS versions below 26, confirm the app has explicitly requested badge notification permission.
 
 ## Documentation
 

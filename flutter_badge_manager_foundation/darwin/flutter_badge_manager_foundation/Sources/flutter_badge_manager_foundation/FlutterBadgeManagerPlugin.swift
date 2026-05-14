@@ -22,6 +22,12 @@ protocol UserNotificationCenterBadgeSetting {
   func setBadgeCount(_ value: Int, completionHandler: ((Error?) -> Void)?)
 }
 
+protocol UserNotificationCenterSettingsReading {
+  func getNotificationSettings(
+    completionHandler: @escaping (UNNotificationSettings) -> Void
+  )
+}
+
 struct SystemUserNotificationCenterBadgeSetter: UserNotificationCenterBadgeSetting {
   func setBadgeCount(
     _ value: Int,
@@ -39,6 +45,16 @@ struct SystemUserNotificationCenterBadgeSetter: UserNotificationCenterBadgeSetti
   }
 }
 
+struct SystemUserNotificationCenterSettingsReader: UserNotificationCenterSettingsReading {
+  func getNotificationSettings(
+    completionHandler: @escaping (UNNotificationSettings) -> Void
+  ) {
+    UNUserNotificationCenter.current().getNotificationSettings(
+      completionHandler: completionHandler
+    )
+  }
+}
+
 protocol ApplicationBadgeSetting {
   func setApplicationIconBadgeNumber(_ value: Int)
 }
@@ -51,6 +67,7 @@ struct SystemApplicationBadgeSetter: ApplicationBadgeSetting {
 
 final class IOSBadgeWriter: BadgeWriting {
   init(
+    notificationSettingsReader: UserNotificationCenterSettingsReading = SystemUserNotificationCenterSettingsReader(),
     notificationCenter: UserNotificationCenterBadgeSetting = SystemUserNotificationCenterBadgeSetter(),
     application: ApplicationBadgeSetting = SystemApplicationBadgeSetter(),
     supportsModernBadgeAPI: @escaping () -> Bool = {
@@ -63,23 +80,35 @@ final class IOSBadgeWriter: BadgeWriting {
     self.application = application
     self.notificationCenter = notificationCenter
     self.supportsModernBadgeAPI = supportsModernBadgeAPI
+    self.notificationSettingsReader = notificationSettingsReader
   }
 
+  private let notificationSettingsReader: UserNotificationCenterSettingsReading
   private let notificationCenter: UserNotificationCenterBadgeSetting
   private let application: ApplicationBadgeSetting
   private let supportsModernBadgeAPI: () -> Bool
 
   func setBadge(_ value: Int) {
+    applyBadge(value)
+  }
+
+  private func applyBadge(_ value: Int) {
     let writeBadge = {
       self.application.setApplicationIconBadgeNumber(value)
 
       if self.supportsModernBadgeAPI() {
-        self.notificationCenter.setBadgeCount(value) { error in
-          if let error {
-            NSLog(
-              "[flutter_badge_manager_foundation] Failed to persist badge count: %@",
-              error.localizedDescription
-            )
+        self.notificationSettingsReader.getNotificationSettings { settings in
+          guard settings.badgeSetting == .enabled else {
+            return
+          }
+
+          self.notificationCenter.setBadgeCount(value) { error in
+            if let error {
+              NSLog(
+                "[flutter_badge_manager_foundation] Failed to persist badge count: %@",
+                error.localizedDescription
+              )
+            }
           }
         }
       }

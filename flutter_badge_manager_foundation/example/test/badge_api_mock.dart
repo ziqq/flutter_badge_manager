@@ -2,6 +2,10 @@ import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager_foundation/src/flutter_badge_manager_foundation.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+const MethodChannel _localNotificationsChannel = MethodChannel(
+  'dexterous.com/flutter/local_notifications',
+);
+
 const _prefix =
     // ignore: lines_longer_than_80_chars
     'dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi';
@@ -26,7 +30,9 @@ const BasicMessageChannel<Object?> _removeChannel =
 
 void setUpBadgeApiMock({
   required List<MethodCall> badgeCalls,
+  List<MethodCall>? localNotificationCalls,
   bool? supported = true,
+  bool permissionGranted = true,
   PlatformException? isSupportedError,
   PlatformException? updateError,
   PlatformException? removeError,
@@ -57,11 +63,21 @@ void setUpBadgeApiMock({
       }
       return wrapResponse(empty: true);
     });
+
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+      .setMockMethodCallHandler(_localNotificationsChannel, (call) async {
+        localNotificationCalls?.add(call);
+        if (call.method == 'requestPermissions') {
+          return permissionGranted;
+        }
+        return null;
+      });
 }
 
 void tearDownBadgeApiMock() {
   TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
     ..setMockDecodedMessageHandler<Object?>(_isSupportedChannel, null)
     ..setMockDecodedMessageHandler<Object?>(_updateChannel, null)
-    ..setMockDecodedMessageHandler<Object?>(_removeChannel, null);
+    ..setMockDecodedMessageHandler<Object?>(_removeChannel, null)
+    ..setMockMethodCallHandler(_localNotificationsChannel, null);
 }

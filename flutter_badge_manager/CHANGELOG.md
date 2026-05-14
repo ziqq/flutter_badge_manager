@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.2
+- **FIXED**: Updated the bundled Darwin implementation to the `0.2.2` patch line, improving iOS badge compatibility on tested iOS 18+ and 26+ devices.
+
 ## 0.2.1
 - **FIXED**: Updated the iOS badge writer to use `UNUserNotificationCenter.setBadgeCount` on iOS 16+ with a legacy fallback for older versions, improving badge persistence when the app moves out of the foreground.
 - **FIXED**: On iOS 16+ the Foundation implementation now synchronizes badge updates through both `UIApplication.shared.applicationIconBadgeNumber` and `UNUserNotificationCenter.setBadgeCount`, preserving the immediate app-side update while also persisting the system badge state.

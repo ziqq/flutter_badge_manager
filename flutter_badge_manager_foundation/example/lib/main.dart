@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'dart:developer' as dev;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager_foundation/flutter_badge_manager_foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 void main() => runZonedGuarded<void>(
   () => runApp(const App()),
@@ -39,62 +41,97 @@ class _HomeScreen extends StatefulWidget {
 
 /// State for widget _HomeScreen.
 class __HomeScreenState extends State<_HomeScreen> {
+  final _plugin = FlutterLocalNotificationsPlugin();
+  late ScaffoldMessengerState? _messenger;
+
   String _supportedString = 'Unknown';
+  bool isSupported = false;
   int _count = 0;
 
   @override
   void initState() {
     super.initState();
-    _initPlatformState();
-  }
+    Future<void>(() async {
+      if (!mounted) return;
 
-  Future<void> _initPlatformState() async {
-    if (!mounted) return;
+      String supportedString;
+      try {
+        final ensure = await _ensureBadgePermission();
 
-    String supportedString;
-    try {
-      final isSupported = await FlutterBadgeManagerFoundation.instance
-          .isSupported();
-      dev.log('isSupported: $isSupported');
-      if (isSupported) {
-        supportedString = 'Supported';
-      } else {
-        supportedString = 'Not supported';
+        isSupported = await FlutterBadgeManagerFoundation.instance
+            .isSupported();
+        isSupported &= ensure == true;
+        dev.log('isSupported: $isSupported');
+        if (isSupported) {
+          supportedString = 'Supported';
+        } else {
+          supportedString = 'Not supported';
+        }
+      } on PlatformException catch (e, _) {
+        dev.log('PlatformException | isSupported error: $e');
+        supportedString = 'Failed to get badge support.';
+      } on Object catch (e, _) {
+        dev.log('error: $e');
+        supportedString = 'Failed to get badge support. $e';
       }
-    } on PlatformException {
-      dev.log('error: PlatformException');
-      supportedString = 'Failed to get badge support.';
-    } on Object catch (e, _) {
-      dev.log('error: $e');
-      supportedString = 'Failed to get badge support. $e';
-    }
 
-    setState(() => _supportedString = supportedString);
+      setState(() => _supportedString = supportedString);
+    });
   }
 
-  void _add() {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _messenger = ScaffoldMessenger.maybeOf(context);
+  }
+
+  /// Requests notification permission on platforms that require it
+  /// for badge display for iOS versions 18 and bellow.
+  Future<bool?> _ensureBadgePermission() async {
+    try {
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        return await _plugin
+            .resolvePlatformSpecificImplementation<
+              IOSFlutterLocalNotificationsPlugin
+            >()
+            ?.requestPermissions(alert: false, badge: true, sound: false);
+      }
+
+      if (defaultTargetPlatform == TargetPlatform.macOS) {
+        return await _plugin
+            .resolvePlatformSpecificImplementation<
+              MacOSFlutterLocalNotificationsPlugin
+            >()
+            ?.requestPermissions(alert: false, badge: true, sound: false);
+      }
+      return false;
+    } on Object catch (e, s) {
+      dev.log('Failed to request badge permission: $e', stackTrace: s);
+      return null;
+    }
+  }
+
+  Future<void> _add() async {
     if (!mounted) return;
     _count++;
-    final messenger = ScaffoldMessenger.maybeOf(context);
-    FlutterBadgeManagerFoundation.instance.update(_count);
-    messenger
+    await FlutterBadgeManagerFoundation.instance.update(_count);
+    _messenger
       ?..clearSnackBars()
       ..showSnackBar(SnackBar(content: Text('Badge count updated: $_count')));
   }
 
-  void _remove() {
+  Future<void> _remove() async {
     if (!mounted) return;
-    final messenger = ScaffoldMessenger.maybeOf(context);
-    FlutterBadgeManagerFoundation.instance.remove();
+    await FlutterBadgeManagerFoundation.instance.remove();
     _count = 0;
-    messenger
+    _messenger
       ?..clearSnackBars()
       ..showSnackBar(SnackBar(content: Text('Badge count updated: $_count')));
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-    appBar: AppBar(title: const Text('Plugin example app')),
+    appBar: AppBar(title: const Text('Badge plugin example (foundation)')),
     body: SizedBox.expand(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

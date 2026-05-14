@@ -27,6 +27,35 @@ final class FlutterBadgeManagerPluginTests: XCTestCase {
         }
     }
 
+    private final class SpyNotificationSettingsReader:
+        UserNotificationCenterSettingsReading
+    {
+        var badgeSetting: UNNotificationSetting
+
+        init(badgeSetting: UNNotificationSetting) {
+            self.badgeSetting = badgeSetting
+        }
+
+        func getNotificationSettings(
+            completionHandler: @escaping (UNNotificationSettings) -> Void
+        ) {
+            completionHandler(StubNotificationSettings(badgeSetting: badgeSetting))
+        }
+    }
+
+    private final class StubNotificationSettings: UNNotificationSettings {
+        private let storedBadgeSetting: UNNotificationSetting
+
+        init(badgeSetting: UNNotificationSetting) {
+            self.storedBadgeSetting = badgeSetting
+            super.init()
+        }
+
+        override var badgeSetting: UNNotificationSetting {
+            storedBadgeSetting
+        }
+    }
+
     private final class SpyApplicationBadgeSetter: ApplicationBadgeSetting {
         var values: [Int] = []
         var onSet: (() -> Void)?
@@ -124,9 +153,13 @@ final class FlutterBadgeManagerPluginTests: XCTestCase {
     #if os(iOS)
     func testIOSBadgeWriterUsesModernBadgeAPIWhenAvailable() {
         let notificationCenter = SpyNotificationCenter()
+        let notificationSettingsReader = SpyNotificationSettingsReader(
+            badgeSetting: .enabled
+        )
         let application = SpyApplicationBadgeSetter()
         let writer = IOSBadgeWriter(
             notificationCenter: notificationCenter,
+            notificationSettingsReader: notificationSettingsReader,
             application: application,
             supportsModernBadgeAPI: { true }
         )
@@ -144,9 +177,13 @@ final class FlutterBadgeManagerPluginTests: XCTestCase {
 
     func testIOSBadgeWriterFallsBackToApplicationBadgeOnOlderSystems() {
         let notificationCenter = SpyNotificationCenter()
+        let notificationSettingsReader = SpyNotificationSettingsReader(
+            badgeSetting: .enabled
+        )
         let application = SpyApplicationBadgeSetter()
         let writer = IOSBadgeWriter(
             notificationCenter: notificationCenter,
+            notificationSettingsReader: notificationSettingsReader,
             application: application,
             supportsModernBadgeAPI: { false }
         )
@@ -160,6 +197,30 @@ final class FlutterBadgeManagerPluginTests: XCTestCase {
         waitForExpectations(timeout: 1)
         XCTAssertTrue(notificationCenter.values.isEmpty)
         XCTAssertEqual(application.values, [5])
+    }
+
+    func testIOSBadgeWriterSkipsModernBadgeAPIWhenBadgePermissionIsDisabled() {
+        let notificationCenter = SpyNotificationCenter()
+        let notificationSettingsReader = SpyNotificationSettingsReader(
+            badgeSetting: .disabled
+        )
+        let application = SpyApplicationBadgeSetter()
+        let writer = IOSBadgeWriter(
+            notificationCenter: notificationCenter,
+            notificationSettingsReader: notificationSettingsReader,
+            application: application,
+            supportsModernBadgeAPI: { true }
+        )
+        let expectation = expectation(description: "application badge update")
+        application.onSet = {
+            expectation.fulfill()
+        }
+
+        writer.setBadge(7)
+
+        waitForExpectations(timeout: 1)
+        XCTAssertTrue(notificationCenter.values.isEmpty)
+        XCTAssertEqual(application.values, [7])
     }
     #endif
 }

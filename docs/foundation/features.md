@@ -20,5 +20,6 @@
 ## Important notes
 
 - Notification settings can still affect whether the user sees the badge.
+- On tested iOS versions below 26, request badge notification permission before relying on badge display or persistence.
 - The package itself does not trigger permission prompts.
 - If an app needs notification authorization, that flow belongs to the app.
