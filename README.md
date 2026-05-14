@@ -146,6 +146,14 @@ flutter_badge_manager_android/              # Android implementation
 flutter_badge_manager_foundation/           # iOS & macOS (Darwin) implementation
 ```
 
+## Documentation
+
+- Repository overview: [docs/architecture.md](docs/architecture.md)
+- Features and behavior: [docs/features.md](docs/features.md)
+- Testing and CI: [docs/tests.md](docs/tests.md)
+- Release workflow: [docs/deployment.md](docs/deployment.md)
+- Package roadmaps: [docs/roadmap.md](docs/roadmap.md)
+
 See [CONTRIBUTING.md](CONTRIBUTING.md) for build commands and development workflow.
 
 ## Contributing

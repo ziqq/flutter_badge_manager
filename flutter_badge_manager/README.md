@@ -131,6 +131,13 @@ Future<void> ensureNotificationPermission() async {
 - Badge not visible on Android: launcher does not support numeric badges or permission not granted.
 - iOS badge not updating or not persisting: check app notification settings and badge allowance in iOS Settings.
 
+## Documentation
+
+- Repository architecture: [../docs/architecture.md](../docs/architecture.md)
+- Feature details: [../docs/features.md](../docs/features.md)
+- Testing and CI: [../docs/tests.md](../docs/tests.md)
+- Release workflow: [../docs/deployment.md](../docs/deployment.md)
+
 ## Contributing
 
 Issues / PRs welcome. Prefer evolving the instance API and federated platform implementations without reintroducing a legacy static wrapper.
