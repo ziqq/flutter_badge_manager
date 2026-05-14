@@ -54,22 +54,22 @@ jobs:
         run: |
           case "${{ matrix.name }}" in
             plugin)
-              cat > pubspec_overrides.yaml <<'EOF'
-              dependency_overrides:
-                flutter_badge_manager_android:
-                  path: ../flutter_badge_manager_android
-                flutter_badge_manager_foundation:
-                  path: ../flutter_badge_manager_foundation
-                flutter_badge_manager_platform_interface:
-                  path: ../flutter_badge_manager_platform_interface
-              EOF
+              printf '%s\n' \
+                'dependency_overrides:' \
+                '  flutter_badge_manager_android:' \
+                '    path: ../flutter_badge_manager_android' \
+                '  flutter_badge_manager_foundation:' \
+                '    path: ../flutter_badge_manager_foundation' \
+                '  flutter_badge_manager_platform_interface:' \
+                '    path: ../flutter_badge_manager_platform_interface' \
+                > pubspec_overrides.yaml
               ;;
             android|foundation)
-              cat > pubspec_overrides.yaml <<'EOF'
-              dependency_overrides:
-                flutter_badge_manager_platform_interface:
-                  path: ../flutter_badge_manager_platform_interface
-              EOF
+              printf '%s\n' \
+                'dependency_overrides:' \
+                '  flutter_badge_manager_platform_interface:' \
+                '    path: ../flutter_badge_manager_platform_interface' \
+                > pubspec_overrides.yaml
               ;;
             interface)
               rm -f pubspec_overrides.yaml
