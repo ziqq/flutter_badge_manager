@@ -1,7 +1,7 @@
 import XCTest
-#if os(iOS)
+#if canImport(Flutter)
 import Flutter
-#elseif os(macOS)
+#elseif canImport(FlutterMacOS)
 import FlutterMacOS
 #endif
 @testable import flutter_badge_manager_foundation
@@ -60,9 +60,11 @@ final class FlutterBadgeManagerPluginTests: XCTestCase {
     }
 
     private class DummyRegistrar: NSObject, FlutterPluginRegistrar {
-        let messenger: DummyMessenger
+        let messenger: FlutterBinaryMessenger
         init(messenger: DummyMessenger) { self.messenger = messenger }
+        #if canImport(Flutter)
         func messenger() -> FlutterBinaryMessenger { messenger }
+        #endif
         func addMethodCallDelegate(_ delegate: FlutterPlugin, channel: FlutterMethodChannel) {}
         func textures() -> FlutterTextureRegistry { fatalError("Not needed") }
         func add(_ applicationDelegate: FlutterPlugin & UIApplicationDelegate) {}

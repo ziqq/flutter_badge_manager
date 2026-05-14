@@ -20,9 +20,16 @@ let package = Package(
     .target(
       name: "flutter_badge_manager_foundation",
       dependencies: [],
+      exclude: [
+        "FlutterBadgeManagerPlugin.g.swift",
+      ],
       resources: [
         .process("Resources")
       ]
+    ),
+    .testTarget(
+      name: "flutter_badge_manager_foundationTests",
+      dependencies: ["flutter_badge_manager_foundation"]
     )
   ]
 )

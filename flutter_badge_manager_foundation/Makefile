@@ -96,8 +96,12 @@ run-genhtml: ## Runs generage coverage html
 				@genhtml coverage/lcov.info -o coverage/html
 
 .PHONY: test-unit
-test-unit: ## Runs unit tests
+test-unit: test-darwin-native ## Runs unit tests
 				@fvm flutter test --coverage || (echo "¯\_(ツ)_/¯ Error while running test-unit"; exit 1)
 				@genhtml coverage/lcov.info --output=coverage -o coverage/html || (echo "¯\_(ツ)_/¯ Error while running genhtml"; exit 2)
 				@cd example && fvm flutter test --coverage || (echo "¯\_(ツ)_/¯ Error while running test-unit in example"; exit 3)
 				@cd example && genhtml coverage/lcov.info --output=coverage -o coverage/html || (echo "¯\_(ツ)_/¯ Error while running genhtml in example"; exit 4)
+
+.PHONY: test-darwin-native
+test-darwin-native: ## Runs Darwin native Swift tests
+				@cd darwin/flutter_badge_manager_foundation && swift test || (echo "¯\_(ツ)_/¯ Error while running Darwin native tests"; exit 1)

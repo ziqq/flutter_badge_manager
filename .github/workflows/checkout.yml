@@ -219,3 +219,14 @@ jobs:
           disable_search: true
           verbose: true
           fail_ci_if_error: false
+
+  foundation-darwin-native-tests:
+    name: "Foundation Darwin Native Tests"
+    runs-on: macos-latest
+    steps:
+      - name: "Checkout"
+        uses: actions/checkout@v4
+
+      - name: "Run Darwin native tests"
+        working-directory: flutter_badge_manager_foundation
+        run: make test-darwin-native

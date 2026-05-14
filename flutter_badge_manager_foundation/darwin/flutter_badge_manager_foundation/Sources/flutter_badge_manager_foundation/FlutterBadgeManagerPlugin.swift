@@ -1,11 +1,15 @@
 import Foundation
 
 #if os(iOS)
+#if canImport(Flutter)
 import Flutter
+#endif
 import UIKit
 import UserNotifications
 #elseif os(macOS)
+#if canImport(FlutterMacOS)
 import FlutterMacOS
+#endif
 import AppKit
 #endif
 
@@ -18,9 +22,7 @@ protocol UserNotificationCenterBadgeSetting {
   func setBadgeCount(_ value: Int, completionHandler: ((Error?) -> Void)?)
 }
 
-struct SystemUserNotificationCenterBadgeSetter:
-  UserNotificationCenterBadgeSetting
-{
+struct SystemUserNotificationCenterBadgeSetter: UserNotificationCenterBadgeSetting {
   func setBadgeCount(
     _ value: Int,
     completionHandler: ((Error?) -> Void)?
@@ -49,8 +51,7 @@ struct SystemApplicationBadgeSetter: ApplicationBadgeSetting {
 
 final class IOSBadgeWriter: BadgeWriting {
   init(
-    notificationCenter: UserNotificationCenterBadgeSetting =
-      SystemUserNotificationCenterBadgeSetter(),
+    notificationCenter: UserNotificationCenterBadgeSetting = SystemUserNotificationCenterBadgeSetter(),
     application: ApplicationBadgeSetting = SystemApplicationBadgeSetter(),
     supportsModernBadgeAPI: @escaping () -> Bool = {
       if #available(iOS 16.0, *) {
@@ -59,8 +60,8 @@ final class IOSBadgeWriter: BadgeWriting {
       return false
     }
   ) {
-    self.notificationCenter = notificationCenter
     self.application = application
+    self.notificationCenter = notificationCenter
     self.supportsModernBadgeAPI = supportsModernBadgeAPI
   }
 
@@ -120,13 +121,19 @@ public class FlutterBadgeManagerPlugin: NSObject, FlutterPlugin, FlutterBadgeMan
     #endif
   }
 
-  // Registers the plugin with the Flutter framework.
-  public static func register(with registrar: FlutterPluginRegistrar) {
+  private static func resolveMessenger(
+    from registrar: FlutterPluginRegistrar
+  ) -> FlutterBinaryMessenger {
     #if os(iOS)
-    let messenger = registrar.messenger()
+    return registrar.messenger()
     #else
-    let messenger = registrar.messenger
+    return registrar.messenger
     #endif
+  }
+
+  // MARK: - Registers the plugin with the Flutter framework.
+  public static func register(with registrar: FlutterPluginRegistrar) {
+    let messenger = resolveMessenger(from: registrar)
     let channel = FlutterMethodChannel(
       name: "github.com/ziqq/flutter_badge_manager",
       binaryMessenger: messenger
@@ -136,9 +143,10 @@ public class FlutterBadgeManagerPlugin: NSObject, FlutterPlugin, FlutterBadgeMan
     FlutterBadgeManagerApiSetup.setUp(binaryMessenger: messenger, api: instance)
   }
 
-  // Handles method calls from Flutter.
+  // MARK: - FlutterPlugin conformance. Handles method calls from Flutter.
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
     switch call.method {
+    // Check if badge management is supported on the current platform
     case "isSupported":
       // iOS and macOS always support badges
       do {
@@ -185,10 +193,12 @@ public class FlutterBadgeManagerPlugin: NSObject, FlutterPlugin, FlutterBadgeMan
     }
   }
 
+  // MARK: - isSupported, update, and remove implementations
   func isSupported() throws -> Bool? {
     true
   }
 
+  // MARK: - update the badge from the app icon. Throws if the count is invalid (e.g., negative).
   func update(count: Int64) throws {
     guard count >= 0 else {
       throw PigeonError(
@@ -201,11 +211,12 @@ public class FlutterBadgeManagerPlugin: NSObject, FlutterPlugin, FlutterBadgeMan
     setBadge(Int(count))
   }
 
+  // MARK: - remove the badge from the app icon.
   func remove() throws {
     setBadge(0)
   }
 
-  // Sets the badge count on the app icon.
+  // MARK: - Private helper to set the badge count using the injected badge writer.
   private func setBadge(_ value: Int) {
     badgeWriter.setBadge(value)
   }

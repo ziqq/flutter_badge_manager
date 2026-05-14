@@ -123,7 +123,7 @@ publish-check: ## Dry-run publish for all packages
 				done
 
 .PHONY: test-unit
-test-unit: ## Run unit tests for all packages
+test-unit: test-darwin-native ## Run unit tests for all packages
 				@for pkg in $(PACKAGES); do \
 						echo "Testing $$pkg..."; \
 						cd "$(PWD)/$$pkg" && fvm flutter test --coverage || { echo "¯\_(ツ)_/¯ Test $$pkg error"; exit 1; }; \
@@ -135,6 +135,10 @@ test-unit: ## Run unit tests for all packages
 								echo "Skipping $$pkg/example tests..."; \
 						fi; \
 				done
+
+.PHONY: test-darwin-native
+test-darwin-native: ## Run Darwin native Swift tests
+				@cd $(PWD)/flutter_badge_manager_foundation && $(MAKE) test-darwin-native || (echo "¯\_(ツ)_/¯ Darwin native foundation tests error"; exit 1)
 
 .PHONY: tag
 tag: ## Add a tag to the current commit
