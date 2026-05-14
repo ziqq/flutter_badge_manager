@@ -13,9 +13,7 @@ void main() {
     setUpBadgeApiMock(badgeCalls: badgeCalls);
   });
 
-  tearDown(() {
-    tearDownBadgeApiMock();
-  });
+  tearDown(tearDownBadgeApiMock);
 
   group('App startup -', () {
     testWidgets('guarded main renders the app', (tester) async {

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.2.1
+- **FIXED**: Updated the iOS badge writer to use `UNUserNotificationCenter.setBadgeCount` on iOS 16+ with a legacy fallback for older versions, improving badge persistence when the app moves out of the foreground.
+- **FIXED**: On iOS 16+ the Foundation implementation now synchronizes badge updates through both `UIApplication.shared.applicationIconBadgeNumber` and `UNUserNotificationCenter.setBadgeCount`, preserving the immediate app-side update while also persisting the system badge state.
+- **FIXED**: Restored `isSupported()` to report badge capability on supported Darwin platforms instead of the current notification authorization state.
+
 ## 0.2.0
 - **CHANGED**: Removed the legacy Darwin `FlutterMethodChannel` transport and kept badge operations on the Pigeon host API only.
 - **FIXED**: Aligned the Foundation package tests and package verification flow with the current Pigeon-backed implementation.

@@ -2,24 +2,25 @@ import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager_foundation/src/flutter_badge_manager_foundation.g.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-const _channelPrefix =
+const _prefix =
+    // ignore: lines_longer_than_80_chars
     'dev.flutter.pigeon.flutter_badge_manager_foundation.FlutterBadgeManagerApi';
 
 const BasicMessageChannel<Object?> _isSupportedChannel =
     BasicMessageChannel<Object?>(
-      '$_channelPrefix.isSupported',
+      '$_prefix.isSupported',
       FlutterBadgeManagerApi.pigeonChannelCodec,
     );
 
 const BasicMessageChannel<Object?> _updateChannel =
     BasicMessageChannel<Object?>(
-      '$_channelPrefix.update',
+      '$_prefix.update',
       FlutterBadgeManagerApi.pigeonChannelCodec,
     );
 
 const BasicMessageChannel<Object?> _removeChannel =
     BasicMessageChannel<Object?>(
-      '$_channelPrefix.remove',
+      '$_prefix.remove',
       FlutterBadgeManagerApi.pigeonChannelCodec,
     );
 

@@ -5,11 +5,14 @@ PODS:
     - FlutterMacOS
   - integration_test (0.0.1):
     - Flutter
+  - permission_handler_apple (9.3.0):
+    - Flutter
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
   - flutter_badge_manager_foundation (from `.symlinks/plugins/flutter_badge_manager_foundation/darwin`)
   - integration_test (from `.symlinks/plugins/integration_test/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
 
 EXTERNAL SOURCES:
   Flutter:
@@ -18,12 +21,15 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/flutter_badge_manager_foundation/darwin"
   integration_test:
     :path: ".symlinks/plugins/integration_test/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
 
 SPEC CHECKSUMS:
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_badge_manager_foundation: fbb8c2f7952d7566af22718e4b4233feef2119f6
   integration_test: 252f60fa39af5e17c3aa9899d35d908a0721b573
+  permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
 
-PODFILE CHECKSUM: 9033ba3f6af960faf780f37b4acba278cb77c66f
+PODFILE CHECKSUM: bacb1be3a0b6dad4ad0a06894d0706ad9319bebb
 
 COCOAPODS: 1.16.2

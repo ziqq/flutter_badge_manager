@@ -7,6 +7,7 @@ import 'dart:async';
 import 'dart:developer' as dev;
 import 'dart:math' show Random;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_badge_manager/flutter_badge_manager.dart';
@@ -57,6 +58,7 @@ class __HomeScreenState extends State<_HomeScreen> {
   /// Ensure notification permission is granted
   /// on Android 13+.
   Future<void> _ensureNotificationPermission() async {
+    if (defaultTargetPlatform != TargetPlatform.android) return;
     final status = await Permission.notification.status;
     if (!status.isGranted) {
       await Permission.notification.request();
@@ -73,7 +75,7 @@ class __HomeScreenState extends State<_HomeScreen> {
     try {
       await _ensureNotificationPermission();
 
-      bool isSupported = await FlutterBadgeManager.instance.isSupported();
+      final isSupported = await FlutterBadgeManager.instance.isSupported();
       dev.log('isSupported: $isSupported');
       result = isSupported ? 'Supported' : 'Not supported';
     } on PlatformException {
@@ -87,31 +89,30 @@ class __HomeScreenState extends State<_HomeScreen> {
     setState(() => _supportedString = result);
   }
 
-  void _addBadge() {
+  Future<void> _add() async {
     if (!mounted) return;
     final messenger = ScaffoldMessenger.maybeOf(context);
     _count++;
     messenger?.clearSnackBars();
-    LocalNotificationsManager.instance
-        .showNotification(
-          id: Random().nextInt(1 << 31),
-          body: 'This is body',
-          title: 'This is title',
-          payload: 'This is payload',
-        )
-        .ignore();
-    FlutterBadgeManager.instance.update(_count);
+    await LocalNotificationsManager.instance.showNotification(
+      id: Random().nextInt(1 << 31),
+      body: 'This is body',
+      title: 'This is title',
+      payload: 'This is payload',
+      badgeNumber: _count,
+    );
+    await FlutterBadgeManager.instance.update(_count);
     messenger?.showSnackBar(
       SnackBar(content: Text('Badge count updated: $_count')),
     );
   }
 
-  void _remove() {
+  Future<void> _remove() async {
     if (!mounted) return;
     final messenger = ScaffoldMessenger.maybeOf(context);
     _count = 0;
     messenger?.clearSnackBars();
-    FlutterBadgeManager.instance.remove();
+    await FlutterBadgeManager.instance.remove();
     messenger?.showSnackBar(
       SnackBar(content: Text('Badge count updated: $_count')),
     );
@@ -126,15 +127,9 @@ class __HomeScreenState extends State<_HomeScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: <Widget>[
           Text('Badge supported: $_supportedString\n'),
-          ElevatedButton(
-            child: const Text('Add badge'),
-            onPressed: () => _addBadge(),
-          ),
+          ElevatedButton(onPressed: _add, child: const Text('Add badge')),
           const SizedBox(height: 16),
-          ElevatedButton(
-            child: const Text('Remove badge'),
-            onPressed: () => _remove(),
-          ),
+          ElevatedButton(onPressed: _remove, child: const Text('Remove badge')),
         ],
       ),
     ),

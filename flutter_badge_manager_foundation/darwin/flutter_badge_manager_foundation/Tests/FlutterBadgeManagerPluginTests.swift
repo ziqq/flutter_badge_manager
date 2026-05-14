@@ -7,6 +7,36 @@ import FlutterMacOS
 @testable import flutter_badge_manager_foundation
 
 final class FlutterBadgeManagerPluginTests: XCTestCase {
+    private final class SpyBadgeWriter: BadgeWriting {
+        var values: [Int] = []
+
+        func setBadge(_ value: Int) {
+            values.append(value)
+        }
+    }
+
+    #if os(iOS)
+    private final class SpyNotificationCenter: UserNotificationCenterBadgeSetting {
+        var values: [Int] = []
+        var onSet: (() -> Void)?
+
+        func setBadgeCount(_ value: Int, completionHandler: ((Error?) -> Void)?) {
+            values.append(value)
+            onSet?()
+            completionHandler?(nil)
+        }
+    }
+
+    private final class SpyApplicationBadgeSetter: ApplicationBadgeSetting {
+        var values: [Int] = []
+        var onSet: (() -> Void)?
+
+        func setApplicationIconBadgeNumber(_ value: Int) {
+            values.append(value)
+            onSet?()
+        }
+    }
+    #endif
 
     private class DummyMessenger: NSObject, FlutterBinaryMessenger {
         var lastChannel: String?
@@ -62,13 +92,16 @@ final class FlutterBadgeManagerPluginTests: XCTestCase {
     }
 
     func testIsSupported() throws {
-        let plugin = FlutterBadgeManagerPlugin()
+        let writer = SpyBadgeWriter()
+        let plugin = FlutterBadgeManagerPlugin(badgeWriter: writer)
         XCTAssertEqual(try plugin.isSupported(), true)
     }
 
     func testUpdateValid() throws {
-        let plugin = FlutterBadgeManagerPlugin()
+        let writer = SpyBadgeWriter()
+        let plugin = FlutterBadgeManagerPlugin(badgeWriter: writer)
         XCTAssertNoThrow(try plugin.update(count: 3))
+        XCTAssertEqual(writer.values, [3])
     }
 
     func testUpdateInvalid() {
@@ -80,7 +113,51 @@ final class FlutterBadgeManagerPluginTests: XCTestCase {
     }
 
     func testRemove() throws {
-        let plugin = FlutterBadgeManagerPlugin()
+        let writer = SpyBadgeWriter()
+        let plugin = FlutterBadgeManagerPlugin(badgeWriter: writer)
         XCTAssertNoThrow(try plugin.remove())
+        XCTAssertEqual(writer.values, [0])
     }
+
+    #if os(iOS)
+    func testIOSBadgeWriterUsesModernBadgeAPIWhenAvailable() {
+        let notificationCenter = SpyNotificationCenter()
+        let application = SpyApplicationBadgeSetter()
+        let writer = IOSBadgeWriter(
+            notificationCenter: notificationCenter,
+            application: application,
+            supportsModernBadgeAPI: { true }
+        )
+        let expectation = expectation(description: "modern badge API")
+        notificationCenter.onSet = {
+            expectation.fulfill()
+        }
+
+        writer.setBadge(7)
+
+        waitForExpectations(timeout: 1)
+        XCTAssertEqual(notificationCenter.values, [7])
+        XCTAssertEqual(application.values, [7])
+    }
+
+    func testIOSBadgeWriterFallsBackToApplicationBadgeOnOlderSystems() {
+        let notificationCenter = SpyNotificationCenter()
+        let application = SpyApplicationBadgeSetter()
+        let writer = IOSBadgeWriter(
+            notificationCenter: notificationCenter,
+            application: application,
+            supportsModernBadgeAPI: { false }
+        )
+        let expectation = expectation(description: "legacy badge API")
+        application.onSet = {
+            expectation.fulfill()
+        }
+
+        writer.setBadge(5)
+
+        waitForExpectations(timeout: 1)
+        XCTAssertTrue(notificationCenter.values.isEmpty)
+        XCTAssertEqual(application.values, [5])
+    }
+    #endif
 }

@@ -53,7 +53,7 @@ class __HomeScreenState extends State<_HomeScreen> {
 
     String supportedString;
     try {
-      bool isSupported = await FlutterBadgeManagerFoundation.instance
+      final isSupported = await FlutterBadgeManagerFoundation.instance
           .isSupported();
       dev.log('isSupported: $isSupported');
       if (isSupported) {
@@ -64,34 +64,32 @@ class __HomeScreenState extends State<_HomeScreen> {
     } on PlatformException {
       dev.log('error: PlatformException');
       supportedString = 'Failed to get badge support.';
-    } on Object catch (_, _) {
-      dev.log('error: Object');
-      supportedString = 'Failed to get badge support.';
+    } on Object catch (e, _) {
+      dev.log('error: $e');
+      supportedString = 'Failed to get badge support. $e';
     }
 
     setState(() => _supportedString = supportedString);
   }
 
-  void _addBadge() {
+  void _add() {
     if (!mounted) return;
-    final messenger = ScaffoldMessenger.maybeOf(context);
     _count++;
-    messenger?.clearSnackBars();
+    final messenger = ScaffoldMessenger.maybeOf(context);
     FlutterBadgeManagerFoundation.instance.update(_count);
-    messenger?.showSnackBar(
-      SnackBar(content: Text('Badge count updated: $_count')),
-    );
+    messenger
+      ?..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text('Badge count updated: $_count')));
   }
 
   void _remove() {
     if (!mounted) return;
     final messenger = ScaffoldMessenger.maybeOf(context);
-    _count = 0;
-    messenger?.clearSnackBars();
     FlutterBadgeManagerFoundation.instance.remove();
-    messenger?.showSnackBar(
-      SnackBar(content: Text('Badge count updated: $_count')),
-    );
+    _count = 0;
+    messenger
+      ?..clearSnackBars()
+      ..showSnackBar(SnackBar(content: Text('Badge count updated: $_count')));
   }
 
   @override
@@ -104,14 +102,8 @@ class __HomeScreenState extends State<_HomeScreen> {
         spacing: 16,
         children: <Widget>[
           Text('Badge supported: $_supportedString\n'),
-          ElevatedButton(
-            child: const Text('Add badge'),
-            onPressed: () => _addBadge(),
-          ),
-          ElevatedButton(
-            child: const Text('Remove badge'),
-            onPressed: () => _remove(),
-          ),
+          ElevatedButton(onPressed: _add, child: const Text('Add badge')),
+          ElevatedButton(onPressed: _remove, child: const Text('Remove badge')),
         ],
       ),
     ),

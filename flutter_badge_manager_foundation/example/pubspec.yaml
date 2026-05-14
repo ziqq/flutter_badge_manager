@@ -14,10 +14,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-  cupertino_icons: ^1.0.8
-
   flutter_badge_manager_foundation:
     path: ../
+
+  cupertino_icons: ^1.0.8
 
 
 dev_dependencies:

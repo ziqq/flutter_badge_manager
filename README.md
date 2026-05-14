@@ -8,7 +8,7 @@ Plugin to set / clear application badge numbers on iOS, macOS and supported Andr
 | Platform | Min Version | Notes |
 |----------|-------------|-------|
 | Android  | API 21+     | Numeric badge only on supported launchers; request POST_NOTIFICATIONS on API 33+. |
-| iOS      | 13.0+       | Uses applicationIconBadgeNumber; needs notification authorization. |
+| iOS      | 13.0+       | Updates the app badge directly and also syncs it through the notification center on iOS 16+ for better persistence. |
 | macOS    | 10.15+      | Uses dockTile.badgeLabel; needs notification authorization. |
 
 <p align="center">
@@ -47,7 +47,7 @@ Federated platform packages (Android, iOS/macOS) are auto-included when you buil
 
 ## iOS Setup
 
-Request notification permission before setting a badge if you also show notifications.
+If your app also posts notifications, request notification authorization through your app's normal notification flow. Badge visibility can still be affected by system notification settings.
 
 Optional (for remote notification background handling) add to `ios/Runner/Info.plist`:
 ```xml
@@ -113,7 +113,7 @@ For migration details, see [MIGRATION.md](MIGRATION.md).
 ## Permissions (recommended flow)
 
 iOS/macOS:
-- Request notification authorization (badge) via `permission_handler` or native flow before first update.
+- Request notification authorization as part of your app's notification flow when needed. Badge capability detection does not depend on that authorization state.
 
 Android (API 33+):
 ```dart
@@ -135,7 +135,7 @@ Future<void> ensureNotificationPermission() async {
 
 - Returns false on `isSupported()` on Pixel: expected (numeric not available).
 - Badge not visible on Android: launcher does not support numeric badges or permission not granted.
-- iOS badge not updating: check notification authorization and that app not restricted in settings.
+- iOS badge not updating or not persisting: check app notification settings and badge allowance in iOS Settings.
 
 ## Project Structure
 

@@ -25,7 +25,7 @@ if (supported) {
 
 ## iOS
 
-Requires notification (badge) permission. Request it before updating the badge if you manage permissions manually.
+Badge visibility can still be affected by the app's notification settings. If your app also posts notifications, request authorization through your normal notification flow.
 
 Add (if you need remote notifications background refresh):
 ```xml
@@ -62,8 +62,9 @@ Negative counts throw `PlatformException(code: 'invalid_args')`.
 ## Notes
 
 - This package uses a generated Pigeon host API for Dart-to-native calls.
-- Badge changes are applied via `UIApplication.shared.applicationIconBadgeNumber` (iOS) and `NSApplication.shared.dockTile.badgeLabel` (macOS).
-- Permission prompts are not auto-triggered if you never requested notifications; make sure to request authorization when needed.
+- Badge changes are applied via `UIApplication.shared.applicationIconBadgeNumber` on all supported iOS versions and additionally synchronized through `UNUserNotificationCenter.setBadgeCount` on iOS 16+ so the system badge state persists after the app leaves the foreground. On macOS the package uses `NSApplication.shared.dockTile.badgeLabel`.
+- `isSupported()` reports whether the Darwin platform implementation supports badges at all. Notification permission still affects whether the badge is shown, but it does not change capability detection.
+- Permission prompts are not triggered by this package. Request notification authorization only if your app's own notification flow needs it.
 
 ## License
 

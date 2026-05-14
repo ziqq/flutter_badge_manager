@@ -1,5 +1,5 @@
 // autor - <a.a.ustinoff@gmail.com> Anton Ustinoff
-// ignore_for_file: sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 
 import 'dart:async';
 
@@ -13,9 +13,9 @@ void _onTapBackgroundNotification(NotificationResponse? notificationResponse) {}
 /// LocalNotificationsManager class
 /// {@endtemplate}
 final class LocalNotificationsManager {
-  static final _internalSingleton = LocalNotificationsManager._internal();
-  static LocalNotificationsManager get instance => _internalSingleton;
-  factory LocalNotificationsManager() => _internalSingleton;
+  static final _instance = LocalNotificationsManager._internal();
+  static LocalNotificationsManager get instance => _instance;
+  factory LocalNotificationsManager() => _instance;
   LocalNotificationsManager._internal() {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     _setupLocalNotificationPlugin();
@@ -32,9 +32,6 @@ final class LocalNotificationsManager {
 
   late final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
   // FirebaseMessaging get messaging => FirebaseMessaging.instance;
-
-  // final StreamController<ReceivedNotification?> _receivedNotificationsStreamController = StreamController<ReceivedNotification?>.broadcast();
-  // Stream<ReceivedNotification?> get didReceivedNotifications => _receivedNotificationsStreamController.stream;
 
   final StreamController<NotificationResponse?> _notificationsStreamController =
       StreamController<NotificationResponse?>.broadcast();
@@ -55,7 +52,6 @@ final class LocalNotificationsManager {
   /// Dispose all streams
   void dispose() {
     _notificationsStreamController.close();
-    // _receivedNotificationsStreamController.close();
   }
 
   /// Show local notification
@@ -64,8 +60,9 @@ final class LocalNotificationsManager {
     String? title,
     String? body,
     String? payload,
+    int? badgeNumber,
   }) async {
-    final details = await _getNotificationDetails();
+    final details = await _getNotificationDetails(badgeNumber: badgeNumber);
     await _flutterLocalNotificationsPlugin.show(
       id,
       title,
@@ -75,43 +72,10 @@ final class LocalNotificationsManager {
     );
   }
 
-  /// Update badge count on Android
-  /// Used only to silently update badge count
-  /// Used because of the lack of a way to update the badge count on Android
-  /* Future<void> updateBadgeCount$Android(int count) async {
-    final androidDetails = AndroidNotificationDetails(
-      'badge_channel_id',
-      'Badge Channel',
-      channelDescription: 'Used only to silently update badge count',
-      importance: Importance.defaultImportance,
-      priority: Priority.defaultPriority,
-      showWhen: false,
-      playSound: false,
-      enableVibration: false,
-      channelShowBadge: true,
-      number: count,
-    );
-
-    final notificationDetails = NotificationDetails(
-      android: androidDetails,
-      iOS: DarwinNotificationDetails(
-        presentAlert: false,
-        presentBadge: true,
-        badgeNumber: count,
-        presentSound: false,
-      ),
-    );
-
-    await _flutterLocalNotificationsPlugin.show(
-      9999,
-      ' ',
-      null,
-      notificationDetails,
-    );
-  } */
-
   /// Get [NotificationDetails]
-  Future<NotificationDetails?> _getNotificationDetails() async {
+  Future<NotificationDetails?> _getNotificationDetails({
+    int? badgeNumber,
+  }) async {
     const androidNotificationDetails = AndroidNotificationDetails(
       'high_importance_channel',
       'Выводить уведомления',
@@ -122,8 +86,10 @@ final class LocalNotificationsManager {
       channelShowBadge: true,
       number: 1,
     );
-    const darwinNotificationDetails = DarwinNotificationDetails();
-    return const NotificationDetails(
+    final darwinNotificationDetails = DarwinNotificationDetails(
+      badgeNumber: badgeNumber,
+    );
+    return NotificationDetails(
       android: androidNotificationDetails,
       iOS: darwinNotificationDetails,
       macOS: darwinNotificationDetails,
@@ -149,19 +115,7 @@ final class LocalNotificationsManager {
     );
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
-      onDidReceiveNotificationResponse: (details) {
-        _notificationsStreamController.add(details);
-        /* switch (notificationResponse.notificationResponseType) {
-          case NotificationResponseType.selectedNotification:
-            _notificationsStreamController.add(notificationResponse.payload);
-            break;
-          case NotificationResponseType.selectedNotificationAction:
-            if (notificationResponse.actionId == navigationActionId) {
-              _notificationsStreamController.add(notificationResponse.payload);
-            }
-            break;
-        } */
-      },
+      onDidReceiveNotificationResponse: _notificationsStreamController.add,
       onDidReceiveBackgroundNotificationResponse: _onTapBackgroundNotification,
     );
     // await FirebaseMessaging.instance

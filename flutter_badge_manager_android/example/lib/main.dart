@@ -73,7 +73,7 @@ class __HomeScreenState extends State<_HomeScreen> {
     try {
       await _ensureNotificationPermission();
 
-      bool isSupported = await FlutterBadgeManagerAndroid.instance
+      final isSupported = await FlutterBadgeManagerAndroid.instance
           .isSupported();
       dev.log('isSupported: $isSupported');
       result = isSupported ? 'Supported' : 'Not supported';
@@ -88,7 +88,7 @@ class __HomeScreenState extends State<_HomeScreen> {
     setState(() => _supportedString = result);
   }
 
-  void _addBadge() {
+  void _add() {
     if (!mounted) return;
     final messenger = ScaffoldMessenger.maybeOf(context);
     _count++;
@@ -127,15 +127,9 @@ class __HomeScreenState extends State<_HomeScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           Text('Badge supported: $_supportedString\n'),
-          ElevatedButton(
-            child: const Text('Add badge'),
-            onPressed: () => _addBadge(),
-          ),
+          ElevatedButton(onPressed: _add, child: const Text('Add badge')),
           const SizedBox(height: 16),
-          ElevatedButton(
-            child: const Text('Remove badge'),
-            onPressed: () => _remove(),
-          ),
+          ElevatedButton(onPressed: _remove, child: const Text('Remove badge')),
         ],
       ),
     ),

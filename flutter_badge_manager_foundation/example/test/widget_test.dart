@@ -14,9 +14,7 @@ void main() {
     setUpBadgeApiMock(badgeCalls: badgeCalls);
   });
 
-  tearDown(() {
-    tearDownBadgeApiMock();
-  });
+  tearDown(tearDownBadgeApiMock);
 
   group('Widget_tests -', () {
     testWidgets('shows supported state after startup', (tester) async {
