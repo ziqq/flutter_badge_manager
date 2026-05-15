@@ -18,7 +18,10 @@ funding:
 
 topics:
   - badge
-  - manager
+  - badge-manager
+  - notification
+  - app-icon
+  - app-badge
 
 
 environment:

@@ -14,7 +14,10 @@ funding:
 
 topics:
   - badge
-  - manager
+  - badge-manager
+  - notification
+  - app-icon
+  - app-badge
 
 #screenshots:
 #  - description: 'Example of using the library to check app version.'
