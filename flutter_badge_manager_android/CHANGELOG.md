@@ -1,8 +1,12 @@
 # Changelog
 
+## 0.2.1
+- **FIXED**: Aligned the generated Android Pigeon Java output with the `FlutterBadgeManagerPluginPigeon` class name, removing the stale `FlutterBadgeManagerPlugin.g.java` layout that could break Gradle/Javac builds.
+- **FIXED**: Updated the Android Pigeon build/check workflow so regenerated bindings are validated against `FlutterBadgeManagerPluginPigeon.java`.
+
 ## 0.2.0
 - **CHANGED**: Removed the legacy Android `MethodChannel` transport and kept badge operations on the Pigeon host API only.
-- **FIXED**: Restored Android plugin registration while keeping the generated bindings in `FlutterBadgeManagerPlugin.g.java`.
+- **FIXED**: Restored Android plugin registration while keeping the generated bindings in `FlutterBadgeManagerPluginPigeon.java`.
 - **FIXED**: Updated the Android example build to use NDK `28.2.13676358`, matching the `integration_test` requirement.
 
 ## 0.1.1

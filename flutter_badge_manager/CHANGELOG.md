@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.2.3
+- **FIXED**: Updated the bundled Android implementation to the `0.2.1` patch line, fixing Android builds that could fail when the generated Pigeon Java source layout drifted from the `FlutterBadgeManagerPluginPigeon` class name.
+
 ## 0.2.2
 - **FIXED**: Updated the bundled Darwin implementation to the `0.2.2` patch line, improving iOS badge compatibility on tested iOS 18+ and 26+ devices.
 

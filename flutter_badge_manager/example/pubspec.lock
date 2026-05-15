@@ -100,14 +100,14 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "0.2.2"
+    version: "0.2.3"
   flutter_badge_manager_android:
     dependency: "direct overridden"
     description:
       path: "../../flutter_badge_manager_android"
       relative: true
     source: path
-    version: "0.2.0"
+    version: "0.2.1"
   flutter_badge_manager_foundation:
     dependency: "direct overridden"
     description:
