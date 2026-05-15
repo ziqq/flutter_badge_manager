@@ -13,10 +13,6 @@ import FlutterMacOS
 import AppKit
 #endif
 
-protocol BadgeWriting {
-  func setBadge(_ value: Int)
-}
-
 #if os(iOS)
 protocol UserNotificationCenterBadgeSetting {
   func setBadgeCount(_ value: Int, completionHandler: ((Error?) -> Void)?)
@@ -65,7 +61,11 @@ struct SystemApplicationBadgeSetter: ApplicationBadgeSetting {
   }
 }
 
-final class IOSBadgeWriter: BadgeWriting {
+protocol BadgeWriter {
+  func setBadge(_ value: Int)
+}
+
+final class IOSBadgeWriter: BadgeWriter {
   init(
     notificationSettingsReader: UserNotificationCenterSettingsReading = SystemUserNotificationCenterSettingsReader(),
     notificationCenter: UserNotificationCenterBadgeSetting = SystemUserNotificationCenterBadgeSetter(),
@@ -122,8 +122,9 @@ final class IOSBadgeWriter: BadgeWriting {
     DispatchQueue.main.sync(execute: writeBadge)
   }
 }
+
 #elseif os(macOS)
-final class MacOSBadgeWriter: BadgeWriting {
+final class MacOSBadgeWriter: BadgeWriter {
   func setBadge(_ value: Int) {
     DispatchQueue.main.async {
       let dockTile = NSApplication.shared.dockTile
@@ -136,13 +137,13 @@ final class MacOSBadgeWriter: BadgeWriting {
 /// The iOS and macOS implementation of the Flutter badge manager plugin.
 /// This class handles method calls from Flutter to manage app icon badges.
 public class FlutterBadgeManagerPlugin: NSObject, FlutterPlugin, FlutterBadgeManagerApi {
-  init(badgeWriter: BadgeWriting? = nil) {
+  init(badgeWriter: BadgeWriter? = nil) {
     self.badgeWriter = badgeWriter ?? Self.makeBadgeWriter()
   }
 
-  private let badgeWriter: BadgeWriting
+  private let badgeWriter: BadgeWriter
 
-  private static func makeBadgeWriter() -> BadgeWriting {
+  private static func makeBadgeWriter() -> BadgeWriter {
     #if os(iOS)
     return IOSBadgeWriter()
     #elseif os(macOS)

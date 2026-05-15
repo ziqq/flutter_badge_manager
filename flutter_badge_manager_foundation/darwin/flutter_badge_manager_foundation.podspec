@@ -3,7 +3,7 @@
 #
 Pod::Spec.new do |s|
   s.name             = 'flutter_badge_manager_foundation'
-  s.version          = '0.2.1'
+  s.version          = '0.2.2'
   s.summary          = 'iOS and macOS implementation of the flutter_badge_manager plugin'
   s.description      = <<-DESC
   Plugin to update the app badge on the app icon.
