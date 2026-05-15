@@ -13,6 +13,10 @@ import FlutterMacOS
 import AppKit
 #endif
 
+protocol BadgeWriter {
+  func setBadge(_ value: Int)
+}
+
 #if os(iOS)
 protocol UserNotificationCenterBadgeSetting {
   func setBadgeCount(_ value: Int, completionHandler: ((Error?) -> Void)?)
@@ -59,10 +63,6 @@ struct SystemApplicationBadgeSetter: ApplicationBadgeSetting {
   func setApplicationIconBadgeNumber(_ value: Int) {
     UIApplication.shared.applicationIconBadgeNumber = value
   }
-}
-
-protocol BadgeWriter {
-  func setBadge(_ value: Int)
 }
 
 final class IOSBadgeWriter: BadgeWriter {

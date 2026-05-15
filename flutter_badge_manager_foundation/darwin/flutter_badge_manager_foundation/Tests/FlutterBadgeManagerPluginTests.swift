@@ -7,7 +7,7 @@ import FlutterMacOS
 @testable import flutter_badge_manager_foundation
 
 final class FlutterBadgeManagerPluginTests: XCTestCase {
-    private final class SpyBadgeWriter: BadgeWriting {
+    private final class SpyBadgeWriter: BadgeWriter {
         var values: [Int] = []
 
         func setBadge(_ value: Int) {
