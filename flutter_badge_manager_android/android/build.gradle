@@ -1,56 +1,37 @@
 plugins {
     id "com.android.library"
-    id "kotlin-android"
-}
-
-def localProperties = new Properties()
-def localPropertiesFile = rootProject.file("local.properties")
-if (localPropertiesFile.exists()) {
-    localPropertiesFile.withReader("UTF-8") { reader ->
-        localProperties.load(reader)
-    }
-}
-
-def flutterVersionCode = localProperties.getProperty("flutter.versionCode")
-if (flutterVersionCode == null) {
-    flutterVersionCode = "1"
-}
-
-def flutterVersionName = localProperties.getProperty("flutter.versionName")
-if (flutterVersionName == null) {
-    flutterVersionName = "1.0"
 }
 
 android {
-    namespace 'flutter.plugins.flutterbadgemanager'
-    compileSdkVersion flutter.compileSdkVersion
+    namespace         = 'flutter.plugins.flutterbadgemanager'
+    compileSdkVersion = flutter.compileSdkVersion
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
-    }
-
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
 
     sourceSets {
-        main.java.srcDirs += 'src/main/kotlin'
+        main.java.srcDirs += "src/main/kotlin"
     }
 
     defaultConfig {
-        minSdkVersion flutter.minSdkVersion
-        targetSdkVersion flutter.targetSdkVersion
-        versionCode flutterVersionCode.toInteger()
-        versionName flutterVersionName
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        minSdkVersion             = flutter.minSdkVersion
+        targetSdkVersion          = flutter.targetSdkVersion
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
 dependencies {
     implementation "me.leolin:ShortcutBadger:1.1.22@aar"
-    testImplementation 'junit:junit:4.12'
-    testImplementation 'com.google.truth:truth:1.0'
+    testImplementation "junit:junit:4.12"
+    testImplementation "com.google.truth:truth:1.0"
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
 }
 
 flutter {

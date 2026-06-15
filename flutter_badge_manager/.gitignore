@@ -81,3 +81,4 @@ temp/
 .tmp/
 tmp/
 pubspec_overrides.yaml
+!example/pubspec_overrides.yaml

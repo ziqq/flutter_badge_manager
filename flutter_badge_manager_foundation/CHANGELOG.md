@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+- **FIXED**: Updated the Darwin Swift Package Manager manifest to use Flutter's `FlutterFramework` package when available, fixing SwiftPM builds that could not resolve generated Pigeon Swift types.
+- **FIXED**: Kept the fallback shim-only Swift package layout for local native package tests when `FlutterFramework` is not present.
+
 ## 0.2.2
 - **FIXED**: Improved iOS badge compatibility by updating the modern notification-center badge sync only when badge authorization is enabled.
 - **FIXED**: Updated the Darwin example app to request badge permission through a notification permission flow, restoring confirmed badge behavior on iOS 18+ and 26+ test devices.

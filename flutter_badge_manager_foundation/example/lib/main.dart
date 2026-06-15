@@ -104,7 +104,10 @@ class __HomeScreenState extends State<_HomeScreen> {
             >()
             ?.requestPermissions(alert: false, badge: true, sound: false);
       }
-      return false;
+
+      // Non-Darwin platforms do not need this permission flow and should not
+      // force the example into the unsupported state during tests.
+      return true;
     } on Object catch (e, s) {
       dev.log('Failed to request badge permission: $e', stackTrace: s);
       return null;

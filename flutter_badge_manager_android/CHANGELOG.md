@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+- **CHANGED**: Migrated the Android plugin and its example app from the Kotlin Gradle Plugin to built-in Kotlin.
+- **CHANGED**: Raised the example app minimum SDK constraints to match the Flutter 3.44 built-in Kotlin migration baseline.
+
 ## 0.2.1
 - **FIXED**: Aligned the generated Android Pigeon Java output with the `FlutterBadgeManagerPluginPigeon` class name, removing the stale `FlutterBadgeManagerPlugin.g.java` layout that could break Gradle/Javac builds.
 - **FIXED**: Updated the Android Pigeon build/check workflow so regenerated bindings are validated against `FlutterBadgeManagerPluginPigeon.java`.

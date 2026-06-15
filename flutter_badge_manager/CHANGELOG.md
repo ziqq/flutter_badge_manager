@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.0
+- **CHANGED**: Updated the bundled Android implementation for the `0.3` release line, migrating it to built-in Kotlin and newer Android build toolchain baselines.
+- **CHANGED**: Updated the bundled Darwin implementation for the `0.3` release line, adding Swift Package Manager-ready packaging for iOS and macOS builds.
+
 ## 0.2.3
 - **FIXED**: Updated the bundled Android implementation to the `0.2.1` patch line, fixing Android builds that could fail when the generated Pigeon Java source layout drifted from the `FlutterBadgeManagerPluginPigeon` class name.
 
