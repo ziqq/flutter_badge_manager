@@ -13,7 +13,6 @@ Release `flutter_badge_manager_foundation` when:
 
 ```sh
 cd flutter_badge_manager_foundation && make all
-cd flutter_badge_manager_foundation && make test-darwin-native
 ```
 
 ## Pigeon note

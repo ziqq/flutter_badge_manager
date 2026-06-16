@@ -27,10 +27,9 @@ app-facing plugin.
 
 ## Native test support
 
-The Darwin package contains a SwiftPM-compatible native test target.
+The published Swift package follows the official Flutter plugin layout and
+depends on the `FlutterFramework` package that Flutter generates at build time.
 
-This exists specifically to test host-side behavior without going through the
-Flutter runtime.
-
-Pigeon-generated Swift transport still exists for runtime use. SwiftPM tests use
-lightweight shim types instead of the generated transport layer.
+It has no standalone SwiftPM test target. Host-side behavior is validated through
+the Dart tests and the example app, per the Flutter Swift Package Manager guide
+for plugin authors.

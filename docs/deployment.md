@@ -22,7 +22,6 @@ make get
 make format
 make analyze
 make test-unit
-make test-darwin-native
 ```
 
 For a fuller package validation pass:

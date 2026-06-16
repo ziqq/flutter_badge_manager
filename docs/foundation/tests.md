@@ -16,30 +16,9 @@ cd flutter_badge_manager_foundation && make test-unit
 
 ## Native Darwin tests
 
-The package also has native Swift tests for host-side logic.
+The published Swift package follows the official Flutter plugin layout and
+depends on the `FlutterFramework` package that Flutter generates at build time.
+It has no standalone SwiftPM test target.
 
-Command:
-
-```sh
-cd flutter_badge_manager_foundation && make test-darwin-native
-```
-
-Direct SwiftPM command:
-
-```sh
-cd flutter_badge_manager_foundation/darwin/flutter_badge_manager_foundation
-swift test
-```
-
-## CI
-
-GitHub Actions runs these Darwin native tests in a dedicated macOS job.
-
-## Why native tests exist separately
-
-They validate host implementation details that are not covered by plain
-`flutter test`, such as:
-
-- plugin registration wiring
-- native badge writer delegation
-- iOS-specific and macOS-specific host behavior
+Host-side behavior is validated through the Dart tests above and the example
+app, per the Flutter Swift Package Manager guide for plugin authors.

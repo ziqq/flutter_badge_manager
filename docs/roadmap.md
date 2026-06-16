@@ -14,7 +14,7 @@
 ## Darwin
 
 - Preserve iOS badge persistence behavior across OS changes.
-- Keep native Swift tests aligned with the host implementation.
+- Keep Darwin host behavior aligned with the Dart and example-app tests.
 - Expand native assertions when Darwin-specific behavior grows.
 
 ## Platform interface

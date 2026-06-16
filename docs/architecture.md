@@ -43,16 +43,14 @@ The Android and Darwin packages use Pigeon for Flutter runtime transport.
 
 Do not edit generated files directly.
 
-## Native test split
+## Darwin testing
 
-The Darwin package now has two distinct testing layers:
+The Darwin package is covered by Flutter-side tests under
+`flutter_badge_manager_foundation/test/` and by the example app.
 
-- Flutter-side tests under `flutter_badge_manager_foundation/test/`.
-- Native Swift tests under
-	`flutter_badge_manager_foundation/darwin/flutter_badge_manager_foundation/Tests/`.
-
-The native Swift tests run through SwiftPM and use lightweight shim types for
-test-only compilation. Those shims are not used by the Flutter runtime.
+The published Swift package follows the official Flutter layout and depends on
+the `FlutterFramework` package that Flutter generates at build time, so it has no
+standalone SwiftPM test target.
 
 ## Key design constraints
 
