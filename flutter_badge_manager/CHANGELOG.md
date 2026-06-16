@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.3.2
+- **FIXED**: Raised the bundled Darwin implementation constraint to `flutter_badge_manager_foundation 0.3.1+`, ensuring consumers of `flutter_badge_manager` resolve the Swift Package Manager archive fix instead of the broken `0.3.0` release.
+
 ## 0.3.1
 - **FIXED**: Restored the published Darwin Swift package manifest to the official Flutter plugin layout that depends on `../FlutterFramework`, fixing iOS and macOS app archives that failed to compile the generated Pigeon Swift types when Swift Package Manager was enabled.
 - **REMOVED**: Dropped the standalone SwiftPM shim layout and native `swift test` target; native host behavior is validated through the Dart tests and the example app per the Flutter Swift Package Manager guide.

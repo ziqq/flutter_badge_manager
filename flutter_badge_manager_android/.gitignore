@@ -75,3 +75,6 @@ integration_test/screenshots
 
 # Android
 **/.cxx/
+
+pubspec_overrides.yaml
+!exemple/pubspec_overrides.yaml

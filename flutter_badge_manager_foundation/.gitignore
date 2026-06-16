@@ -64,3 +64,5 @@ integration_test/screenshots
 temp/
 .tmp/
 tmp/
+pubspec_overrides.yaml
+!exemple/pubspec_overrides.yaml
