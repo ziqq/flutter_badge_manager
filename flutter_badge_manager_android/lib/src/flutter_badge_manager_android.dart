@@ -12,15 +12,13 @@ import 'package:flutter_badge_manager_platform_interface/flutter_badge_manager_p
 /// functionality for Android through the generated Pigeon host API.
 class FlutterBadgeManagerAndroid extends FlutterBadgeManagerPlatform {
   /// Creates a new plugin implementation instance.
-  FlutterBadgeManagerAndroid._({
-    @visibleForTesting FlutterBadgeManagerApi? api,
-  }) : _api = api ?? FlutterBadgeManagerApi();
+  FlutterBadgeManagerAndroid._({@visibleForTesting FlutterBadgeManagerApi? api})
+    : _api = api ?? FlutterBadgeManagerApi();
 
   /// Returns an instance using the specified [api].
   factory FlutterBadgeManagerAndroid._instanceFor({
     @visibleForTesting FlutterBadgeManagerApi? api,
-  }) =>
-      FlutterBadgeManagerAndroid._(api: api);
+  }) => FlutterBadgeManagerAndroid._(api: api);
 
   final FlutterBadgeManagerApi _api;
 

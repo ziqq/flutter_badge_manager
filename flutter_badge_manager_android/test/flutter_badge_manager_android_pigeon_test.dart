@@ -10,12 +10,11 @@ void main() {
   BasicMessageChannel<Object?> channel(
     String method,
     TestDefaultBinaryMessenger messenger,
-  ) =>
-      BasicMessageChannel<Object?>(
-        '$channelPrefix.$method.$suffix',
-        FlutterBadgeManagerApi.pigeonChannelCodec,
-        binaryMessenger: messenger,
-      );
+  ) => BasicMessageChannel<Object?>(
+    '$channelPrefix.$method.$suffix',
+    FlutterBadgeManagerApi.pigeonChannelCodec,
+    binaryMessenger: messenger,
+  );
 
   late TestDefaultBinaryMessenger messenger;
 
@@ -50,26 +49,28 @@ void main() {
       );
     });
 
-    test('isSupported throws channel-error when host is disconnected',
-        () async {
-      final api = FlutterBadgeManagerApi(
-        binaryMessenger: messenger,
-        messageChannelSuffix: suffix,
-      );
+    test(
+      'isSupported throws channel-error when host is disconnected',
+      () async {
+        final api = FlutterBadgeManagerApi(
+          binaryMessenger: messenger,
+          messageChannelSuffix: suffix,
+        );
 
-      await expectLater(
-        api.isSupported(),
-        throwsA(
-          isA<PlatformException>()
-              .having((e) => e.code, 'code', 'channel-error')
-              .having(
-                (e) => e.message,
-                'message',
-                contains('$channelPrefix.isSupported.$suffix'),
-              ),
-        ),
-      );
-    });
+        await expectLater(
+          api.isSupported(),
+          throwsA(
+            isA<PlatformException>()
+                .having((e) => e.code, 'code', 'channel-error')
+                .having(
+                  (e) => e.message,
+                  'message',
+                  contains('$channelPrefix.isSupported.$suffix'),
+                ),
+          ),
+        );
+      },
+    );
 
     test('update sends count over the suffixed channel', () async {
       Object? capturedMessage;
@@ -133,11 +134,7 @@ void main() {
         throwsA(
           isA<PlatformException>()
               .having((e) => e.code, 'code', 'remove_failed')
-              .having(
-            (e) => e.details,
-            'details',
-            {'retryable': false},
-          ),
+              .having((e) => e.details, 'details', {'retryable': false}),
         ),
       );
     });

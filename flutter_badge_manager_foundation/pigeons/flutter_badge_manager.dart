@@ -4,14 +4,15 @@
 
 import 'package:pigeon/pigeon.dart';
 
-@ConfigurePigeon(PigeonOptions(
-  dartOut: 'lib/src/flutter_badge_manager_foundation.g.dart',
-  dartTestOut: 'test/test_api.g.dart',
-  swiftOut:
-      'darwin/flutter_badge_manager_foundation/Sources/flutter_badge_manager_foundation/FlutterBadgeManagerPlugin.g.swift',
-  copyrightHeader: 'pigeons/copyright.txt',
-))
-
+@ConfigurePigeon(
+  PigeonOptions(
+    dartOut: 'lib/src/flutter_badge_manager_foundation.g.dart',
+    dartTestOut: 'test/test_api.g.dart',
+    swiftOut:
+        'darwin/flutter_badge_manager_foundation/Sources/flutter_badge_manager_foundation/FlutterBadgeManagerPlugin.g.swift',
+    copyrightHeader: 'pigeons/copyright.txt',
+  ),
+)
 /// Package-local Pigeon schema for the iOS and macOS implementation.
 ///
 /// This contract intentionally lives in the foundation package because it

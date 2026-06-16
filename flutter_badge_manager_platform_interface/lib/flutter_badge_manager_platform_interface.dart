@@ -74,10 +74,10 @@ final class _MissingFlutterBadgeManagerPlatform
       _MissingFlutterBadgeManagerPlatform._();
 
   static StateError _missingImplementationError() => StateError(
-        'No FlutterBadgeManagerPlatform implementation was registered. '
-        'Ensure a federated platform package is available for the current '
-        'platform or inject a test implementation explicitly.',
-      );
+    'No FlutterBadgeManagerPlatform implementation was registered. '
+    'Ensure a federated platform package is available for the current '
+    'platform or inject a test implementation explicitly.',
+  );
 
   @override
   Future<bool> isSupported() =>

@@ -19,8 +19,7 @@ class FlutterBadgeManagerFoundation extends FlutterBadgeManagerPlatform {
   /// Returns an instance using a specified [api].
   factory FlutterBadgeManagerFoundation._instanceFor({
     @visibleForTesting FlutterBadgeManagerApi? api,
-  }) =>
-      FlutterBadgeManagerFoundation._(api: api);
+  }) => FlutterBadgeManagerFoundation._(api: api);
 
   /// Returns the default instance
   /// of [FlutterBadgeManagerFoundation].

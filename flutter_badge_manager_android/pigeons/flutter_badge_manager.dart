@@ -4,18 +4,19 @@
 
 import 'package:pigeon/pigeon.dart';
 
-@ConfigurePigeon(PigeonOptions(
-  dartOut: 'lib/src/flutter_badge_manager_android.g.dart',
-  dartTestOut: 'test/test_api.g.dart',
-  javaOut:
-      'android/src/main/java/flutter/plugins/flutterbadgemanager/FlutterBadgeManagerPluginPigeon.java',
-  javaOptions: JavaOptions(
-    package: 'flutter.plugins.flutterbadgemanager',
-    className: 'FlutterBadgeManagerPluginPigeon',
+@ConfigurePigeon(
+  PigeonOptions(
+    dartOut: 'lib/src/flutter_badge_manager_android.g.dart',
+    dartTestOut: 'test/test_api.g.dart',
+    javaOut:
+        'android/src/main/java/flutter/plugins/flutterbadgemanager/FlutterBadgeManagerPluginPigeon.java',
+    javaOptions: JavaOptions(
+      package: 'flutter.plugins.flutterbadgemanager',
+      className: 'FlutterBadgeManagerPluginPigeon',
+    ),
+    copyrightHeader: 'pigeons/copyright.txt',
   ),
-  copyrightHeader: 'pigeons/copyright.txt',
-))
-
+)
 /// Package-local Pigeon schema for the Android implementation.
 ///
 /// This contract intentionally lives in the Android package because it

@@ -61,151 +61,149 @@ class _InvalidPlatform implements FlutterBadgeManagerPlatform {
 }
 
 void main() => group('FlutterBadgeManagerPlatform interface', () {
-      test('default instance throws until implementation is registered', () {
-        expect(
-          FlutterBadgeManagerPlatform.instance.isSupported,
-          throwsA(
-            isA<StateError>().having(
-              (e) => e.message,
-              'message',
-              contains('No FlutterBadgeManagerPlatform implementation'),
-            ),
-          ),
-        );
-      });
+  test('default instance throws until implementation is registered', () {
+    expect(
+      FlutterBadgeManagerPlatform.instance.isSupported,
+      throwsA(
+        isA<StateError>().having(
+          (e) => e.message,
+          'message',
+          contains('No FlutterBadgeManagerPlatform implementation'),
+        ),
+      ),
+    );
+  });
 
-      test('default instance update fails fast without implementation', () {
-        expect(
-          () => FlutterBadgeManagerPlatform.instance.update(1),
-          throwsA(
-            isA<StateError>().having(
-              (e) => e.message,
-              'message',
-              contains('No FlutterBadgeManagerPlatform implementation'),
-            ),
-          ),
-        );
-      });
+  test('default instance update fails fast without implementation', () {
+    expect(
+      () => FlutterBadgeManagerPlatform.instance.update(1),
+      throwsA(
+        isA<StateError>().having(
+          (e) => e.message,
+          'message',
+          contains('No FlutterBadgeManagerPlatform implementation'),
+        ),
+      ),
+    );
+  });
 
-      test('default instance remove fails fast without implementation', () {
-        expect(
-          FlutterBadgeManagerPlatform.instance.remove,
-          throwsA(
-            isA<StateError>().having(
-              (e) => e.message,
-              'message',
-              contains('No FlutterBadgeManagerPlatform implementation'),
-            ),
-          ),
-        );
-      });
+  test('default instance remove fails fast without implementation', () {
+    expect(
+      FlutterBadgeManagerPlatform.instance.remove,
+      throwsA(
+        isA<StateError>().having(
+          (e) => e.message,
+          'message',
+          contains('No FlutterBadgeManagerPlatform implementation'),
+        ),
+      ),
+    );
+  });
 
-      test('default instance getter reuses the missing singleton', () {
-        expect(
-          FlutterBadgeManagerPlatform.instance,
-          same(FlutterBadgeManagerPlatform.instance),
-        );
-      });
+  test('default instance getter reuses the missing singleton', () {
+    expect(
+      FlutterBadgeManagerPlatform.instance,
+      same(FlutterBadgeManagerPlatform.instance),
+    );
+  });
 
-      test('can replace instance with mock (isMock bypass)', () async {
-        final mock = _MockPlatform();
-        FlutterBadgeManagerPlatform.instance = mock; // should not throw
-        expect(FlutterBadgeManagerPlatform.instance, mock);
-        expect(
-            await FlutterBadgeManagerPlatform.instance.isSupported(), isTrue);
-      });
+  test('can replace instance with mock (isMock bypass)', () async {
+    final mock = _MockPlatform();
+    FlutterBadgeManagerPlatform.instance = mock; // should not throw
+    expect(FlutterBadgeManagerPlatform.instance, mock);
+    expect(await FlutterBadgeManagerPlatform.instance.isSupported(), isTrue);
+  });
 
-      test('can re-assign instance to another mock', () async {
-        final mock1 = _MockPlatform();
-        final mock2 = _AnotherMockPlatform();
-        FlutterBadgeManagerPlatform.instance = mock1;
-        expect(FlutterBadgeManagerPlatform.instance, same(mock1));
+  test('can re-assign instance to another mock', () async {
+    final mock1 = _MockPlatform();
+    final mock2 = _AnotherMockPlatform();
+    FlutterBadgeManagerPlatform.instance = mock1;
+    expect(FlutterBadgeManagerPlatform.instance, same(mock1));
 
-        FlutterBadgeManagerPlatform.instance = mock2;
-        expect(FlutterBadgeManagerPlatform.instance, same(mock2));
-        expect(
-            await FlutterBadgeManagerPlatform.instance.isSupported(), isFalse);
-      });
+    FlutterBadgeManagerPlatform.instance = mock2;
+    expect(FlutterBadgeManagerPlatform.instance, same(mock2));
+    expect(await FlutterBadgeManagerPlatform.instance.isSupported(), isFalse);
+  });
 
-      test('rejects implementations that do not extend platform interface', () {
-        expect(
-          () => FlutterBadgeManagerPlatform.instance = _InvalidPlatform(),
-          throwsA(isA<AssertionError>()),
-        );
-      });
+  test('rejects implementations that do not extend platform interface', () {
+    expect(
+      () => FlutterBadgeManagerPlatform.instance = _InvalidPlatform(),
+      throwsA(isA<AssertionError>()),
+    );
+  });
 
-      test('mock delegates update and remove correctly', () async {
-        final mock = _MockPlatform();
-        FlutterBadgeManagerPlatform.instance = mock;
+  test('mock delegates update and remove correctly', () async {
+    final mock = _MockPlatform();
+    FlutterBadgeManagerPlatform.instance = mock;
 
-        await FlutterBadgeManagerPlatform.instance.update(10);
-        expect(mock.lastUpdated, 10);
+    await FlutterBadgeManagerPlatform.instance.update(10);
+    expect(mock.lastUpdated, 10);
 
-        await FlutterBadgeManagerPlatform.instance.remove();
-        expect(mock.removeCalled, isTrue);
-      });
+    await FlutterBadgeManagerPlatform.instance.remove();
+    expect(mock.removeCalled, isTrue);
+  });
 
-      test('isMock returns false by default on base class', () {
-        final stub = _StubPlatform();
-        expect(stub.isMock, isFalse);
-      });
+  test('isMock returns false by default on base class', () {
+    final stub = _StubPlatform();
+    expect(stub.isMock, isFalse);
+  });
 
-      group('unimplemented methods -', () {
-        late _StubPlatform stub;
+  group('unimplemented methods -', () {
+    late _StubPlatform stub;
 
-        setUp(() {
-          stub = _StubPlatform();
-        });
-
-        test('isSupported throws UnimplementedError', () async {
-          expect(stub.isSupported, throwsA(isA<UnimplementedError>()));
-        });
-
-        test('update throws UnimplementedError', () async {
-          expect(() => stub.update(1), throwsA(isA<UnimplementedError>()));
-        });
-
-        test('remove throws UnimplementedError', () async {
-          expect(stub.remove, throwsA(isA<UnimplementedError>()));
-        });
-
-        test('isSupported error message is descriptive', () {
-          expect(
-            stub.isSupported,
-            throwsA(
-              isA<UnimplementedError>().having(
-                (e) => e.message,
-                'message',
-                contains('isSupported'),
-              ),
-            ),
-          );
-        });
-
-        test('update error message is descriptive', () {
-          expect(
-            () => stub.update(1),
-            throwsA(
-              isA<UnimplementedError>().having(
-                (e) => e.message,
-                'message',
-                contains('update'),
-              ),
-            ),
-          );
-        });
-
-        test('remove error message is descriptive', () {
-          expect(
-            stub.remove,
-            throwsA(
-              isA<UnimplementedError>().having(
-                (e) => e.message,
-                'message',
-                contains('remove'),
-              ),
-            ),
-          );
-        });
-      });
+    setUp(() {
+      stub = _StubPlatform();
     });
+
+    test('isSupported throws UnimplementedError', () async {
+      expect(stub.isSupported, throwsA(isA<UnimplementedError>()));
+    });
+
+    test('update throws UnimplementedError', () async {
+      expect(() => stub.update(1), throwsA(isA<UnimplementedError>()));
+    });
+
+    test('remove throws UnimplementedError', () async {
+      expect(stub.remove, throwsA(isA<UnimplementedError>()));
+    });
+
+    test('isSupported error message is descriptive', () {
+      expect(
+        stub.isSupported,
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            contains('isSupported'),
+          ),
+        ),
+      );
+    });
+
+    test('update error message is descriptive', () {
+      expect(
+        () => stub.update(1),
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            contains('update'),
+          ),
+        ),
+      );
+    });
+
+    test('remove error message is descriptive', () {
+      expect(
+        stub.remove,
+        throwsA(
+          isA<UnimplementedError>().having(
+            (e) => e.message,
+            'message',
+            contains('remove'),
+          ),
+        ),
+      );
+    });
+  });
+});
