@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.3.1
+- **FIXED**: Restored the published Darwin Swift package manifest to the official Flutter plugin layout that depends on `../FlutterFramework`, fixing iOS and macOS app archives that failed to compile the generated Pigeon Swift types when Swift Package Manager was enabled.
+- **REMOVED**: Dropped the standalone SwiftPM shim layout and native `swift test` target; native host behavior is validated through the Dart tests and the example app per the Flutter Swift Package Manager guide.
+
 ## 0.3.0
 - **CHANGED**: Updated the bundled Android implementation for the `0.3` release line, migrating it to built-in Kotlin and newer Android build toolchain baselines.
 - **CHANGED**: Updated the bundled Darwin implementation for the `0.3` release line, adding Swift Package Manager-ready packaging for iOS and macOS builds.
