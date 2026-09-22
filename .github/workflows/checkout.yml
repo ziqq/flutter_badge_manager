@@ -268,6 +268,7 @@ jobs:
           template-path: .github/notify/ci.md.tmpl
           variables: |
             {
+              "package_url": "https://pub.dev/packages/flutter_badge_manager",
               "status_label": ${{ toJSON(contains(needs.*.result, 'failure') && 'failure' || contains(needs.*.result, 'cancelled') && 'cancelled' || 'success') }}
             }
           failure-policy: best-effort
