@@ -223,6 +223,7 @@ jobs:
   notify:
     name: Notify CI result
     needs: [detect-changes, package-ci, coverage-merge]
+    continue-on-error: true
     if: >-
       always() &&
       github.actor != 'dependabot[bot]' &&
