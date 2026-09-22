@@ -269,7 +269,7 @@ jobs:
           variables: |
             {
               "event_label": ${{ toJSON(github.event_name == 'push' && 'Push' || github.event_name == 'pull_request' && 'Pull request' || github.event_name == 'workflow_dispatch' && 'Manual run' || github.event_name) }},
-              "status_icon": ${{ toJSON(contains(needs.*.result, 'failure') && '❌' || contains(needs.*.result, 'cancelled') && '⏹️' || '✅') }},
+              "status_icon": ${{ toJSON(contains(needs.*.result, 'failure') && '×' || contains(needs.*.result, 'cancelled') && '–' || '✓') }},
               "status_label": ${{ toJSON(contains(needs.*.result, 'failure') && 'failed' || contains(needs.*.result, 'cancelled') && 'cancelled' || 'passed') }}
             }
           failure-policy: best-effort
