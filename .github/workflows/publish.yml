@@ -1,17 +1,55 @@
 name: Publish to pub.dev
 
+# Push a tag `<package>-v<version>` (e.g. flutter_badge_manager_android-v0.3.1) to publish that package.
+# Uses pub.dev automated publishing (OIDC), no secrets. Each package needs it enabled on
+# pub.dev → Admin → Automated publishing: repository ziqq/flutter_badge_manager,
+# tag pattern `<package>-v{{version}}`, required environment `release`.
+
 on:
-  workflow_dispatch:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+*"
+      - "flutter_badge_manager-v[0-9]+.[0-9]+.[0-9]+*"
+      - "flutter_badge_manager_android-v[0-9]+.[0-9]+.[0-9]+*"
+      - "flutter_badge_manager_foundation-v[0-9]+.[0-9]+.[0-9]+*"
+      - "flutter_badge_manager_platform_interface-v[0-9]+.[0-9]+.[0-9]+*"
 
 jobs:
-  publish:
-    uses: ziqq/flutter_ci_workflows/.github/workflows/publish_to_pub.yml@main
+  flutter_badge_manager:
+    name: "Publish flutter_badge_manager"
+    if: startsWith(github.ref_name, 'flutter_badge_manager-v')
+    permissions:
+      id-token: write # Required for authentication using OIDC
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
     with:
-      PANA_TOTAL: '110'
-    secrets:
-      PUB_CREDENTIAL_JSON: ${{ secrets.PUB_CREDENTIAL_JSON }}
-      PUB_OAUTH_ACCESS_TOKEN: ${{ secrets.PUB_OAUTH_ACCESS_TOKEN }}
-      PUB_OAUTH_REFRESH_TOKEN: ${{ secrets.PUB_OAUTH_REFRESH_TOKEN }}
+      environment: release
+      working-directory: flutter_badge_manager
+
+  flutter_badge_manager_android:
+    name: "Publish flutter_badge_manager_android"
+    if: startsWith(github.ref_name, 'flutter_badge_manager_android-v')
+    permissions:
+      id-token: write # Required for authentication using OIDC
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+    with:
+      environment: release
+      working-directory: flutter_badge_manager_android
+
+  flutter_badge_manager_foundation:
+    name: "Publish flutter_badge_manager_foundation"
+    if: startsWith(github.ref_name, 'flutter_badge_manager_foundation-v')
+    permissions:
+      id-token: write # Required for authentication using OIDC
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+    with:
+      environment: release
+      working-directory: flutter_badge_manager_foundation
+
+  flutter_badge_manager_platform_interface:
+    name: "Publish flutter_badge_manager_platform_interface"
+    if: startsWith(github.ref_name, 'flutter_badge_manager_platform_interface-v')
+    permissions:
+      id-token: write # Required for authentication using OIDC
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@6afc89df92d6eb3834022f73cd65adc8cdfcb92d # v1.8.1
+    with:
+      environment: release
+      working-directory: flutter_badge_manager_platform_interface
